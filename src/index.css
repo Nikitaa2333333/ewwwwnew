@@ -10,6 +10,7 @@
   --color-sand: #EFEDEA;
   --color-charcoal: #191919;
   --color-stone: #D1CEC7;
+  --color-gold: #C9A86C;
 }
 
 @layer base {
@@ -18,7 +19,7 @@
   }
 
   body {
-    background-color: var(--color-sand);
+    background: linear-gradient(160deg, #F2F0ED 0%, #EFEDEA 55%, #E9E6E1 100%);
     color: var(--color-charcoal);
     font-family: var(--font-lora);
     -webkit-font-smoothing: antialiased;
@@ -33,6 +34,16 @@
 
 .mix-blend-diff {
   mix-blend-mode: difference;
+}
+
+/* Number input — hide arrows */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
 }
 
 /* Marquee gallery */
