@@ -42,7 +42,7 @@ const Navbar = () => {
           <a
             key={item.label}
             href={item.href}
-            className={`font-lora text-[11px] uppercase tracking-[0.3em] font-medium transition-all duration-300 hover:text-gold relative group ${textColor}`}
+            className={`font-lora text-[14px] font-medium transition-all duration-300 hover:text-gold relative group ${textColor}`}
           >
             {item.label}
             <span className="absolute -bottom-1 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
