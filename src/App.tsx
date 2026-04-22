@@ -7,14 +7,6 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
 const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
   const menuItems = [
     { label: 'О нас', href: '#' },
     { label: 'Залы', href: '#' },
@@ -23,40 +15,72 @@ const Navbar = () => {
     { label: 'Контакты', href: '#' },
   ];
 
-  const scrolledClass = scrolled 
-    ? 'bg-white/80 backdrop-blur-xl border-b border-black/5 py-4 shadow-[0_4px_30px_rgba(0,0,0,0.02)]' 
-    : 'bg-transparent py-6';
-  
-  const textColor = scrolled ? 'text-charcoal' : 'text-white';
-
   return (
-    <motion.nav
-      className={`fixed top-0 left-0 w-full px-8 md:px-16 flex justify-between items-center z-50 transition-all duration-700 ease-in-out ${scrolledClass}`}
-    >
-      <div className={`text-xl md:text-2xl font-cormorant font-medium uppercase tracking-[0.25em] transition-colors duration-500 ${textColor}`}>
-        Лофт & Свет
-      </div>
+    <nav className="fixed top-0 left-0 w-full z-50 bg-charcoal border-b border-white/8">
+      <div className="grid grid-cols-3 items-center px-8 md:px-12 py-4">
 
-      <div className="hidden md:flex items-center gap-10">
-        {menuItems.map((item) => (
-          <a
-            key={item.label}
-            href={item.href}
-            className={`font-lora text-[14px] font-medium transition-all duration-300 hover:text-gold relative group ${textColor}`}
-          >
-            {item.label}
-            <span className="absolute -bottom-1 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
+        {/* Лого — слева */}
+        <div className="font-cormorant text-white text-xl md:text-2xl font-medium">
+          Ривер Лофт
+        </div>
+
+        {/* Навигация — по центру */}
+        <div className="hidden md:flex items-center justify-center gap-8">
+          {menuItems.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="font-lora text-[14px] text-white/75 hover:text-white transition-colors duration-200 relative group"
+            >
+              {item.label}
+              <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
+            </a>
+          ))}
+        </div>
+
+        {/* Правая часть — телефон, соцсети, кнопка */}
+        <div className="hidden md:flex items-center justify-end gap-5">
+
+          {/* Телефон */}
+          <a href="tel:+74991234567" className="font-lora text-[13px] text-white/60 hover:text-white transition-colors duration-200 whitespace-nowrap">
+            +7 (499) 123-45-67
           </a>
-        ))}
-      </div>
 
-      {/* Mobile simple text link if needed, or just hide */}
-      <div className="md:hidden">
-        <a href="tel:+74991234567" className={`font-lora text-[10px] uppercase tracking-widest ${textColor}`}>
-          +7 (499) 123-45-67
-        </a>
+          {/* Соцсети */}
+          <div className="flex items-center gap-3">
+            {/* Instagram */}
+            <a href="#" aria-label="Instagram" className="text-white/50 hover:text-white transition-colors duration-200">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+            {/* VK */}
+            <a href="#" aria-label="ВКонтакте" className="text-white/50 hover:text-white transition-colors duration-200">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 13.5h-1.7c-.64 0-.84-.51-1.99-1.67-1-.97-1.44-.97-1.69-.97-.34 0-.44.1-.44.58v1.52c0 .42-.13.67-1.22.67-1.8 0-3.8-1.09-5.2-3.13C4.13 10.12 3.7 8.1 3.7 7.67c0-.25.1-.48.58-.48h1.7c.43 0 .59.19.75.65.83 2.38 2.21 4.47 2.78 4.47.21 0 .31-.1.31-.64V9.62c-.07-1.15-.67-1.25-.67-1.66 0-.2.16-.4.42-.4h2.68c.36 0 .49.19.49.61v3.26c0 .36.16.49.26.49.21 0 .39-.13.78-.52 1.21-1.35 2.07-3.43 2.07-3.43.11-.25.31-.48.74-.48h1.7c.51 0 .62.26.51.61-.21.98-2.28 3.91-2.28 3.91-.18.29-.24.42 0 .74.17.23.74.71 1.12 1.14.7.77 1.23 1.41 1.37 1.86.16.44-.07.67-.51.67z"/>
+              </svg>
+            </a>
+          </div>
+
+          {/* CTA кнопка */}
+          <a
+            href="#"
+            className="font-lora text-[13px] text-charcoal bg-gold hover:bg-[#b8976a] transition-colors duration-200 px-5 py-2 rounded-full whitespace-nowrap"
+          >
+            Забронировать
+          </a>
+        </div>
+
+        {/* Мобильный телефон */}
+        <div className="md:hidden flex justify-end">
+          <a href="tel:+74991234567" className="font-lora text-[12px] text-white/70">
+            +7 (499) 123-45-67
+          </a>
+        </div>
       </div>
-    </motion.nav>
+    </nav>
   );
 };
 
