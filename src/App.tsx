@@ -6,7 +6,7 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
-const Navbar = ({ menuOpen, setMenuOpen }: { menuOpen: boolean, setMenuOpen: (v: boolean | ((v: boolean) => boolean)) => void }) => {
+const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -14,11 +14,6 @@ const Navbar = ({ menuOpen, setMenuOpen }: { menuOpen: boolean, setMenuOpen: (v:
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [menuOpen]);
 
   const menuItems = [
     { label: 'О нас', href: '#' },
@@ -28,117 +23,40 @@ const Navbar = ({ menuOpen, setMenuOpen }: { menuOpen: boolean, setMenuOpen: (v:
     { label: 'Контакты', href: '#' },
   ];
 
-  const isLight = scrolled && !menuOpen;
-  const textColor = menuOpen ? 'text-white' : isLight ? 'text-charcoal' : 'text-white';
+  const scrolledClass = scrolled 
+    ? 'bg-white/80 backdrop-blur-xl border-b border-black/5 py-4 shadow-[0_4px_30px_rgba(0,0,0,0.02)]' 
+    : 'bg-transparent py-6';
+  
+  const textColor = scrolled ? 'text-charcoal' : 'text-white';
 
   return (
-    <>
-      <motion.nav
-        className={`fixed top-0 left-0 w-full px-8 py-5 md:py-6 flex justify-between items-center z-50 transition-all duration-700 ease-in-out ${
-          scrolled || menuOpen ? 'bg-white/80 backdrop-blur-xl border-b border-black/5 shadow-[0_4px_30px_rgba(0,0,0,0.02)]' : 'bg-transparent'
-        }`}
-      >
-        <div className={`text-xl md:text-2xl font-cormorant font-medium uppercase tracking-[0.25em] transition-colors duration-500 ${textColor}`}>
-          Лофт & Свет
-        </div>
+    <motion.nav
+      className={`fixed top-0 left-0 w-full px-8 md:px-16 flex justify-between items-center z-50 transition-all duration-700 ease-in-out ${scrolledClass}`}
+    >
+      <div className={`text-xl md:text-2xl font-cormorant font-medium uppercase tracking-[0.25em] transition-colors duration-500 ${textColor}`}>
+        Лофт & Свет
+      </div>
 
-        <button
-          onClick={() => setMenuOpen((v: boolean) => !v)}
-          className={`group flex items-center gap-5 cursor-pointer z-[60] relative transition-all duration-500 ${textColor}`}
-          aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
-        >
-          <span className="font-lora text-[10px] uppercase tracking-[0.4em] font-medium opacity-60 group-hover:opacity-100 transition-opacity hidden sm:block">
-            {menuOpen ? 'Закрыть' : 'Меню'}
-          </span>
-          <div className="relative w-8 h-8 flex items-center justify-center">
-            <motion.div
-              className="absolute inset-0 rounded-full border border-current opacity-20"
-              animate={menuOpen ? { scale: 1.4, opacity: 0 } : { scale: 1, opacity: 0.2 }}
-              transition={{ duration: 0.6 }}
-            />
-            <div className="flex flex-col gap-[7px] items-end">
-              <motion.span
-                className="block h-px bg-current"
-                animate={menuOpen ? { rotate: 45, y: 4, width: '22px' } : { rotate: 0, y: 0, width: '28px' }}
-                transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-              />
-              <motion.span
-                className="block h-px bg-current"
-                animate={menuOpen ? { rotate: -45, y: -4, width: '22px' } : { rotate: 0, y: 0, width: '18px' }}
-                transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-              />
-            </div>
-          </div>
-        </button>
-      </motion.nav>
-
-      {/* Fullscreen overlay menu */}
-      <motion.div
-        className="fixed inset-0 z-40 bg-[#0f0f0f] flex flex-col items-center justify-center pointer-events-none"
-        initial={false}
-        animate={menuOpen
-          ? { clipPath: 'circle(150% at calc(100% - 60px) 48px)', pointerEvents: 'auto' }
-          : { clipPath: 'circle(0% at calc(100% - 60px) 48px)', pointerEvents: 'none' }
-        }
-        transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
-      >
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(201,168,108,0.1)_0%,transparent_70%)]" />
-        </div>
-
-        <nav className="flex flex-col items-center gap-1 mb-16 relative z-10">
-          {menuItems.map((item, i) => (
-            <motion.a
-              key={item.label}
-              href={item.href}
-              className="font-cormorant text-white leading-none tracking-tight hover:text-gold transition-all duration-300 cursor-pointer group flex items-center gap-8"
-              style={{ fontSize: 'clamp(2.8rem, 8vw, 7.5rem)' }}
-              initial={{ opacity: 0, y: 40, rotateX: -20 }}
-              animate={menuOpen ? { opacity: 1, y: 0, rotateX: 0 } : { opacity: 0, y: 40, rotateX: -20 }}
-              transition={{ 
-                duration: 0.8, 
-                delay: menuOpen ? 0.3 + i * 0.1 : 0, 
-                ease: [0.16, 1, 0.3, 1] 
-              }}
-              onClick={() => setMenuOpen(false)}
-            >
-              <span className="font-lora text-gold/30 text-xs md:text-sm font-light opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-x-[-10px]">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span className="group-hover:tracking-[0.05em] transition-all duration-500">
-                {item.label}
-              </span>
-            </motion.a>
-          ))}
-        </nav>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={menuOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ delay: menuOpen ? 0.8 : 0, duration: 0.6 }}
-          className="absolute bottom-12 flex flex-col items-center gap-6"
-        >
-          <div className="flex gap-8 font-lora text-white/40 text-sm tracking-widest uppercase">
-            <a href="#" onClick={() => setMenuOpen(false)} className="hover:text-gold transition-colors">Instagram</a>
-            <a href="#" onClick={() => setMenuOpen(false)} className="hover:text-gold transition-colors">Pinterest</a>
-          </div>
-          <div className="h-px w-12 bg-white/10" />
-          <a href="tel:+74991234567" className="font-lora text-white/60 hover:text-white transition-colors tracking-widest text-sm">
-            +7 (499) 123-45-67
+      <div className="hidden md:flex items-center gap-10">
+        {menuItems.map((item) => (
+          <a
+            key={item.label}
+            href={item.href}
+            className={`font-lora text-[11px] uppercase tracking-[0.3em] font-medium transition-all duration-300 hover:text-gold relative group ${textColor}`}
+          >
+            {item.label}
+            <span className="absolute -bottom-1 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
           </a>
-        </motion.div>
+        ))}
+      </div>
 
-        <motion.span
-          className="absolute left-10 bottom-10 font-accent text-white/5 -rotate-6 pointer-events-none select-none"
-          style={{ fontSize: 'clamp(3rem, 10vw, 12rem)' }}
-          initial={{ opacity: 0, x: -50 }}
-          animate={menuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-          transition={{ delay: 0.5, duration: 1.2 }}
-        >
-          Лофт & Свет
-        </motion.span>
-      </motion.div>
-    </>
+      {/* Mobile simple text link if needed, or just hide */}
+      <div className="md:hidden">
+        <a href="tel:+74991234567" className={`font-lora text-[10px] uppercase tracking-widest ${textColor}`}>
+          +7 (499) 123-45-67
+        </a>
+      </div>
+    </motion.nav>
   );
 };
 
@@ -877,26 +795,17 @@ const Footer = () => {
 };
 
 export default function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
     <div className="bg-sand text-charcoal selection:bg-stone selection:text-charcoal w-full min-h-screen overflow-x-hidden">
-      <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-      
-      <motion.div
-        animate={menuOpen ? { scale: 0.92, opacity: 0.4, filter: 'blur(10px)' } : { scale: 1, opacity: 1, filter: 'blur(0px)' }}
-        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-        className="origin-center"
-      >
-        <Hero />
-        <Intro />
-        <VenueHalls />
-        <AboutRiverLoft />
-        <AdvantagesSection />
-        <BookingSection />
-        <Gallery />
-        <Footer />
-      </motion.div>
+      <Navbar />
+      <Hero />
+      <Intro />
+      <VenueHalls />
+      <AboutRiverLoft />
+      <AdvantagesSection />
+      <BookingSection />
+      <Gallery />
+      <Footer />
     </div>
   );
 }
