@@ -199,11 +199,10 @@ const Hero = () => {
           </a>
           <a
             href="#"
-            className="font-lora text-white/55 px-5 py-3.5 hover:text-white transition-colors duration-250 cursor-pointer flex items-center gap-2 group"
+            className="font-lora text-white/55 px-5 py-3.5 hover:text-white transition-colors duration-250 cursor-pointer"
             style={{ fontSize: 'clamp(0.85rem, 1.15vw, 1.02rem)' }}
           >
             Смотреть площадку
-            <span className="group-hover:translate-x-1.5 transition-transform duration-200 inline-block">→</span>
           </a>
         </motion.div>
       </div>
@@ -406,10 +405,9 @@ const AboutRiverLoft = () => {
             href="#"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="group inline-flex items-center gap-3 bg-sand text-charcoal px-8 py-4 rounded-full font-lora text-lg transition-colors duration-200 hover:bg-white cursor-pointer"
+            className="inline-flex items-center bg-sand text-charcoal px-8 py-4 rounded-full font-lora text-lg transition-colors duration-200 hover:bg-white cursor-pointer"
           >
             Смотреть 3D-тур
-            <span className="transition-transform duration-200 group-hover:translate-x-2">→</span>
           </motion.a>
         </div>
       </motion.div>
@@ -701,9 +699,8 @@ const BookingSection = () => {
               </p>
             </div>
 
-            <button className="bg-charcoal text-sand px-12 py-5 rounded-full font-lora text-xl hover:bg-charcoal/80 transition-colors duration-300 group flex items-center gap-4 cursor-pointer">
+            <button className="bg-charcoal text-sand px-12 py-5 rounded-full font-lora text-xl hover:bg-charcoal/80 transition-colors duration-300 cursor-pointer">
               Забронировать дату
-              <span className="group-hover:translate-x-2 transition-transform duration-200">→</span>
             </button>
           </motion.div>
         </motion.div>
