@@ -210,25 +210,7 @@ const Hero = () => {
 
 
 
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-[76px] left-1/2 -translate-x-1/2 hidden md:block"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-      >
-        <motion.div
-          className="w-5 h-8 rounded-full border border-white/28 flex items-start justify-center pt-1.5"
-          animate={{ opacity: [0.25, 0.8, 0.25] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <motion.div
-            className="w-1 h-2 bg-white/55 rounded-full"
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </motion.div>
-      </motion.div>
+
     </section>
   );
 };
