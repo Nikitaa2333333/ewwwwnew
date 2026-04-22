@@ -102,7 +102,7 @@ const Hero = () => {
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
   return (
-    <section ref={containerRef} className="relative w-full h-screen overflow-hidden bg-charcoal">
+    <section ref={containerRef} className="relative w-full h-screen overflow-hidden bg-charcoal" style={{ minHeight: '100svh' }}>
       {/* Parallax background */}
       <motion.div style={{ y, opacity }} className="absolute inset-0 w-full h-full">
         <img
@@ -138,7 +138,7 @@ const Hero = () => {
       </motion.span>
 
       {/* Main content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4 pb-20">
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4 pb-4 pt-[72px]">
         {/* Heading */}
         <motion.div
           initial={{ y: 60, opacity: 0 }}
@@ -209,37 +209,7 @@ const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Bottom key theses bar */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0"
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className="border-t border-white/12 bg-black/25 backdrop-blur-sm">
-          <div className="max-w-5xl mx-auto px-8 py-5 grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
-            {HERO_THESES.map((t, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.7 + i * 0.08, duration: 0.7 }}
-                className="text-center px-4"
-              >
-                <div
-                  className="font-cormorant text-gold/85 leading-none"
-                  style={{ fontSize: 'clamp(1.2rem, 2.2vw, 1.9rem)' }}
-                >
-                  {t.value}
-                </div>
-                <div className="font-lora text-white/38 uppercase tracking-widest mt-1" style={{ fontSize: '0.62rem' }}>
-                  {t.label}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
+
 
       {/* Scroll indicator */}
       <motion.div
@@ -260,6 +230,32 @@ const Hero = () => {
           />
         </motion.div>
       </motion.div>
+    </section>
+  );
+};
+
+const StatsSection = () => {
+  return (
+    <section className="bg-charcoal py-20 px-8 md:px-16 border-y border-white/5">
+      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+        {HERO_THESES.map((t, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.1, duration: 0.8 }}
+            className="flex flex-col items-center md:items-start text-center md:text-left group"
+          >
+            <div className="font-cormorant text-gold text-5xl md:text-7xl font-light leading-none mb-4 transition-transform duration-500 group-hover:scale-110 origin-center md:origin-left">
+              {t.value}
+            </div>
+            <div className="font-lora text-white/40 text-xs md:text-sm uppercase tracking-[0.2em] max-w-[140px] leading-relaxed">
+              {t.label}
+            </div>
+          </motion.div>
+        ))}
+      </div>
     </section>
   );
 };
@@ -823,6 +819,7 @@ export default function App() {
     <div className="bg-sand text-charcoal selection:bg-stone selection:text-charcoal w-full min-h-screen overflow-x-hidden">
       <Navbar />
       <Hero />
+      <StatsSection />
       <Intro />
       <VenueHalls />
       <AboutRiverLoft />
