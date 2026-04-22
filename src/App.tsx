@@ -87,7 +87,6 @@ const Navbar = () => {
 const HERO_THESES = [
   { value: '200+', label: 'незабываемых событий' },
   { value: '1 200', label: 'м² пространства' },
-  { value: 'Панорамный', label: 'вид на усадьбу' },
   { value: 'с 2018', label: 'года работаем' },
 ];
 
@@ -237,23 +236,19 @@ const Hero = () => {
 const StatsSection = () => {
   return (
     <section className="bg-charcoal py-20 px-8 md:px-16 border-y border-white/5">
-      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
         {HERO_THESES.map((t, i) => (
-          <motion.div
+          <div
             key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1, duration: 0.8 }}
             className="flex flex-col items-center md:items-start text-center md:text-left group"
           >
-            <div className="font-cormorant text-gold text-5xl md:text-7xl font-light leading-none mb-4 transition-transform duration-500 group-hover:scale-110 origin-center md:origin-left">
+            <div className="font-cormorant text-gold text-5xl md:text-7xl font-light leading-none mb-4 origin-center md:origin-left">
               {t.value}
             </div>
-            <div className="font-lora text-white/40 text-xs md:text-sm uppercase tracking-[0.2em] max-w-[140px] leading-relaxed">
+            <div className="font-lora text-white text-xs md:text-sm uppercase tracking-[0.2em] max-w-[140px] leading-relaxed">
               {t.label}
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
     </section>
