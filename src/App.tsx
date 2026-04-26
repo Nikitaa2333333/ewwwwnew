@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { motion, useScroll, useTransform } from 'motion/react';
+import { AnimatePresence, motion, useScroll, useTransform } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
 const Navbar = () => {
@@ -84,14 +84,35 @@ const Navbar = () => {
   );
 };
 
-const HERO_THESES = [
-  { value: '200+', label: 'незабываемых событий' },
-  { value: '1 200', label: 'м² пространства' },
-  { value: 'с 2018', label: 'года работаем' },
+const FACTS = [
+  { num: '10+', label: 'лет опыта', desc: 'в организации мероприятий любого формата' },
+  { num: '2 000+', label: 'мероприятий', desc: 'свадьбы, юбилеи, корпоративы, семинары и не только' },
+  { num: '100+', label: 'отзывов 5★', desc: 'на Яндексе от довольных гостей и пар' },
+  { num: null, label: 'Любой формат', desc: 'Свадьбы, юбилеи, корпоративы, семинары, презентации, дни рождения — всё зависит от вашей фантазии' },
+  { num: '40+', label: 'подрядчиков', desc: 'проверенные партнёры на ваш выбор' },
+  { num: '10+', label: 'лет в команде', desc: 'профессиональные официанты и повара с опытом' },
+];
+
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12 } },
+};
+const itemVariants = {
+  hidden: { opacity: 0, y: 48 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
+};
+
+const HERO_SLIDES = [
+  '/IMG_20260414_202514.webp',
+  '/IMG_20260414_202543.webp',
+  '/IMG_20260414_202551.webp',
+  '/IMG_20260414_202558.webp',
+  '/IMG_20260414_202525.webp',
 ];
 
 const Hero = () => {
   const containerRef = useRef(null);
+  const [current, setCurrent] = useState(0);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
@@ -100,35 +121,49 @@ const Hero = () => {
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent(prev => (prev + 1) % HERO_SLIDES.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section ref={containerRef} className="relative w-full h-screen overflow-hidden bg-charcoal" style={{ minHeight: '100svh' }}>
       {/* Parallax background */}
       <motion.div style={{ y, opacity }} className="absolute inset-0 w-full h-full">
-        <img
-          src="/IMG_20260414_202514.webp"
-          alt="Wedding table setting in a loft"
-          loading="eager"
-          className="w-full h-full object-cover opacity-75"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/15 to-black/80" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/25 via-transparent to-black/25" />
+        <AnimatePresence mode="crossfade">
+          <motion.img
+            key={HERO_SLIDES[current]}
+            src={HERO_SLIDES[current]}
+            alt=""
+            loading="lazy"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.93 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: 'easeInOut' }}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </AnimatePresence>
+        {/* Bottom glow — keeps photo vivid, only darkens where text lives */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+        {/* Subtle left vignette for text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-transparent" />
       </motion.div>
 
-
-
-      {/* Main content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4 pb-4 pt-[72px]">
+      {/* Main content — left-aligned, bottom */}
+      <div className="absolute inset-0 flex flex-col justify-end items-start text-white px-10 md:px-16 pb-16 pt-[72px]">
         {/* Heading */}
         <motion.div
           initial={{ y: 60, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center text-center"
+          className="flex flex-col items-start"
         >
           <h1
-            className="leading-[0.75] font-cormorant text-center tracking-tight"
+            className="leading-[0.88] font-cormorant tracking-tight"
             style={{
-              fontSize: 'clamp(4.5rem, 11vw, 12rem)',
+              fontSize: 'clamp(3.2rem, 6.5vw, 8rem)',
               background: 'linear-gradient(145deg, #ffffff 0%, #f0e0c8 45%, #C9A86C 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -136,15 +171,16 @@ const Hero = () => {
               filter: 'drop-shadow(0 2px 40px rgba(0,0,0,0.5))',
             }}
           >
-            Идеальное<br />Мгновение
+            Идеальное<br />мгновение
           </h1>
 
           <span
-            className="font-accent block mt-1"
+            className="font-accent block mt-2"
             style={{
-              fontSize: 'clamp(2.4rem, 5.5vw, 6.5rem)',
-              color: 'rgba(232, 208, 168, 0.88)',
-              textShadow: '0 2px 28px rgba(0,0,0,0.45)',
+              fontSize: 'clamp(3rem, 7vw, 9.5rem)',
+              color: 'rgba(232, 208, 168, 0.95)',
+              textShadow: '0 2px 32px rgba(0,0,0,0.5)',
+              lineHeight: 1,
             }}
           >
             вашей истории
@@ -156,166 +192,143 @@ const Hero = () => {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="font-lora text-white mt-2 max-w-2xl text-center leading-relaxed"
-          style={{ fontSize: 'clamp(1.1rem, 1.6vw, 1.4rem)' }}
+          className="font-lora text-white/85 mt-6 max-w-lg leading-relaxed text-left"
+          style={{ fontSize: 'clamp(1.05rem, 1.5vw, 1.35rem)' }}
         >
           Потрясающее место для вашего праздника с огромными панорамными окнами
           {' '}и видом на Церковь Зна́мения Пресвятой Богоро́дицы
         </motion.p>
+
         {/* CTA buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.25, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-9 flex flex-wrap gap-4 justify-center items-center"
+          className="mt-10 flex flex-wrap gap-4 items-center"
         >
           <a
             href="#"
-            className="font-lora text-white border border-white/60 px-8 py-3.5 rounded-full hover:bg-white hover:text-charcoal transition-all duration-300 cursor-pointer"
-            style={{ fontSize: 'clamp(0.85rem, 1.15vw, 1.02rem)' }}
+            className="font-lora text-white border border-white/55 px-10 py-4 rounded-full hover:bg-white hover:text-charcoal transition-all duration-300 cursor-pointer"
+            style={{ fontSize: 'clamp(0.9rem, 1.2vw, 1.05rem)' }}
           >
             Забронировать дату
           </a>
           <a
             href="#"
-            className="font-lora text-white/55 px-5 py-3.5 hover:text-white transition-colors duration-250 cursor-pointer"
-            style={{ fontSize: 'clamp(0.85rem, 1.15vw, 1.02rem)' }}
+            className="font-lora text-white/60 px-5 py-4 hover:text-white transition-colors duration-250 cursor-pointer"
+            style={{ fontSize: 'clamp(0.9rem, 1.2vw, 1.05rem)' }}
           >
             Смотреть площадку
           </a>
         </motion.div>
       </div>
-
-
-
-
     </section>
   );
 };
+
+const VenueBar = () => (
+  <div className="bg-charcoal border-y border-white/10 px-8 md:px-16 py-6">
+    <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-0 divide-y sm:divide-y-0 sm:divide-x divide-white/15">
+      {[
+        { value: '200', unit: 'м²', label: 'пространства' },
+        { value: 'до 100', unit: '', label: 'гостей при банкетной рассадке' },
+        { value: 'до 150', unit: '', label: 'гостей на фуршет' },
+      ].map((item, i) => (
+        <div key={i} className="flex items-baseline gap-2 px-10 py-3 sm:py-0">
+          <span className="font-cormorant text-gold leading-none" style={{ fontSize: 'clamp(2rem, 3.5vw, 3rem)' }}>
+            {item.value}{item.unit}
+          </span>
+          <span className="font-lora text-white" style={{ fontSize: 'clamp(0.85rem, 1.1vw, 1rem)' }}>
+            {item.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 const StatsSection = () => {
   return (
-    <section className="bg-charcoal py-20 px-8 md:px-16 border-y border-white/5">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-        {HERO_THESES.map((t, i) => (
-          <div
-            key={i}
-            className="flex flex-col items-center md:items-start text-center md:text-left group"
-          >
-            <div className="font-cormorant text-gold text-5xl md:text-7xl font-light leading-none mb-4 origin-center md:origin-left">
-              {t.value}
-            </div>
-            <div className="font-lora text-white text-xs md:text-sm uppercase tracking-[0.2em] max-w-[140px] leading-relaxed">
-              {t.label}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-};
-
-
-
-const HALLS = [
-  {
-    id: '01',
-    title: 'Зона сбора гостей',
-    subtitle: 'Welcome • Коктейли • Общение',
-    images: [
-      '/IMG_20260414_202517.webp',
-      '/IMG_20260414_202525.webp',
-      '/IMG_20260414_202529.webp',
-    ],
-  },
-  {
-    id: '02',
-    title: 'Главный Зал',
-    subtitle: 'Торжество • Свет • Пространство',
-    images: [
-      '/IMG_20260414_202543.webp',
-      '/IMG_20260414_202547.webp',
-    ],
-  },
-  {
-    id: '03',
-    title: 'Зона Церемонии',
-    subtitle: 'Чувства • Декор • Воздух',
-    images: [
-      '/IMG_20260414_202551.webp',
-      '/IMG_20260414_202553.webp',
-    ],
-  },
-  {
-    id: '04',
-    title: 'Камерная Терраса',
-    subtitle: 'Вечер • Огни • Уют',
-    images: [
-      '/IMG_20260414_202558.webp',
-      '/IMG_20260414_202520.webp',
-    ],
-  }
-];
-
-const HallSection = ({ hall }: { hall: typeof HALLS[0], key?: string }) => {
-  return (
-    <section className="relative w-full bg-sand">
-      <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center bg-sand text-charcoal px-6 z-0 overflow-hidden">
-        {/* Vertical rotated label */}
-        <span className="absolute left-6 top-1/2 -translate-y-1/2 -rotate-90 origin-center text-xs font-lora text-charcoal/25 whitespace-nowrap">
-          {hall.subtitle}
-        </span>
-
-        {/* Номер зала */}
-        <div className="text-2xl font-lora mb-6 text-gold/80">
-          ( {hall.id} )
-        </div>
-
-        {/* TITLE-XL — второй по размеру на сайте */}
-        <h2
-          className="leading-[0.9] font-cormorant tracking-tight text-center text-charcoal"
-          style={{ fontSize: 'clamp(3.5rem, 8vw, 9rem)' }}
-        >
-          {hall.title}
+    <section className="bg-charcoal py-32 px-8 md:px-16 overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        className="max-w-7xl mx-auto mb-20 text-center"
+      >
+        <h2 className="font-cormorant text-white leading-none" style={{ fontSize: 'clamp(3.5rem, 7vw, 7rem)' }}>
+          Почему<br />
+          <span className="font-accent font-light text-gold/80">выбирают нас</span>
         </h2>
+      </motion.div>
 
-        {/* Subtitle — Great Vibes accent */}
-        <p
-          className="font-accent text-charcoal/55 mt-6 font-light"
-          style={{ fontSize: 'clamp(1.8rem, 4vw, 4rem)' }}
-        >
-          {hall.subtitle}
-        </p>
-      </div>
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-px bg-white/10"
+      >
+        {/* Плашка 1 — широкая, большая */}
+        <motion.div variants={itemVariants} className="relative col-span-2 lg:col-span-1 bg-charcoal px-10 py-14 flex flex-col justify-end min-h-[320px] group overflow-hidden cursor-default">
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <span className="font-cormorant text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(6rem, 10vw, 11rem)' }}>10+</span>
+          <span className="font-cormorant text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.5rem)' }}>лет опыта</span>
+          <span className="font-lora text-white mt-3" style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)' }}>в организации мероприятий любого формата</span>
+          <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
+        </motion.div>
 
-      {hall.images.map((img: string, idx: number) => (
-        <div
-          key={idx}
-          className="sticky top-0 w-full h-screen relative shadow-[0_-20px_60px_rgba(0,0,0,0.18)] z-10 overflow-hidden will-change-transform"
-        >
-          <img
-            src={img}
-            loading="lazy"
-            className="w-full h-full object-cover"
-            alt={`${hall.title} ${idx + 1}`}
-          />
-          <div className="absolute inset-0 bg-charcoal/10" />
-          <div className="absolute bottom-12 right-12 text-white font-lora text-xl drop-shadow-md mix-blend-difference">
-            {idx + 1} / {hall.images.length}
-          </div>
-        </div>
-      ))}
+        {/* Плашка 2 */}
+        <motion.div variants={itemVariants} className="relative bg-charcoal px-10 py-14 flex flex-col justify-end min-h-[320px] group overflow-hidden cursor-default">
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <span className="font-cormorant text-gold leading-none group-hover:text-white transition-colors duration-500 whitespace-nowrap" style={{ fontSize: 'clamp(5rem, 8vw, 9rem)' }}>2 000+</span>
+          <span className="font-cormorant text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.5rem)' }}>мероприятий</span>
+          <span className="font-lora text-white mt-3" style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)' }}>свадьбы, юбилеи, корпоративы, семинары и не только</span>
+          <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
+        </motion.div>
+
+        {/* Плашка 3 */}
+        <motion.div variants={itemVariants} className="relative bg-charcoal px-10 py-14 flex flex-col justify-end min-h-[320px] group overflow-hidden cursor-default">
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <span className="font-cormorant text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(5rem, 8vw, 9rem)' }}>100+</span>
+          <span className="font-cormorant text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.5rem)' }}>отзывов 5★</span>
+          <span className="font-lora text-white mt-3" style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)' }}>на Яндексе от довольных гостей и пар</span>
+          <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
+        </motion.div>
+
+        {/* Плашка 4 — широкая, текстовая */}
+        <motion.div variants={itemVariants} className="relative col-span-2 bg-charcoal px-10 py-14 flex flex-col justify-end group overflow-hidden cursor-default">
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <span className="font-cormorant text-white leading-tight group-hover:text-gold transition-colors duration-500" style={{ fontSize: 'clamp(2.5rem, 5vw, 5.5rem)' }}>Любой формат</span>
+          <span className="font-lora text-white mt-4 max-w-2xl" style={{ fontSize: 'clamp(1rem, 1.4vw, 1.3rem)' }}>Свадьбы, юбилеи, корпоративы, семинары, презентации, дни рождения — всё зависит от вашей фантазии</span>
+          <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
+        </motion.div>
+
+        {/* Плашка 5 */}
+        <motion.div variants={itemVariants} className="relative bg-charcoal px-10 py-14 flex flex-col justify-end group overflow-hidden cursor-default">
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <span className="font-cormorant text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(5rem, 8vw, 9rem)' }}>40+</span>
+          <span className="font-cormorant text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.5rem)' }}>подрядчиков</span>
+          <span className="font-lora text-white mt-3" style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)' }}>проверенные партнёры на ваш выбор</span>
+          <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
+        </motion.div>
+
+        {/* Плашка 6 */}
+        <motion.div variants={itemVariants} className="relative col-span-2 lg:col-span-3 bg-charcoal px-10 py-14 flex flex-col justify-end group overflow-hidden cursor-default">
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <span className="font-cormorant text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(5rem, 8vw, 9rem)' }}>10+</span>
+          <span className="font-cormorant text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.5rem)' }}>лет в команде</span>
+          <span className="font-lora text-white mt-3 max-w-lg" style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)' }}>профессиональные официанты и повара с многолетним опытом</span>
+          <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
 
-const VenueHalls = () => (
-  <div className="w-full">
-    {HALLS.map((hall) => (
-      <HallSection key={hall.id} hall={hall} />
-    ))}
-  </div>
-);
+
+
 
 const AboutRiverLoft = () => {
   const sectionRef = useRef(null);
@@ -335,7 +348,7 @@ const AboutRiverLoft = () => {
       style={{ minHeight: '220vh' }}
     >
       {/* Sticky viewport — everything is pinned here */}
-      <div className="sticky top-0 h-screen overflow-hidden">
+      <div className="sticky top-0 h-screen overflow-hidden bg-charcoal z-10">
 
         {/* Text — stays white, church physically covers it */}
         <div className="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-12 lg:px-24 text-center z-10 pointer-events-none">
@@ -409,18 +422,19 @@ const AboutRiverLoft = () => {
 };
 
 const AboutRiverLoftCTA = () => (
-  <section className="bg-charcoal flex flex-col items-center text-center px-6 pb-0 pt-0 -mt-32 relative z-30">
+  <section className="bg-charcoal flex flex-col items-center text-center px-6 pt-16 pb-24">
     <p
-      className="font-lora text-white mb-8 max-w-xl"
-      style={{ fontSize: 'clamp(1rem, 1.4vw, 1.25rem)' }}
+      className="font-lora text-white/70 mb-10 max-w-md"
+      style={{ fontSize: 'clamp(1rem, 1.4vw, 1.2rem)' }}
     >
       Осмотрите площадку для ваших событий прямо сейчас в виртуальном 3D-туре
     </p>
     <motion.a
       href="#"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className="inline-flex items-center text-white border border-white/40 px-8 py-4 rounded-full font-lora text-lg transition-all duration-300 hover:bg-white hover:text-charcoal cursor-pointer"
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
+      className="inline-flex items-center text-white border border-white/30 px-10 py-4 rounded-full font-lora transition-all duration-300 hover:bg-white hover:text-charcoal cursor-pointer"
+      style={{ fontSize: 'clamp(0.95rem, 1.3vw, 1.1rem)' }}
     >
       Смотреть 3D-тур
     </motion.a>
@@ -966,18 +980,81 @@ const Footer = () => {
   );
 };
 
+const TravelSection = () => (
+  <section className="px-8 md:px-16 py-32" style={{ background: '#C9A86C', borderRadius: '50% 50% 0 0 / 120px 120px 0 0' }}>
+    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+
+      {/* Левая колонка — заголовок и контакты */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <h2
+          className="font-cormorant text-charcoal leading-[1.05] mb-10"
+          style={{ fontSize: 'clamp(3rem, 5.5vw, 6rem)' }}
+        >
+          Свадебное<br />
+          <span className="font-accent font-light text-charcoal/70">путешествие</span>
+        </h2>
+
+        <div className="flex flex-col gap-3 font-lora">
+          <a
+            href="tel:+79636491852"
+            className="text-charcoal/70 hover:text-charcoal transition-colors duration-200"
+            style={{ fontSize: 'clamp(1rem, 1.3vw, 1.15rem)' }}
+          >
+            +7 963-649-18-52
+          </a>
+          <a
+            href="https://emojitours.ru"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-charcoal/60 hover:text-charcoal transition-colors duration-200 underline underline-offset-4"
+            style={{ fontSize: 'clamp(1rem, 1.3vw, 1.15rem)' }}
+          >
+            emojitours.ru
+          </a>
+        </div>
+      </motion.div>
+
+      {/* Правая колонка — текст */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col gap-6 font-lora text-charcoal/75 leading-[1.75]"
+        style={{ fontSize: 'clamp(1rem, 1.35vw, 1.2rem)' }}
+      >
+        <p>
+          Каждый гость для нас является особенным. Мы хотим, чтобы и после свадебного торжества праздник для Вас продолжился незабываемым свадебным путешествием.
+        </p>
+        <p>
+          Туристическое агентство Emoji Tours — это место, где Вы сможете получить море незабываемых впечатлений и ощутить надёжность, заботу и новые впечатления от путешествия мечты.
+        </p>
+        <p className="text-charcoal/90">
+          Наша задача — чтобы ваше путешествие стало индивидуальной историей, которую вы будете пересказывать годами. Каждая деталь продумана для вашего вдохновения.
+        </p>
+      </motion.div>
+
+    </div>
+  </section>
+);
+
 export default function App() {
   return (
     <div className="bg-sand text-charcoal selection:bg-stone selection:text-charcoal w-full min-h-screen">
       <Navbar />
       <Hero />
+      <VenueBar />
       <StatsSection />
-      <VenueHalls />
       <AboutRiverLoft />
       <AboutRiverLoftCTA />
-      <AdvantagesSection />
       <BookingSection />
       <Gallery />
+      <TravelSection />
       <Footer />
     </div>
   );
