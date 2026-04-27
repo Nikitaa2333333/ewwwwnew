@@ -4,9 +4,233 @@
  */
 
 import { AnimatePresence, motion, useScroll, useTransform } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 
-const Navbar = () => {
+const formatPhone = (raw: string): string => {
+  const digits = raw.replace(/\D/g, '').replace(/^(7|8)/, '');
+  let result = '+7';
+  if (digits.length === 0) return result;
+  result += ' (' + digits.slice(0, 3);
+  if (digits.length < 3) return result;
+  result += ') ' + digits.slice(3, 6);
+  if (digits.length < 6) return result;
+  result += '-' + digits.slice(6, 8);
+  if (digits.length < 8) return result;
+  result += '-' + digits.slice(8, 10);
+  return result;
+};
+
+const isPhoneComplete = (phone: string) =>
+  phone.replace(/\D/g, '').length === 11;
+
+const BookingModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+  const [name, setName] = useState('');
+  const [nameError, setNameError] = useState(false);
+  const [phone, setPhone] = useState('');
+  const [phoneError, setPhoneError] = useState(false);
+  const [note, setNote] = useState('');
+  const [sent, setSent] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [open, onClose]);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
+
+  const handleSubmit = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    const nameInvalid = name.trim().length === 0;
+    const phoneInvalid = !isPhoneComplete(phone);
+    if (nameInvalid) setNameError(true);
+    if (phoneInvalid) setPhoneError(true);
+    if (nameInvalid || phoneInvalid) return;
+    setSent(true);
+  };
+
+  const handleClose = () => {
+    onClose();
+    setTimeout(() => { setName(''); setNameError(false); setPhone(''); setPhoneError(false); setNote(''); setSent(false); }, 400);
+  };
+
+  const fieldClass =
+    'w-full bg-transparent border-b border-white/20 focus:border-gold focus:outline-none font-lora font-medium text-white placeholder:text-white/30 pb-2 transition-colors duration-300';
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-8"
+          onClick={handleClose}
+        >
+          <div className="absolute inset-0 bg-charcoal/80 backdrop-blur-sm" />
+
+          <motion.div
+            initial={{ opacity: 0, y: 36, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.98 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="relative bg-charcoal w-full max-w-lg px-10 py-12 md:px-12 md:py-12 overflow-hidden"
+            style={{  }}
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Закрыть */}
+            <button
+              onClick={handleClose}
+              aria-label="Закрыть"
+              className="absolute top-5 right-6 text-white/35 hover:text-white transition-colors duration-200"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                <line x1="5" y1="5" x2="19" y2="19" />
+                <line x1="19" y1="5" x2="5" y2="19" />
+              </svg>
+            </button>
+
+            <AnimatePresence mode="wait">
+              {sent ? (
+                <motion.div
+                  key="thanks"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex flex-col items-center text-center py-8"
+                >
+                  <span className="font-accent text-gold block mb-4" style={{ fontSize: 'clamp(2.30rem, 4.60vw, 3.45rem)' }}>
+                    Спасибо!
+                  </span>
+                  <p className="font-lora font-medium text-white/80" style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}>
+                    Мы свяжемся с вами в ближайшее время.
+                  </p>
+                </motion.div>
+              ) : (
+                <motion.div key="form" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+                  {/* Заголовок */}
+                  <div className="mb-10">
+                    <h2
+                      className="font-cormorant font-semibold text-white leading-none"
+                      style={{ fontSize: 'clamp(2.07rem, 3.80vw, 2.88rem)' }}
+                    >
+                      Забронировать
+                    </h2>
+                    <span
+                      className="font-accent text-gold block mt-1"
+                      style={{ fontSize: 'clamp(1.84rem, 3.40vw, 2.59rem)', lineHeight: 1 }}
+                    >
+                      дату
+                    </span>
+                  </div>
+
+                  <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Ваше имя"
+                        value={name}
+                        onChange={e => { setName(e.target.value); setNameError(false); }}
+                        className={`${fieldClass} ${nameError ? 'border-red-400 focus:border-red-400' : ''}`}
+                        style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}
+                      />
+                      {nameError && (
+                        <p className="font-lora text-red-400 mt-2" style={{ fontSize: '0.85rem' }}>
+                          Введите ваше имя
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <input
+                        type="tel"
+                        placeholder="+7 (___) ___-__-__"
+                        value={phone}
+                        onChange={e => {
+                          const formatted = formatPhone(e.target.value);
+                          setPhone(formatted);
+                          setPhoneError(false);
+                        }}
+                        onFocus={() => { if (!phone) setPhone('+7 ('); }}
+                        onBlur={() => { if (phone === '+7 (') setPhone(''); }}
+                        className={`${fieldClass} ${phoneError ? 'border-red-400 focus:border-red-400' : ''}`}
+                        style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}
+                      />
+                      {phoneError && (
+                        <p className="font-lora text-red-400 mt-2" style={{ fontSize: '0.85rem' }}>
+                          Введите корректный номер
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <textarea
+                        placeholder="Примечания (желаемый способ связи, дата, пожелания)"
+                        value={note}
+                        onChange={e => setNote(e.target.value)}
+                        rows={3}
+                        className={`${fieldClass} resize-none`}
+                        style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}
+                      />
+                    </div>
+
+                    {/* Подвал: соцсети + кнопка */}
+                    <div className="flex items-center justify-between pt-2">
+                      {/* Соцсети */}
+                      <div className="flex items-center gap-4">
+                        {/* Instagram */}
+                        <a href="#" aria-label="Instagram" className="text-white/45 hover:text-white transition-colors duration-200">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                            <circle cx="12" cy="12" r="4" />
+                            <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+                          </svg>
+                        </a>
+                        {/* VK */}
+                        <a href="#" aria-label="ВКонтакте" className="text-white/45 hover:text-white transition-colors duration-200">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 13.5h-1.7c-.64 0-.84-.51-1.99-1.67-1-.97-1.44-.97-1.69-.97-.34 0-.44.1-.44.58v1.52c0 .42-.13.67-1.22.67-1.8 0-3.8-1.09-5.2-3.13C4.13 10.12 3.7 8.1 3.7 7.67c0-.25.1-.48.58-.48h1.7c.43 0 .59.19.75.65.83 2.38 2.21 4.47 2.78 4.47.21 0 .31-.1.31-.64V9.62c-.07-1.15-.67-1.25-.67-1.66 0-.2.16-.4.42-.4h2.68c.36 0 .49.19.49.61v3.26c0 .36.16.49.26.49.21 0 .39-.13.78-.52 1.21-1.35 2.07-3.43 2.07-3.43.11-.25.31-.48.74-.48h1.7c.51 0 .62.26.51.61-.21.98-2.28 3.91-2.28 3.91-.18.29-.24.42 0 .74.17.23.74.71 1.12 1.14.7.77 1.23 1.41 1.37 1.86.16.44-.07.67-.51.67z" />
+                          </svg>
+                        </a>
+                        {/* WhatsApp */}
+                        <a href="#" aria-label="WhatsApp" className="text-white/45 hover:text-white transition-colors duration-200">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                          </svg>
+                        </a>
+                        {/* Telegram */}
+                        <a href="#" aria-label="Telegram" className="text-white/45 hover:text-white transition-colors duration-200">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                          </svg>
+                        </a>
+                      </div>
+
+                      {/* Кнопка отправки */}
+                      <button
+                        type="submit"
+                        className="font-lora font-medium text-white border border-white/30 rounded-full px-8 py-3 hover:bg-white hover:text-charcoal transition-all duration-300 cursor-pointer whitespace-nowrap"
+                        style={{ fontSize: 'clamp(1rem, 1.38vw, 1.15rem)' }}
+                      >
+                        Отправить заявку
+                      </button>
+                    </div>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const Navbar = ({ onBook }: { onBook: () => void }) => {
   const menuItems = [
     { label: 'О нас', href: '#' },
     { label: 'Залы', href: '#' },
@@ -20,7 +244,7 @@ const Navbar = () => {
       <div className="grid grid-cols-3 items-center px-8 md:px-12 py-4">
 
         {/* Лого — слева */}
-        <div className="font-cormorant text-white text-xl md:text-2xl font-medium">
+        <div className="font-cormorant font-semibold text-white text-xl md:text-2xl font-medium">
           Ривер Лофт
         </div>
 
@@ -30,7 +254,7 @@ const Navbar = () => {
             <a
               key={item.label}
               href={item.href}
-              className="font-lora text-[14px] text-white/75 hover:text-white transition-colors duration-200 relative group"
+              className="font-lora font-medium text-[14px] text-white hover:text-white transition-colors duration-200 relative group"
             >
               {item.label}
               <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
@@ -42,40 +266,40 @@ const Navbar = () => {
         <div className="hidden md:flex items-center justify-end gap-5">
 
           {/* Телефон */}
-          <a href="tel:+74991234567" className="font-lora text-[13px] text-white/60 hover:text-white transition-colors duration-200 whitespace-nowrap">
+          <a href="tel:+74991234567" className="font-lora font-medium text-[13px] text-white/90 hover:text-white transition-colors duration-200 whitespace-nowrap">
             +7 (499) 123-45-67
           </a>
 
           {/* Соцсети */}
           <div className="flex items-center gap-3">
             {/* Instagram */}
-            <a href="#" aria-label="Instagram" className="text-white/50 hover:text-white transition-colors duration-200">
+            <a href="#" aria-label="Instagram" className="text-white/90 hover:text-white transition-colors duration-200">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                <circle cx="12" cy="12" r="4"/>
-                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
               </svg>
             </a>
             {/* VK */}
-            <a href="#" aria-label="ВКонтакте" className="text-white/50 hover:text-white transition-colors duration-200">
+            <a href="#" aria-label="ВКонтакте" className="text-white/90 hover:text-white transition-colors duration-200">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 13.5h-1.7c-.64 0-.84-.51-1.99-1.67-1-.97-1.44-.97-1.69-.97-.34 0-.44.1-.44.58v1.52c0 .42-.13.67-1.22.67-1.8 0-3.8-1.09-5.2-3.13C4.13 10.12 3.7 8.1 3.7 7.67c0-.25.1-.48.58-.48h1.7c.43 0 .59.19.75.65.83 2.38 2.21 4.47 2.78 4.47.21 0 .31-.1.31-.64V9.62c-.07-1.15-.67-1.25-.67-1.66 0-.2.16-.4.42-.4h2.68c.36 0 .49.19.49.61v3.26c0 .36.16.49.26.49.21 0 .39-.13.78-.52 1.21-1.35 2.07-3.43 2.07-3.43.11-.25.31-.48.74-.48h1.7c.51 0 .62.26.51.61-.21.98-2.28 3.91-2.28 3.91-.18.29-.24.42 0 .74.17.23.74.71 1.12 1.14.7.77 1.23 1.41 1.37 1.86.16.44-.07.67-.51.67z"/>
+                <path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 13.5h-1.7c-.64 0-.84-.51-1.99-1.67-1-.97-1.44-.97-1.69-.97-.34 0-.44.1-.44.58v1.52c0 .42-.13.67-1.22.67-1.8 0-3.8-1.09-5.2-3.13C4.13 10.12 3.7 8.1 3.7 7.67c0-.25.1-.48.58-.48h1.7c.43 0 .59.19.75.65.83 2.38 2.21 4.47 2.78 4.47.21 0 .31-.1.31-.64V9.62c-.07-1.15-.67-1.25-.67-1.66 0-.2.16-.4.42-.4h2.68c.36 0 .49.19.49.61v3.26c0 .36.16.49.26.49.21 0 .39-.13.78-.52 1.21-1.35 2.07-3.43 2.07-3.43.11-.25.31-.48.74-.48h1.7c.51 0 .62.26.51.61-.21.98-2.28 3.91-2.28 3.91-.18.29-.24.42 0 .74.17.23.74.71 1.12 1.14.7.77 1.23 1.41 1.37 1.86.16.44-.07.67-.51.67z" />
               </svg>
             </a>
           </div>
 
           {/* CTA кнопка */}
-          <a
-            href="#"
-            className="font-lora text-[13px] text-white border border-white/40 hover:bg-white hover:text-charcoal transition-all duration-300 px-5 py-2 rounded-full whitespace-nowrap"
+          <button
+            onClick={onBook}
+            className="font-lora font-medium text-[13px] text-white border border-white/40 hover:bg-white hover:text-charcoal transition-all duration-300 px-5 py-2 rounded-full whitespace-nowrap cursor-pointer"
           >
             Забронировать
-          </a>
+          </button>
         </div>
 
         {/* Мобильный телефон */}
         <div className="md:hidden flex justify-end">
-          <a href="tel:+74991234567" className="font-lora text-[12px] text-white/70">
+          <a href="tel:+74991234567" className="font-lora font-medium text-[12px] text-white/70">
             +7 (499) 123-45-67
           </a>
         </div>
@@ -90,7 +314,6 @@ const FACTS = [
   { num: '100+', label: 'отзывов 5★', desc: 'на Яндексе от довольных гостей и пар' },
   { num: null, label: 'Любой формат', desc: 'Свадьбы, юбилеи, корпоративы, семинары, презентации, дни рождения — всё зависит от вашей фантазии' },
   { num: '40+', label: 'подрядчиков', desc: 'проверенные партнёры на ваш выбор' },
-  { num: '10+', label: 'лет в команде', desc: 'профессиональные официанты и повара с опытом' },
 ];
 
 const containerVariants = {
@@ -103,14 +326,20 @@ const itemVariants = {
 };
 
 const HERO_SLIDES = [
-  '/IMG_20260414_202514.webp',
-  '/IMG_20260414_202543.webp',
-  '/IMG_20260414_202551.webp',
-  '/IMG_20260414_202558.webp',
-  '/IMG_20260414_202525.webp',
+  '/15-43-14.webp',
+  '/wed-a-140.webp',
+  '/wdfl357.webp',
+  '/wdfl593.webp',
+  '/wed-a-53.webp',
+  '/20-14-11.webp',
+  '/photo-443.webp',
 ];
 
-const Hero = () => {
+const HERO_SLIDE_POSITION: Record<string, string> = {
+  '/wed-a-53.webp': 'center 30%',
+};
+
+const Hero = ({ onBook }: { onBook: () => void }) => {
   const containerRef = useRef(null);
   const [current, setCurrent] = useState(0);
   const { scrollYProgress } = useScroll({
@@ -124,7 +353,7 @@ const Hero = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent(prev => (prev + 1) % HERO_SLIDES.length);
-    }, 4000);
+    }, 5500);
     return () => clearInterval(timer);
   }, []);
 
@@ -132,17 +361,24 @@ const Hero = () => {
     <section ref={containerRef} className="relative w-full h-screen overflow-hidden bg-charcoal" style={{ minHeight: '100svh' }}>
       {/* Parallax background */}
       <motion.div style={{ y, opacity }} className="absolute inset-0 w-full h-full">
-        <AnimatePresence mode="crossfade">
+        {/* Preload all slides */}
+        <div className="sr-only" aria-hidden="true">
+          {HERO_SLIDES.map((src) => <img key={src} src={src} alt="" />)}
+        </div>
+        <AnimatePresence>
           <motion.img
             key={HERO_SLIDES[current]}
             src={HERO_SLIDES[current]}
             alt=""
-            loading="lazy"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.93 }}
+            initial={{ opacity: 0, scale: 1.06 }}
+            animate={{ opacity: 0.95, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: 'easeInOut' }}
+            transition={{
+              opacity: { duration: 2, ease: 'easeInOut' },
+              scale: { duration: 6, ease: [0.16, 1, 0.3, 1] },
+            }}
             className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: HERO_SLIDE_POSITION[HERO_SLIDES[current]] ?? 'center' }}
           />
         </AnimatePresence>
         {/* Bottom glow — keeps photo vivid, only darkens where text lives */}
@@ -161,9 +397,9 @@ const Hero = () => {
           className="flex flex-col items-start"
         >
           <h1
-            className="leading-[0.88] font-cormorant tracking-tight"
+            className="leading-[0.88] font-cormorant font-semibold tracking-tight"
             style={{
-              fontSize: 'clamp(3.2rem, 6.5vw, 8rem)',
+              fontSize: 'clamp(3.68rem, 7.47vw, 9.20rem)',
               background: 'linear-gradient(145deg, #ffffff 0%, #f0e0c8 45%, #C9A86C 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -177,7 +413,7 @@ const Hero = () => {
           <span
             className="font-accent block mt-2"
             style={{
-              fontSize: 'clamp(3rem, 7vw, 9.5rem)',
+              fontSize: 'clamp(3.45rem, 8.05vw, 10.92rem)',
               color: 'rgba(232, 208, 168, 0.95)',
               textShadow: '0 2px 32px rgba(0,0,0,0.5)',
               lineHeight: 1,
@@ -192,8 +428,8 @@ const Hero = () => {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="font-lora text-white/85 mt-6 max-w-lg leading-relaxed text-left"
-          style={{ fontSize: 'clamp(1.05rem, 1.5vw, 1.35rem)' }}
+          className="font-lora font-medium text-white mt-6 max-w-lg leading-relaxed text-left"
+          style={{ fontSize: 'clamp(1.21rem, 1.72vw, 1.55rem)' }}
         >
           Потрясающее место для вашего праздника с огромными панорамными окнами
           {' '}и видом на Церковь Зна́мения Пресвятой Богоро́дицы
@@ -206,17 +442,17 @@ const Hero = () => {
           transition={{ delay: 1.25, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="mt-10 flex flex-wrap gap-4 items-center"
         >
-          <a
-            href="#"
-            className="font-lora text-white border border-white/55 px-10 py-4 rounded-full hover:bg-white hover:text-charcoal transition-all duration-300 cursor-pointer"
-            style={{ fontSize: 'clamp(0.9rem, 1.2vw, 1.05rem)' }}
+          <button
+            onClick={onBook}
+            className="font-lora font-medium text-white border border-white/55 px-10 py-4 rounded-full hover:bg-white hover:text-charcoal transition-all duration-300 cursor-pointer"
+            style={{ fontSize: 'clamp(1.03rem, 1.38vw, 1.21rem)' }}
           >
             Забронировать дату
-          </a>
+          </button>
           <a
             href="#"
-            className="font-lora text-white/60 px-5 py-4 hover:text-white transition-colors duration-250 cursor-pointer"
-            style={{ fontSize: 'clamp(0.9rem, 1.2vw, 1.05rem)' }}
+            className="font-lora font-medium text-white/90 px-5 py-4 hover:text-white transition-colors duration-250 cursor-pointer"
+            style={{ fontSize: 'clamp(1.03rem, 1.38vw, 1.21rem)' }}
           >
             Смотреть площадку
           </a>
@@ -235,10 +471,10 @@ const VenueBar = () => (
         { value: 'до 150', unit: '', label: 'гостей на фуршет' },
       ].map((item, i) => (
         <div key={i} className="flex items-baseline gap-2 px-10 py-3 sm:py-0">
-          <span className="font-cormorant text-gold leading-none" style={{ fontSize: 'clamp(2rem, 3.5vw, 3rem)' }}>
+          <span className="font-cormorant font-semibold text-gold leading-none" style={{ fontSize: 'clamp(2.30rem, 4.02vw, 3.45rem)' }}>
             {item.value}{item.unit}
           </span>
-          <span className="font-lora text-white" style={{ fontSize: 'clamp(0.85rem, 1.1vw, 1rem)' }}>
+          <span className="font-lora font-medium text-white" style={{ fontSize: 'clamp(0.98rem, 1.26vw, 1.15rem)' }}>
             {item.label}
           </span>
         </div>
@@ -257,7 +493,7 @@ const StatsSection = () => {
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         className="max-w-7xl mx-auto mb-20 text-center"
       >
-        <h2 className="font-cormorant text-white leading-none" style={{ fontSize: 'clamp(3.5rem, 7vw, 7rem)' }}>
+        <h2 className="font-cormorant font-semibold text-white leading-none" style={{ fontSize: 'clamp(4.02rem, 8.05vw, 8.05rem)' }}>
           Почему<br />
           <span className="font-accent font-light text-gold/80">выбирают нас</span>
         </h2>
@@ -273,55 +509,47 @@ const StatsSection = () => {
         {/* Плашка 1 — широкая, большая */}
         <motion.div variants={itemVariants} className="relative col-span-2 lg:col-span-1 bg-charcoal px-10 py-14 flex flex-col justify-end min-h-[320px] group overflow-hidden cursor-default">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <span className="font-cormorant text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(6rem, 10vw, 11rem)' }}>10+</span>
-          <span className="font-cormorant text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.5rem)' }}>лет опыта</span>
-          <span className="font-lora text-white mt-3" style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)' }}>в организации мероприятий любого формата</span>
+          <span className="font-cormorant font-semibold text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(6.90rem, 11.50vw, 12.65rem)' }}>10+</span>
+          <span className="font-cormorant font-semibold text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.84rem, 2.88vw, 2.88rem)' }}>лет опыта</span>
+          <span className="font-lora font-medium text-white mt-3" style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.38rem)' }}>в организации мероприятий любого формата</span>
           <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
         </motion.div>
 
         {/* Плашка 2 */}
         <motion.div variants={itemVariants} className="relative bg-charcoal px-10 py-14 flex flex-col justify-end min-h-[320px] group overflow-hidden cursor-default">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <span className="font-cormorant text-gold leading-none group-hover:text-white transition-colors duration-500 whitespace-nowrap" style={{ fontSize: 'clamp(5rem, 8vw, 9rem)' }}>2 000+</span>
-          <span className="font-cormorant text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.5rem)' }}>мероприятий</span>
-          <span className="font-lora text-white mt-3" style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)' }}>свадьбы, юбилеи, корпоративы, семинары и не только</span>
+          <span className="font-cormorant font-semibold text-gold leading-none group-hover:text-white transition-colors duration-500 whitespace-nowrap" style={{ fontSize: 'clamp(5.75rem, 9.20vw, 10.35rem)' }}>2 000+</span>
+          <span className="font-cormorant font-semibold text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.84rem, 2.88vw, 2.88rem)' }}>мероприятий</span>
+          <span className="font-lora font-medium text-white mt-3" style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.38rem)' }}>свадьбы, юбилеи, корпоративы, семинары и не только</span>
           <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
         </motion.div>
 
         {/* Плашка 3 */}
         <motion.div variants={itemVariants} className="relative bg-charcoal px-10 py-14 flex flex-col justify-end min-h-[320px] group overflow-hidden cursor-default">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <span className="font-cormorant text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(5rem, 8vw, 9rem)' }}>100+</span>
-          <span className="font-cormorant text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.5rem)' }}>отзывов 5★</span>
-          <span className="font-lora text-white mt-3" style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)' }}>на Яндексе от довольных гостей и пар</span>
+          <span className="font-cormorant font-semibold text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(5.75rem, 9.20vw, 10.35rem)' }}>100+</span>
+          <span className="font-cormorant font-semibold text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.84rem, 2.88vw, 2.88rem)' }}>отзывов 5★</span>
+          <span className="font-lora font-medium text-white mt-3" style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.38rem)' }}>на Яндексе от довольных гостей и пар</span>
           <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
         </motion.div>
 
         {/* Плашка 4 — широкая, текстовая */}
         <motion.div variants={itemVariants} className="relative col-span-2 bg-charcoal px-10 py-14 flex flex-col justify-end group overflow-hidden cursor-default">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <span className="font-cormorant text-white leading-tight group-hover:text-gold transition-colors duration-500" style={{ fontSize: 'clamp(2.5rem, 5vw, 5.5rem)' }}>Любой формат</span>
-          <span className="font-lora text-white mt-4 max-w-2xl" style={{ fontSize: 'clamp(1rem, 1.4vw, 1.3rem)' }}>Свадьбы, юбилеи, корпоративы, семинары, презентации, дни рождения — всё зависит от вашей фантазии</span>
+          <span className="font-cormorant font-semibold text-white leading-tight group-hover:text-gold transition-colors duration-500" style={{ fontSize: 'clamp(2.88rem, 5.75vw, 6.32rem)' }}>Любой формат</span>
+          <span className="font-lora font-medium text-white mt-4 max-w-2xl" style={{ fontSize: 'clamp(1.15rem, 1.61vw, 1.49rem)' }}>Свадьбы, юбилеи, корпоративы, семинары, презентации, дни рождения — всё зависит от вашей фантазии</span>
           <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
         </motion.div>
 
         {/* Плашка 5 */}
         <motion.div variants={itemVariants} className="relative bg-charcoal px-10 py-14 flex flex-col justify-end group overflow-hidden cursor-default">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <span className="font-cormorant text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(5rem, 8vw, 9rem)' }}>40+</span>
-          <span className="font-cormorant text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.5rem)' }}>подрядчиков</span>
-          <span className="font-lora text-white mt-3" style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)' }}>проверенные партнёры на ваш выбор</span>
+          <span className="font-cormorant font-semibold text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(5.75rem, 9.20vw, 10.35rem)' }}>40+</span>
+          <span className="font-cormorant font-semibold text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.84rem, 2.88vw, 2.88rem)' }}>подрядчиков</span>
+          <span className="font-lora font-medium text-white mt-3" style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.38rem)' }}>проверенные партнёры на ваш выбор</span>
           <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
         </motion.div>
 
-        {/* Плашка 6 */}
-        <motion.div variants={itemVariants} className="relative col-span-2 lg:col-span-3 bg-charcoal px-10 py-14 flex flex-col justify-end group overflow-hidden cursor-default">
-          <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <span className="font-cormorant text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(5rem, 8vw, 9rem)' }}>10+</span>
-          <span className="font-cormorant text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.5rem)' }}>лет в команде</span>
-          <span className="font-lora text-white mt-3 max-w-lg" style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)' }}>профессиональные официанты и повара с многолетним опытом</span>
-          <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
-        </motion.div>
       </motion.div>
     </section>
   );
@@ -338,7 +566,7 @@ const AboutRiverLoft = () => {
   });
 
   // Church rises from below, covers text physically (no fake opacity fade on text)
-  const churchY = useTransform(scrollYProgress, [0, 1], ['100vh', '-10vh']);
+  const churchY = useTransform(scrollYProgress, [0, 1], ['100vh', '0vh']);
   const churchScale = useTransform(scrollYProgress, [0, 1], [0.92, 1.05]);
 
   return (
@@ -361,22 +589,22 @@ const AboutRiverLoft = () => {
             className="max-w-6xl mx-auto flex flex-col items-center"
           >
             <h2
-              className="font-cormorant leading-[1.05] tracking-tight mb-16 text-white"
-              style={{ fontSize: 'clamp(3rem, 6vw, 6rem)' }}
+              className="font-cormorant font-semibold leading-[1.05] tracking-tight mb-16 text-white"
+              style={{ fontSize: 'clamp(3.45rem, 6.90vw, 6.90rem)' }}
             >
               Светлый лофт
               <br />
               <span
-                className="font-accent text-white/80 font-light block mt-3"
-                style={{ fontSize: 'clamp(2.5rem, 5.5vw, 5.5rem)' }}
+                className="font-accent text-white font-light block mt-3"
+                style={{ fontSize: 'clamp(2.88rem, 6.32vw, 6.32rem)' }}
               >
-                в парке Дубровицы
+                рядом с парком Дубровицы
               </span>
             </h2>
 
             <div
-              className="flex flex-col md:flex-row gap-8 md:gap-16 text-left max-w-5xl font-lora text-white leading-[1.7] mb-16"
-              style={{ fontSize: 'clamp(1.1rem, 1.6vw, 1.375rem)' }}
+              className="flex flex-col md:flex-row gap-8 md:gap-16 text-left max-w-5xl font-lora font-medium text-white leading-[1.7] mb-16"
+              style={{ fontSize: 'clamp(1.26rem, 1.84vw, 1.58rem)' }}
             >
               <p className="flex-1">
                 Ривер Лофт – это идеальное место для отдыха вдали от городской суеты. Пространство для Ваших событий любого формата в живописном и энергетически сильном месте слияния двух рек Пахры и Десны.
@@ -391,27 +619,13 @@ const AboutRiverLoft = () => {
 
         {/* Church — rises from below, overlaps text, z-20 */}
         <motion.div
-          style={{ y: churchY, scale: churchScale }}
+          style={{ y: churchY, scale: churchScale, willChange: 'transform' }}
           className="absolute inset-x-0 bottom-0 z-20 origin-bottom"
         >
           <img
             src="/church-dubrovitsy.png"
             alt="Церковь Знамение в Дубровицах"
             className="w-full h-auto block"
-          />
-          {/* Bottom gradient */}
-          <div
-            className="absolute inset-x-0 bottom-0 pointer-events-none"
-            style={{ height: '38%', background: 'linear-gradient(to top, #191919 0%, #191919 18%, transparent 100%)' }}
-          />
-          {/* Side fades */}
-          <div
-            className="absolute inset-y-0 left-0 pointer-events-none w-[8%]"
-            style={{ background: 'linear-gradient(to right, #191919, transparent)' }}
-          />
-          <div
-            className="absolute inset-y-0 right-0 pointer-events-none w-[8%]"
-            style={{ background: 'linear-gradient(to left, #191919, transparent)' }}
           />
         </motion.div>
 
@@ -421,25 +635,6 @@ const AboutRiverLoft = () => {
   );
 };
 
-const AboutRiverLoftCTA = () => (
-  <section className="bg-charcoal flex flex-col items-center text-center px-6 pt-16 pb-24">
-    <p
-      className="font-lora text-white/70 mb-10 max-w-md"
-      style={{ fontSize: 'clamp(1rem, 1.4vw, 1.2rem)' }}
-    >
-      Осмотрите площадку для ваших событий прямо сейчас в виртуальном 3D-туре
-    </p>
-    <motion.a
-      href="#"
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
-      className="inline-flex items-center text-white border border-white/30 px-10 py-4 rounded-full font-lora transition-all duration-300 hover:bg-white hover:text-charcoal cursor-pointer"
-      style={{ fontSize: 'clamp(0.95rem, 1.3vw, 1.1rem)' }}
-    >
-      Смотреть 3D-тур
-    </motion.a>
-  </section>
-);
 
 const ADVANTAGES = [
   {
@@ -470,23 +665,23 @@ const EditorialAdvantage = ({ title, desc, index }: any) => {
       className="group flex items-start gap-6 md:gap-12 py-10 border-t border-white/10 cursor-default"
     >
       {/* Номер */}
-      <span className="font-cormorant text-2xl text-gold/60 font-light w-10 flex-shrink-0 pt-1 transition-colors duration-500 group-hover:text-gold">
+      <span className="font-cormorant font-semibold text-2xl text-gold/60 font-light w-10 flex-shrink-0 pt-1 transition-colors duration-500 group-hover:text-gold">
         {String(index + 1).padStart(2, '0')}
       </span>
 
       <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-16 flex-1">
         {/* TITLE-M — заголовок преимущества */}
         <h3
-          className="font-cormorant text-white flex-shrink-0 md:w-72 leading-tight transition-colors duration-500 group-hover:text-gold"
-          style={{ fontSize: 'clamp(2rem, 3.5vw, 3.5rem)' }}
+          className="font-cormorant font-semibold text-white flex-shrink-0 md:w-72 leading-tight transition-colors duration-500 group-hover:text-gold"
+          style={{ fontSize: 'clamp(2.30rem, 4.02vw, 4.02rem)' }}
         >
           {title}
         </h3>
 
         {/* Body — крупный, прямой, хорошо читается */}
         <p
-          className="font-lora text-white/80 leading-[1.7] transition-colors duration-500 group-hover:text-gold/75"
-          style={{ fontSize: 'clamp(1.1rem, 1.5vw, 1.375rem)' }}
+          className="font-lora font-medium text-white leading-[1.7] transition-colors duration-500 group-hover:text-gold/75"
+          style={{ fontSize: 'clamp(1.26rem, 1.72vw, 1.58rem)' }}
         >
           {desc}
         </p>
@@ -518,18 +713,18 @@ const AdvantagesSection = () => {
         >
           {/* TITLE-L */}
           <h2
-            className="font-cormorant text-white leading-[1.05]"
-            style={{ fontSize: 'clamp(3rem, 6vw, 6rem)' }}
+            className="font-cormorant font-semibold text-white leading-[1.05]"
+            style={{ fontSize: 'clamp(3.45rem, 6.90vw, 6.90rem)' }}
           >
             Наши
             <br />
-            <span className="font-accent font-light text-white/75">преимущества</span>
+            <span className="font-accent font-light text-white">преимущества</span>
           </h2>
 
           {/* Подзаголовок — читаемый размер */}
           <p
-            className="font-lora text-white/80 max-w-sm md:text-right pb-1"
-            style={{ fontSize: 'clamp(1rem, 1.4vw, 1.25rem)' }}
+            className="font-lora font-medium text-white max-w-sm md:text-right pb-1"
+            style={{ fontSize: 'clamp(1.15rem, 1.61vw, 1.44rem)' }}
           >
             Идеальное мероприятие складывается из внимания к каждой детали.
           </p>
@@ -550,8 +745,8 @@ const AdvantagesSection = () => {
           className="mt-12 flex justify-end"
         >
           <span
-            className="font-accent text-white/50 -rotate-6 inline-block"
-            style={{ fontSize: 'clamp(1.5rem, 3vw, 3rem)' }}
+            className="font-accent text-white/90 -rotate-6 inline-block"
+            style={{ fontSize: 'clamp(1.72rem, 3.45vw, 3.45rem)' }}
           >
             С любовью, команда
           </span>
@@ -614,10 +809,146 @@ const EXTRA = [
   'Подбор свадебного путешествия',
 ];
 
-const BookingSection = () => {
+const ZonesSlider = () => {
+  const [active, setActive] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const zones = ZONES.filter(z => z.images.length > 0);
+
+  const allImages = useMemo(() => {
+    return zones.flatMap((z, zoneIndex) =>
+      z.images.map((src) => ({ src, zoneIndex, title: z.title }))
+    );
+  }, [zones]);
+
+  const scrollToZone = (zoneIndex: number) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    
+    const firstImageIndex = allImages.findIndex(img => img.zoneIndex === zoneIndex);
+    if (firstImageIndex !== -1) {
+      const card = el.children[firstImageIndex] as HTMLElement;
+      el.scrollTo({ left: card.offsetLeft, behavior: 'smooth' });
+    }
+  };
+
+  const onScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    
+    let closestIndex = 0;
+    let minDiff = Infinity;
+    
+    for (let i = 0; i < allImages.length; i++) {
+      const child = el.children[i] as HTMLElement;
+      if (!child) continue;
+      // Calculate distance from center of the image to the center of the scroll container
+      const childCenter = child.offsetLeft + child.offsetWidth / 2;
+      const scrollCenter = el.scrollLeft + el.offsetWidth / 2;
+      const diff = Math.abs(childCenter - scrollCenter);
+      
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIndex = i;
+      }
+    }
+    
+    const currentZoneIndex = allImages[closestIndex]?.zoneIndex ?? 0;
+    if (currentZoneIndex !== active) {
+      setActive(currentZoneIndex);
+    }
+  };
+
+  return (
+    <div className="mb-14">
+      {/* Заголовок */}
+      <h3
+        className="font-cormorant font-semibold text-charcoal leading-tight mb-10"
+        style={{ fontSize: 'clamp(1.84rem, 3.45vw, 2.88rem)' }}
+      >
+        Что входит в стоимость
+      </h3>
+
+      {/* Таймлайн-табы */}
+      <div className="relative mb-6">
+        <div className="flex">
+          {zones.map((zone, i) => (
+            <button
+              key={i}
+              onClick={() => scrollToZone(i)}
+              className="relative flex-1 text-left pt-1 pb-3 pr-4 transition-colors duration-200"
+            >
+              <span
+                className="block font-lora font-medium text-[11px] mb-1 transition-colors duration-200"
+                style={{ color: i === active ? '#C9A86C' : 'color-mix(in srgb, #191919 30%, transparent)' }}
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span
+                className="block font-cormorant font-semibold leading-tight transition-colors duration-200"
+                style={{
+                  fontSize: 'clamp(1.09rem, 2.07vw, 1.44rem)',
+                  color: i === active ? '#191919' : 'color-mix(in srgb, #191919 40%, transparent)',
+                }}
+              >
+                {zone.title}
+              </span>
+              <span className="absolute bottom-0 left-0 w-full h-px bg-charcoal/10" />
+              <motion.span
+                className="absolute bottom-0 left-0 h-px bg-gold"
+                animate={{ width: i === active ? '100%' : '0%' }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <style>{`.zones-scroll::-webkit-scrollbar{display:none}`}</style>
+      {/* Полоса карточек — нативный скролл */}
+      <div className="relative">
+        <div
+          ref={scrollRef}
+          onScroll={onScroll}
+          className="zones-scroll flex gap-4 overflow-x-auto"
+          style={{
+            scrollSnapType: 'x mandatory',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            marginRight: '-1.5rem',
+            paddingRight: '1.5rem',
+          }}
+        >
+          {allImages.map((img, i) => (
+            <div
+              key={i}
+              className="flex-none snap-start overflow-hidden aspect-[4/3] bg-charcoal/5"
+              style={{ width: 'calc(100vw - 3rem)', maxWidth: '380px' }}
+            >
+              <img
+                src={img.src}
+                loading="lazy"
+                alt={img.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
+        {/* Градиент справа */}
+        <div 
+          className="absolute top-0 bottom-0 w-24 pointer-events-none bg-gradient-to-l from-sand to-transparent" 
+          style={{ right: '-1.5rem' }} 
+        />
+      </div>
+    </div>
+  );
+};
+
+const BookingSection = ({ onBook }: { onBook: () => void }) => {
   const [day, setDay] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
+  const monthRef = useRef<HTMLInputElement>(null);
+  const yearRef = useRef<HTMLInputElement>(null);
 
   const isComplete = day !== '' && month !== '' && year.length === 4;
   const parsedDate = isComplete
@@ -641,9 +972,9 @@ const BookingSection = () => {
       return {
         label: 'Декабрь (15–30)',
         rows: [
-          { days: 'Пн. — Чт.', price: '80 000 ₽', match: dow >= 1 && dow <= 4 },
-          { days: 'Пт., Сб.',  price: '150 000 ₽', match: dow === 5 || dow === 6 },
-          { days: 'Вс.',       price: '100 000 ₽', match: dow === 0 },
+          { days: 'Пн. — Чт.', price: 80000, match: dow >= 1 && dow <= 4 },
+          { days: 'Пт., Сб.', price: 150000, match: dow === 5 || dow === 6 },
+          { days: 'Вс.', price: 100000, match: dow === 0 },
         ],
       };
     }
@@ -651,19 +982,19 @@ const BookingSection = () => {
       return {
         label: 'Июнь — Сентябрь, Декабрь (до 15.12)',
         rows: [
-          { days: 'Пн. — Чт.', price: '60 000 ₽',  match: dow >= 1 && dow <= 4 },
-          { days: 'Пт.',        price: '90 000 ₽',  match: dow === 5 },
-          { days: 'Сб.',        price: '100 000 ₽', match: dow === 6 },
-          { days: 'Вс.',        price: '80 000 ₽',  match: dow === 0 },
+          { days: 'Пн. — Чт.', price: 60000, match: dow >= 1 && dow <= 4 },
+          { days: 'Пт.', price: 90000, match: dow === 5 },
+          { days: 'Сб.', price: 100000, match: dow === 6 },
+          { days: 'Вс.', price: 80000, match: dow === 0 },
         ],
       };
     }
     return {
       label: 'Январь — Май, Октябрь, Ноябрь',
       rows: [
-        { days: 'Пн. — Чт.', price: '50 000 ₽', match: dow >= 1 && dow <= 4 },
-        { days: 'Пт., Сб.',  price: '80 000 ₽', match: dow === 5 || dow === 6 },
-        { days: 'Вс.',       price: '60 000 ₽', match: dow === 0 },
+        { days: 'Пн. — Чт.', price: 50000, match: dow >= 1 && dow <= 4 },
+        { days: 'Пт., Сб.', price: 80000, match: dow === 5 || dow === 6 },
+        { days: 'Вс.', price: 60000, match: dow === 0 },
       ],
     };
   };
@@ -671,7 +1002,7 @@ const BookingSection = () => {
   const tariff = isValid ? getRentalTariff(parsedDate!) : null;
 
   const inputClass =
-    'w-16 bg-transparent border-b-2 border-charcoal/20 focus:border-gold focus:outline-none text-center font-cormorant text-charcoal pb-1 transition-colors duration-200 placeholder:text-charcoal/25';
+    'w-16 md:w-24 bg-transparent border-b-2 border-charcoal/20 focus:border-gold focus:outline-none text-center font-cormorant font-semibold text-charcoal pb-1 transition-colors duration-200 placeholder:text-charcoal/25';
 
   return (
     <section className="py-32 px-6 lg:px-24 bg-sand text-charcoal flex flex-col justify-center items-center">
@@ -684,12 +1015,12 @@ const BookingSection = () => {
           className="text-center mb-20"
         >
           <h2
-            className="font-cormorant leading-[1.05] text-charcoal"
-            style={{ fontSize: 'clamp(3rem, 6vw, 6rem)' }}
+            className="font-cormorant font-semibold leading-[1.05] text-charcoal"
+            style={{ fontSize: 'clamp(3.45rem, 6.90vw, 6.90rem)' }}
           >
             Условия
             <br />
-            <span className="font-accent font-light text-charcoal/45">бронирования</span>
+            <span className="font-accent font-light text-charcoal">бронирования</span>
           </h2>
         </motion.div>
 
@@ -701,32 +1032,55 @@ const BookingSection = () => {
           className="flex flex-col items-center"
         >
           <p
-            className="font-lora font-medium text-charcoal/60 mb-12 text-center"
-            style={{ fontSize: 'clamp(1rem, 1.4vw, 1.25rem)' }}
+            className="font-lora font-medium text-charcoal mb-12 text-center"
+            style={{ fontSize: 'clamp(1.15rem, 1.61vw, 1.44rem)' }}
           >
             Когда вы планируете свой праздник?
           </p>
 
           <div className="flex items-end gap-3 md:gap-5">
             <input
-              type="number" min={1} max={31} placeholder="ДД"
-              value={day} onChange={e => setDay(e.target.value)}
+              type="text" inputMode="numeric" placeholder="ДД" maxLength={2}
+              value={day}
+              onChange={e => {
+                const raw = e.target.value.replace(/\D/g, '');
+                if (raw === '') { setDay(''); return; }
+                const n = parseInt(raw);
+                if (n > 31) return;
+                setDay(raw);
+                if (raw.length === 2 || (raw.length === 1 && n > 3)) monthRef.current?.focus();
+              }}
               className={inputClass}
-              style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 3.2rem)' }}
             />
-            <span className="font-cormorant text-charcoal/30 pb-2 text-3xl">·</span>
             <input
-              type="number" min={1} max={12} placeholder="ММ"
-              value={month} onChange={e => setMonth(e.target.value)}
+              ref={monthRef}
+              type="text" inputMode="numeric" placeholder="ММ" maxLength={2}
+              value={month}
+              onChange={e => {
+                const raw = e.target.value.replace(/\D/g, '');
+                if (raw === '') { setMonth(''); return; }
+                const n = parseInt(raw);
+                if (n > 12) return;
+                setMonth(raw);
+                if (raw.length === 2 || (raw.length === 1 && n > 1)) yearRef.current?.focus();
+              }}
               className={inputClass}
-              style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 3.2rem)' }}
             />
-            <span className="font-cormorant text-charcoal/30 pb-2 text-3xl">·</span>
             <input
-              type="number" min={2025} max={2030} placeholder="ГГГГ"
-              value={year} onChange={e => setYear(e.target.value)}
-              className="w-28 md:w-36 bg-transparent border-b-2 border-charcoal/20 focus:border-gold focus:outline-none text-center font-cormorant text-charcoal pb-1 transition-colors duration-200 placeholder:text-charcoal/25"
-              style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}
+              ref={yearRef}
+              type="text" inputMode="numeric" placeholder="ГГГГ" maxLength={4}
+              value={year}
+              onChange={e => {
+                const raw = e.target.value.replace(/\D/g, '');
+                if (raw === '') { setYear(''); return; }
+                const n = parseInt(raw);
+                if (raw.length === 4 && (n < 2000 || n > 2099)) return;
+                setYear(raw);
+              }}
+              className="w-28 md:w-48 bg-transparent border-b-2 border-charcoal/20 focus:border-gold focus:outline-none text-center font-cormorant font-semibold text-charcoal pb-1 transition-colors duration-200 placeholder:text-charcoal/25"
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 3.2rem)' }}
             />
           </div>
 
@@ -735,82 +1089,43 @@ const BookingSection = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: isValid ? 1 : 0, height: isValid ? 'auto' : 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full overflow-hidden"
+            className="w-full"
+            style={{ overflowY: 'clip', overflowX: 'visible' }}
           >
             <div className="w-full h-px bg-charcoal/10 mt-16 mb-14" />
 
             {/* Что входит в стоимость — зоны */}
-            <div className="mb-14">
-              <h3
-                className="font-cormorant text-charcoal mb-12 leading-tight"
-                style={{ fontSize: 'clamp(1.6rem, 3vw, 2.5rem)' }}
-              >
-                Что входит в стоимость
-              </h3>
+            <ZonesSlider />
 
-              <div className="flex flex-col gap-14">
-                {ZONES.map((zone, i) => (
-                  <div key={i}>
-                    <p
-                      className="font-lora text-charcoal/40 text-xs uppercase tracking-[0.2em] mb-2"
-                    >
-                      {String(i + 1).padStart(2, '0')}
-                    </p>
-                    <h4
-                      className="font-cormorant text-charcoal leading-none mb-5"
-                      style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3rem)' }}
-                    >
-                      {zone.title}
-                    </h4>
-                    {zone.images.length > 0 && (
-                      <div
-                        className="grid gap-2"
-                        style={{ gridTemplateColumns: `repeat(${zone.images.length}, 1fr)` }}
-                      >
-                        {zone.images.map((src, j) => (
-                          <div key={j} className="overflow-hidden aspect-[4/3]">
-                            <img
-                              src={src}
-                              loading="lazy"
-                              alt={zone.title}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+            {/* Остальное */}
+            <div className="mt-12 pt-10 border-t border-charcoal/10 mb-14">
+              <p className="font-lora font-medium text-charcoal mb-6" style={{ fontSize: 'clamp(1.15rem, 1.6vw, 1.35rem)' }}>Также включено</p>
+              <ul className="columns-2 md:columns-3 gap-8">
+                {INCLUDED_SERVICES.map((item, i) => (
+                  <li key={i} className="flex items-start gap-4 font-lora font-medium text-charcoal mb-2 md:mb-3 break-inside-avoid" style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-gold mt-1 flex-shrink-0">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>{item}</span>
+                  </li>
                 ))}
-              </div>
-
-              {/* Остальное */}
-              <div className="mt-12 pt-10 border-t border-charcoal/10">
-                <p className="font-lora text-sm text-charcoal/40 mb-6">Также включено</p>
-                <ul className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3">
-                  {INCLUDED_SERVICES.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 font-lora font-medium text-charcoal/75" style={{ fontSize: 'clamp(0.92rem, 1.3vw, 1.05rem)' }}>
-                      <span className="text-gold flex-shrink-0">—</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              </ul>
             </div>
 
             {/* За дополнительную плату */}
             <div className="mb-14 border-t border-charcoal/10 pt-12">
               <h3
-                className="font-cormorant text-charcoal mb-2 leading-tight"
-                style={{ fontSize: 'clamp(1.6rem, 3vw, 2.5rem)' }}
+                className="font-cormorant font-semibold text-charcoal mb-2 leading-tight"
+                style={{ fontSize: 'clamp(1.84rem, 3.45vw, 2.88rem)' }}
               >
                 За дополнительную плату
               </h3>
-              <p className="font-lora text-charcoal/45 text-sm mb-7">Доступны по запросу</p>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3">
+              <p className="font-lora font-medium text-charcoal mb-7" style={{ fontSize: 'clamp(1.15rem, 1.6vw, 1.35rem)' }}>Доступны по запросу</p>
+              <ul className="columns-1 md:columns-2 gap-10">
                 {EXTRA.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 font-lora font-medium text-charcoal/75" style={{ fontSize: 'clamp(0.92rem, 1.3vw, 1.05rem)' }}>
-                    <span className="text-gold/60 mt-[3px] flex-shrink-0">+</span>
-                    {item}
+                  <li key={i} className="flex items-start gap-4 font-lora font-medium text-charcoal mb-2 md:mb-3 break-inside-avoid" style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}>
+                    <span className="mt-2.5 w-1.5 h-1.5 bg-gold flex-shrink-0 rotate-45" />
+                    <span>{item}</span>
                   </li>
                 ))}
               </ul>
@@ -819,20 +1134,21 @@ const BookingSection = () => {
             {/* Условия */}
             <div className="mb-14 border-t border-charcoal/10 pt-12">
               <h3
-                className="font-cormorant text-charcoal mb-8 leading-tight"
-                style={{ fontSize: 'clamp(1.6rem, 3vw, 2.5rem)' }}
+                className="font-cormorant font-semibold text-charcoal mb-8 leading-tight"
+                style={{ fontSize: 'clamp(1.84rem, 3.45vw, 2.88rem)' }}
               >
                 Условия
               </h3>
-              <ul className="flex flex-col gap-4">
+              <ul className="flex flex-col gap-2 md:gap-3">
                 {[
                   'Минимальный заказ по меню — от 5 000 ₽/чел.',
                   'Сервисный сбор за обслуживание — 10% от стоимости заказа.',
                   'Минимальный депозит — 200 000 ₽ (без учёта обслуживания и аренды зала).',
+                  'Авансовый платеж — 50% стоимости аренды + 30 000 ₽ (депозит).'
                 ].map((text, i) => (
-                  <li key={i} className="flex items-start gap-3 font-lora font-medium text-charcoal/80" style={{ fontSize: 'clamp(0.92rem, 1.3vw, 1.05rem)' }}>
-                    <span className="text-gold mt-[3px] flex-shrink-0 text-lg leading-none">·</span>
-                    {text}
+                  <li key={i} className="flex items-start gap-4 font-lora font-medium text-charcoal" style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}>
+                    <span className="mt-2.5 w-1.5 h-1.5 bg-gold flex-shrink-0 rotate-45" />
+                    <span>{text}</span>
                   </li>
                 ))}
               </ul>
@@ -842,31 +1158,31 @@ const BookingSection = () => {
             {tariff && (
               <div className="border-t border-charcoal/10 pt-12 mb-16">
                 <h3
-                  className="font-cormorant text-charcoal mb-2 leading-tight"
-                  style={{ fontSize: 'clamp(1.6rem, 3vw, 2.5rem)' }}
+                  className="font-cormorant font-semibold text-charcoal mb-2 leading-tight"
+                  style={{ fontSize: 'clamp(1.84rem, 3.45vw, 2.88rem)' }}
                 >
                   Аренда зала
                 </h3>
-                <p className="font-lora font-medium text-charcoal/40 mb-8" style={{ fontSize: 'clamp(0.92rem, 1.3vw, 1.05rem)' }}>
+                <p className="font-lora font-medium text-charcoal mb-8" style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}>
                   {tariff.label}
                 </p>
                 <div className="flex flex-col gap-0 border-t border-charcoal/10">
                   {tariff.rows.map((row, i) => (
                     <div
                       key={i}
-                      className={`flex items-center justify-between py-4 border-b border-charcoal/10 ${row.match ? 'text-charcoal' : 'text-charcoal/40'}`}
+                      className={`flex items-center justify-between py-4 border-b border-charcoal/10 ${row.match ? 'text-charcoal' : 'text-charcoal'}`}
                     >
-                      <span className="font-lora font-medium" style={{ fontSize: 'clamp(0.92rem, 1.3vw, 1.05rem)' }}>
+                      <span className="font-lora font-medium" style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}>
                         {row.days}
                         {row.match && (
-                          <span className="ml-3 font-lora font-normal text-xs text-gold tracking-widest">← ваш день</span>
+                          <span className="ml-4 px-3 py-1 bg-gold text-white text-[10px] font-bold uppercase tracking-[0.15em] rounded-full">ваш день</span>
                         )}
                       </span>
                       <span
-                        className={`font-cormorant leading-none ${row.match ? 'text-charcoal' : 'text-charcoal/40'}`}
-                        style={{ fontSize: row.match ? 'clamp(1.8rem, 3vw, 2.5rem)' : 'clamp(1.4rem, 2.5vw, 2rem)' }}
+                        className={`font-cormorant font-semibold leading-none ${row.match ? 'text-charcoal' : 'text-charcoal'}`}
+                        style={{ fontSize: row.match ? 'clamp(2.07rem, 3.45vw, 2.88rem)' : 'clamp(1.61rem, 2.88vw, 2.30rem)' }}
                       >
-                        {row.price}
+                        {row.price.toLocaleString('ru-RU')} ₽
                       </span>
                     </div>
                   ))}
@@ -875,8 +1191,9 @@ const BookingSection = () => {
             )}
 
             <button
-              className="border border-charcoal/30 text-charcoal px-12 py-5 font-lora hover:bg-charcoal hover:text-sand transition-all duration-300 cursor-pointer"
-              style={{ fontSize: 'clamp(0.95rem, 1.3vw, 1.1rem)' }}
+              onClick={onBook}
+              className="rounded-full border border-charcoal/30 text-charcoal px-12 py-5 font-lora font-medium hover:bg-charcoal hover:text-sand transition-all duration-300 cursor-pointer"
+              style={{ fontSize: 'clamp(1.09rem, 1.49vw, 1.26rem)' }}
             >
               Забронировать эту дату
             </button>
@@ -920,41 +1237,41 @@ const Gallery = () => {
   );
 };
 
-const Footer = () => {
+const Footer = ({ onBook }: { onBook: () => void }) => {
   return (
     <footer className="bg-charcoal text-white px-6 py-24 md:px-12 lg:px-24">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-6 pb-24">
         <div className="lg:col-span-8">
           {/* TITLE-L */}
           <h2
-            className="font-cormorant leading-tight text-white"
-            style={{ fontSize: 'clamp(2.5rem, 5vw, 5rem)' }}
+            className="font-cormorant font-semibold leading-tight text-white"
+            style={{ fontSize: 'clamp(2.88rem, 5.75vw, 5.75rem)' }}
           >
             Готовы создать вечное воспоминание?
             <br />
-            <span className="font-accent font-light text-white/75 mt-3 block">
+            <span className="font-accent font-light text-white mt-3 block">
               давайте обсудим.
             </span>
           </h2>
           <div className="mt-12">
-            <button className="font-lora border border-white/20 rounded-full px-8 py-4 hover:bg-white hover:text-charcoal transition-colors duration-300 cursor-pointer"
-              style={{ fontSize: 'clamp(1rem, 1.4vw, 1.25rem)' }}
+            <button onClick={onBook} className="font-lora font-medium border border-white/20 rounded-full px-8 py-4 hover:bg-white hover:text-charcoal transition-colors duration-300 cursor-pointer"
+              style={{ fontSize: 'clamp(1.15rem, 1.61vw, 1.44rem)' }}
             >
               Оставить заявку
             </button>
           </div>
         </div>
 
-        <div className="lg:col-span-4 flex flex-col lg:items-end justify-center gap-8 font-lora text-white/85"
-          style={{ fontSize: 'clamp(1rem, 1.3vw, 1.125rem)' }}
+        <div className="lg:col-span-4 flex flex-col lg:items-end justify-center gap-8 font-lora font-medium text-white"
+          style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.29rem)' }}
         >
           <div className="flex flex-col gap-2">
-            <span className="uppercase text-sm text-white/55">( Контакты )</span>
+            <span className="uppercase text-base text-white/90">( Контакты )</span>
             <a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">hello@loftandlight.com</a>
             <a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">+1 234 567 890</a>
           </div>
           <div className="flex flex-col gap-2 lg:text-right mt-8 md:mt-0">
-            <span className="uppercase text-sm text-white/55">( Адрес )</span>
+            <span className="uppercase text-base text-white/90">( Адрес )</span>
             <p>123 Лофт Авеню,<br />Арт-Квартал, 10001</p>
           </div>
         </div>
@@ -962,14 +1279,14 @@ const Footer = () => {
 
       <div className="pb-8">
         <p
-          className="font-cormorant uppercase tracking-[0.2em] text-white/10 leading-none select-none"
-          style={{ fontSize: 'clamp(3rem, 10vw, 9rem)' }}
+          className="font-cormorant font-semibold uppercase tracking-[0.2em] text-white/10 leading-none select-none"
+          style={{ fontSize: 'clamp(3.45rem, 11.50vw, 10.35rem)' }}
         >
           Ривер Лофт
         </p>
       </div>
 
-      <div className="pt-8 border-t border-gold/20 flex flex-col md:flex-row justify-between items-center text-sm text-white/60 font-lora">
+      <div className="pt-8 border-t border-gold/20 flex flex-col md:flex-row justify-between items-center text-base text-white/90 font-lora font-medium">
         <p>© {new Date().getFullYear()} Ривер Лофт. Все права защищены.</p>
         <div className="flex gap-6 mt-4 md:mt-0">
           <a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Instagram</a>
@@ -992,18 +1309,18 @@ const TravelSection = () => (
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
       >
         <h2
-          className="font-cormorant text-charcoal leading-[1.05] mb-10"
-          style={{ fontSize: 'clamp(3rem, 5.5vw, 6rem)' }}
+          className="font-cormorant font-semibold text-charcoal leading-[1.05] mb-10"
+          style={{ fontSize: 'clamp(3.45rem, 6.32vw, 6.90rem)' }}
         >
           Свадебное<br />
-          <span className="font-accent font-light text-charcoal/70">путешествие</span>
+          <span className="font-accent font-light text-charcoal">путешествие</span>
         </h2>
 
-        <div className="flex flex-col gap-3 font-lora">
+        <div className="flex flex-col gap-3 font-lora font-medium">
           <a
             href="tel:+79636491852"
-            className="text-charcoal/70 hover:text-charcoal transition-colors duration-200"
-            style={{ fontSize: 'clamp(1rem, 1.3vw, 1.15rem)' }}
+            className="text-charcoal hover:text-charcoal transition-colors duration-200"
+            style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.32rem)' }}
           >
             +7 963-649-18-52
           </a>
@@ -1011,8 +1328,8 @@ const TravelSection = () => (
             href="https://emojitours.ru"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-charcoal/60 hover:text-charcoal transition-colors duration-200 underline underline-offset-4"
-            style={{ fontSize: 'clamp(1rem, 1.3vw, 1.15rem)' }}
+            className="text-charcoal hover:text-charcoal transition-colors duration-200 underline underline-offset-4"
+            style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.32rem)' }}
           >
             emojitours.ru
           </a>
@@ -1025,8 +1342,8 @@ const TravelSection = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col gap-6 font-lora text-charcoal/75 leading-[1.75]"
-        style={{ fontSize: 'clamp(1rem, 1.35vw, 1.2rem)' }}
+        className="flex flex-col gap-6 font-lora font-medium text-charcoal leading-[1.75]"
+        style={{ fontSize: 'clamp(1.15rem, 1.55vw, 1.38rem)' }}
       >
         <p>
           Каждый гость для нас является особенным. Мы хотим, чтобы и после свадебного торжества праздник для Вас продолжился незабываемым свадебным путешествием.
@@ -1034,7 +1351,7 @@ const TravelSection = () => (
         <p>
           Туристическое агентство Emoji Tours — это место, где Вы сможете получить море незабываемых впечатлений и ощутить надёжность, заботу и новые впечатления от путешествия мечты.
         </p>
-        <p className="text-charcoal/90">
+        <p className="text-charcoal">
           Наша задача — чтобы ваше путешествие стало индивидуальной историей, которую вы будете пересказывать годами. Каждая деталь продумана для вашего вдохновения.
         </p>
       </motion.div>
@@ -1044,18 +1361,22 @@ const TravelSection = () => (
 );
 
 export default function App() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
   return (
     <div className="bg-sand text-charcoal selection:bg-stone selection:text-charcoal w-full min-h-screen">
-      <Navbar />
-      <Hero />
+      <BookingModal open={modalOpen} onClose={closeModal} />
+      <Navbar onBook={openModal} />
+      <Hero onBook={openModal} />
       <VenueBar />
       <StatsSection />
       <AboutRiverLoft />
-      <AboutRiverLoftCTA />
-      <BookingSection />
+      <BookingSection onBook={openModal} />
       <Gallery />
       <TravelSection />
-      <Footer />
+      <Footer onBook={openModal} />
     </div>
   );
 }
