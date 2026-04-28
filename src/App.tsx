@@ -222,6 +222,10 @@ const BookingModal = ({ open, onClose }: { open: boolean; onClose: () => void })
                             <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
                           </svg>
                         </a>
+                        {/* MAX */}
+                        <a href="#" aria-label="MAX" className="group transition-colors duration-200">
+                          <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width={20} height={20} className="brightness-0 invert opacity-45 group-hover:opacity-100 transition-opacity duration-200" />
+                        </a>
                       </div>
 
                       {/* Кнопка отправки */}
@@ -300,6 +304,10 @@ const Navbar = ({ onBook }: { onBook: () => void }) => {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 13.5h-1.7c-.64 0-.84-.51-1.99-1.67-1-.97-1.44-.97-1.69-.97-.34 0-.44.1-.44.58v1.52c0 .42-.13.67-1.22.67-1.8 0-3.8-1.09-5.2-3.13C4.13 10.12 3.7 8.1 3.7 7.67c0-.25.1-.48.58-.48h1.7c.43 0 .59.19.75.65.83 2.38 2.21 4.47 2.78 4.47.21 0 .31-.1.31-.64V9.62c-.07-1.15-.67-1.25-.67-1.66 0-.2.16-.4.42-.4h2.68c.36 0 .49.19.49.61v3.26c0 .36.16.49.26.49.21 0 .39-.13.78-.52 1.21-1.35 2.07-3.43 2.07-3.43.11-.25.31-.48.74-.48h1.7c.51 0 .62.26.51.61-.21.98-2.28 3.91-2.28 3.91-.18.29-.24.42 0 .74.17.23.74.71 1.12 1.14.7.77 1.23 1.41 1.37 1.86.16.44-.07.67-.51.67z" />
               </svg>
+            </a>
+            {/* MAX */}
+            <a href="#" aria-label="MAX" className="group transition-colors duration-200">
+              <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width={18} height={18} className="brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity duration-200" />
             </a>
           </div>
 
@@ -1242,9 +1250,9 @@ const Gallery = () => {
   const doubled = [...GALLERY_IMAGES, ...GALLERY_IMAGES];
   return (
     <section className="py-24 overflow-hidden">
-      <div className="flex gap-5 marquee-track" style={{ width: 'max-content' }}>
+      <div className="flex marquee-track" style={{ width: 'max-content' }}>
         {doubled.map((img, i) => (
-          <div key={i} className="flex-shrink-0 w-[320px] md:w-[380px] aspect-[3/4] overflow-hidden">
+          <div key={i} className="flex-shrink-0 w-[320px] md:w-[380px] aspect-[3/4] overflow-hidden mr-5">
             <img
               src={img} loading="lazy" alt="Gallery"
               className="w-full h-full object-cover grayscale-[15%] hover:grayscale-0 transition-all duration-700"
@@ -1256,125 +1264,343 @@ const Gallery = () => {
   );
 };
 
+const FOOTER_NAV = [
+  { label: 'О площадке', href: '#' },
+  { label: 'Залы и зоны', href: '#' },
+  { label: 'Галерея', href: '#' },
+  { label: 'Условия аренды', href: '#' },
+  { label: 'Контакты', href: '#' },
+];
+
+const FOOTER_SOCIALS = [
+  {
+    label: 'Instagram',
+    href: '#',
+    icon: (
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    label: 'ВКонтакте',
+    href: '#',
+    icon: (
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 13.5h-1.7c-.64 0-.84-.51-1.99-1.67-1-.97-1.44-.97-1.69-.97-.34 0-.44.1-.44.58v1.52c0 .42-.13.67-1.22.67-1.8 0-3.8-1.09-5.2-3.13C4.13 10.12 3.7 8.1 3.7 7.67c0-.25.1-.48.58-.48h1.7c.43 0 .59.19.75.65.83 2.38 2.21 4.47 2.78 4.47.21 0 .31-.1.31-.64V9.62c-.07-1.15-.67-1.25-.67-1.66 0-.2.16-.4.42-.4h2.68c.36 0 .49.19.49.61v3.26c0 .36.16.49.26.49.21 0 .39-.13.78-.52 1.21-1.35 2.07-3.43 2.07-3.43.11-.25.31-.48.74-.48h1.7c.51 0 .62.26.51.61-.21.98-2.28 3.91-2.28 3.91-.18.29-.24.42 0 .74.17.23.74.71 1.12 1.14.7.77 1.23 1.41 1.37 1.86.16.44-.07.67-.51.67z" />
+      </svg>
+    ),
+  },
+  {
+    label: 'Telegram',
+    href: '#',
+    icon: (
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+      </svg>
+    ),
+  },
+  {
+    label: 'WhatsApp',
+    href: '#',
+    icon: (
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+      </svg>
+    ),
+  },
+  {
+    label: 'MAX',
+    href: '#',
+    icon: <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width={17} height={17} className="brightness-0 invert" />,
+  },
+];
+
 const Footer = ({ onBook }: { onBook: () => void }) => {
   return (
-    <footer className="bg-charcoal text-white px-6 py-24 md:px-12 lg:px-24">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-6 pb-24">
-        <div className="lg:col-span-8">
-          {/* TITLE-L */}
+    <footer className="bg-charcoal text-white overflow-hidden">
+
+      {/* CTA — центр */}
+      <div className="px-8 md:px-16 pt-28 pb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 36 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-7xl mx-auto flex flex-col items-center text-center"
+        >
           <h2
-            className="font-cormorant font-semibold leading-tight text-white"
+            className="font-cormorant font-semibold leading-[1.0] text-white"
             style={{ fontSize: 'clamp(2.88rem, 5.75vw, 5.75rem)' }}
           >
-            Готовы создать вечное воспоминание?
-            <br />
-            <span className="font-accent font-light text-white mt-3 block">
-              давайте обсудим.
+            Готовы создать<br />
+            <span className="font-accent font-light" style={{ fontSize: 'clamp(2.59rem, 5.18vw, 5.18rem)' }}>
+              вечное воспоминание?
             </span>
           </h2>
           <div className="mt-12">
-            <button onClick={onBook} className="font-lora font-medium border border-white/20 rounded-full px-8 py-4 hover:bg-white hover:text-charcoal transition-colors duration-300 cursor-pointer"
-              style={{ fontSize: 'clamp(1.15rem, 1.61vw, 1.44rem)' }}
+            <button
+              onClick={onBook}
+              className="font-lora font-medium border border-white/30 rounded-full px-10 py-4 hover:bg-white hover:text-charcoal transition-all duration-300 cursor-pointer"
+              style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}
             >
               Оставить заявку
             </button>
           </div>
-        </div>
+        </motion.div>
+      </div>
 
-        <div className="lg:col-span-4 flex flex-col lg:items-end justify-center gap-8 font-lora font-medium text-white"
-          style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.29rem)' }}
-        >
-          <div className="flex flex-col gap-2">
-            <span className="uppercase text-base text-white/90">( Контакты )</span>
-            <a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">hello@loftandlight.com</a>
-            <a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">+1 234 567 890</a>
-          </div>
-          <div className="flex flex-col gap-2 lg:text-right mt-8 md:mt-0">
-            <span className="uppercase text-base text-white/90">( Адрес )</span>
-            <p>123 Лофт Авеню,<br />Арт-Квартал, 10001</p>
-          </div>
+      {/* Gold divider */}
+      <div className="mx-8 md:mx-16">
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+          style={{ originX: 0 }}
+          className="h-px bg-gradient-to-r from-gold/70 via-gold/25 to-transparent"
+        />
+      </div>
+
+      {/* Info columns */}
+      <div className="px-8 md:px-16 py-16">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-10 md:gap-6">
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="col-span-2 md:col-span-1"
+          >
+            <p className="font-cormorant font-semibold text-white mb-4" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2rem)' }}>
+              Ривер Лофт
+            </p>
+            <p className="font-lora font-medium text-white/45 leading-relaxed" style={{ fontSize: 'clamp(0.90rem, 1.15vw, 1rem)' }}>
+              Премиальная площадка для мероприятий у слияния рек Пахры и Десны
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <p className="font-lora font-medium text-white/35 mb-5" style={{ fontSize: 'clamp(0.78rem, 0.95vw, 0.88rem)' }}>
+              Навигация
+            </p>
+            <ul className="flex flex-col gap-3">
+              {FOOTER_NAV.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    className="font-lora font-medium text-white/65 hover:text-gold transition-colors duration-300 relative group inline-block"
+                    style={{ fontSize: 'clamp(0.95rem, 1.2vw, 1.06rem)' }}
+                  >
+                    {link.label}
+                    <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <p className="font-lora font-medium text-white/35 mb-5" style={{ fontSize: 'clamp(0.78rem, 0.95vw, 0.88rem)' }}>
+              Мы в сети
+            </p>
+            <ul className="flex flex-col gap-3">
+              {FOOTER_SOCIALS.map((s) => (
+                <li key={s.label}>
+                  <a
+                    href={s.href}
+                    aria-label={s.label}
+                    className="flex items-center gap-3 font-lora font-medium text-white/65 hover:text-gold transition-colors duration-300 group"
+                    style={{ fontSize: 'clamp(0.95rem, 1.2vw, 1.06rem)' }}
+                  >
+                    <span className="opacity-50 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0">
+                      {s.icon}
+                    </span>
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <p className="font-lora font-medium text-white/35 mb-5" style={{ fontSize: 'clamp(0.78rem, 0.95vw, 0.88rem)' }}>
+              Режим работы
+            </p>
+            <ul className="flex flex-col gap-2 font-lora font-medium text-white/60" style={{ fontSize: 'clamp(0.90rem, 1.15vw, 1rem)' }}>
+              <li>Пн — Пт: <span className="text-white">10:00 – 22:00</span></li>
+              <li>Сб — Вс: <span className="text-white">09:00 – 23:00</span></li>
+
+            </ul>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <p className="font-lora font-medium text-white/35 mb-5" style={{ fontSize: 'clamp(0.78rem, 0.95vw, 0.88rem)' }}>
+              Контакты
+            </p>
+            <div className="flex flex-col gap-1 mb-5">
+              <a
+                href="mailto:hello@riverloft.ru"
+                className="font-lora font-medium text-white/65 hover:text-gold transition-colors duration-300"
+                style={{ fontSize: 'clamp(0.95rem, 1.2vw, 1.06rem)' }}
+              >
+                hello@riverloft.ru
+              </a>
+              <a
+                href="tel:+74991234567"
+                className="font-lora font-medium text-white/65 hover:text-gold transition-colors duration-300"
+                style={{ fontSize: 'clamp(0.95rem, 1.2vw, 1.06rem)' }}
+              >
+                +7 (499) 123-45-67
+              </a>
+            </div>
+            <p className="font-lora font-medium text-white/35 mb-2" style={{ fontSize: 'clamp(0.78rem, 0.95vw, 0.88rem)' }}>
+              Адрес
+            </p>
+            <p className="font-lora font-medium text-white/65 leading-relaxed" style={{ fontSize: 'clamp(0.95rem, 1.2vw, 1.06rem)' }}>
+              Подольский р-н,<br />с. Дубровицы,<br />ул. Парковая, 1
+            </p>
+          </motion.div>
+
         </div>
       </div>
 
-      <div className="pb-8">
-        <p
-          className="font-cormorant font-semibold uppercase tracking-[0.2em] text-white/10 leading-none select-none"
-          style={{ fontSize: 'clamp(3.45rem, 11.50vw, 10.35rem)' }}
-        >
-          Ривер Лофт
+      {/* Bottom bar */}
+      <div className="mx-8 md:mx-16 border-t border-white/[0.08] py-7 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p className="font-lora font-medium text-white/30" style={{ fontSize: 'clamp(0.82rem, 1vw, 0.95rem)' }}>
+          © {new Date().getFullYear()} Ривер Лофт. Все права защищены.
         </p>
-      </div>
-
-      <div className="pt-8 border-t border-gold/20 flex flex-col md:flex-row justify-between items-center text-base text-white/90 font-lora font-medium">
-        <p>© {new Date().getFullYear()} Ривер Лофт. Все права защищены.</p>
-        <div className="flex gap-6 mt-4 md:mt-0">
-          <a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Instagram</a>
-          <a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Pinterest</a>
+        <div className="flex gap-6">
+          <a href="#" className="font-lora font-medium text-white/30 hover:text-white/65 transition-colors duration-300" style={{ fontSize: 'clamp(0.82rem, 1vw, 0.95rem)' }}>
+            Политика конфиденциальности
+          </a>
+          <a href="#" className="font-lora font-medium text-white/30 hover:text-white/65 transition-colors duration-300" style={{ fontSize: 'clamp(0.82rem, 1vw, 0.95rem)' }}>
+            Договор оферты
+          </a>
         </div>
       </div>
+
     </footer>
   );
 };
 
 const TravelSection = () => (
-  <section className="px-8 md:px-16 py-32" style={{ background: '#C9A86C', borderRadius: '50% 50% 0 0 / 120px 120px 0 0' }}>
-    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-
-      {/* Левая колонка — заголовок и контакты */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+  <section className="relative w-full bg-charcoal" style={{ minHeight: '90vh' }}>
+    {/* Видео на весь блок */}
+    <div className="absolute inset-0 overflow-hidden">
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="w-full h-full object-cover"
       >
-        <h2
-          className="font-cormorant font-semibold text-charcoal leading-[1.05] mb-10"
-          style={{ fontSize: 'clamp(3.45rem, 6.32vw, 6.90rem)' }}
+        <source src="/travel-video.mp4" type="video/mp4" />
+      </video>
+    </div>
+
+    {/* Тёплый золотой оверлей */}
+    <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(30,18,6,0.82) 0%, rgba(90,55,15,0.35) 50%, rgba(180,130,50,0.10) 100%)' }} />
+    <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(30,18,6,0.65) 0%, rgba(90,55,15,0.18) 50%, rgba(30,18,6,0.45) 100%)' }} />
+
+    {/* Двухколоночный контент */}
+    <div className="absolute inset-0 flex items-end px-10 md:px-16 py-16 md:py-20">
+      <div className="w-full flex flex-col md:flex-row md:items-end md:justify-between gap-10">
+
+        {/* Левая колонка — заголовок + кнопка */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-start gap-8"
         >
-          Свадебное<br />
-          <span className="font-accent font-light text-charcoal">путешествие</span>
-        </h2>
+          <div>
+            <h2
+              className="leading-[0.9] font-cormorant font-semibold text-white"
+              style={{
+                fontSize: 'clamp(3rem, 5vw, 6.5rem)',
+                filter: 'drop-shadow(0 2px 40px rgba(0,0,0,0.5))',
+              }}
+            >
+              Свадебное
+            </h2>
+            <span
+              className="font-accent block text-white"
+              style={{
+                fontSize: 'clamp(2.8rem, 5.2vw, 7rem)',
+                textShadow: '0 2px 32px rgba(0,0,0,0.5)',
+                lineHeight: 1,
+              }}
+            >
+              путешествие
+            </span>
+          </div>
 
-        <div className="flex flex-col gap-3 font-lora font-medium">
-          <a
-            href="tel:+79636491852"
-            className="text-charcoal hover:text-charcoal transition-colors duration-200"
-            style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.32rem)' }}
-          >
-            +7 963-649-18-52
-          </a>
-          <a
-            href="https://emojitours.ru"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-charcoal hover:text-charcoal transition-colors duration-200 underline underline-offset-4"
-            style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.32rem)' }}
-          >
-            emojitours.ru
-          </a>
-        </div>
-      </motion.div>
+          <div className="flex flex-wrap items-center gap-5">
+            <a
+              href="https://emojitours.ru"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-lora font-medium text-white border border-white/50 px-9 py-4 rounded-full hover:bg-white hover:text-charcoal transition-all duration-300"
+              style={{ fontSize: 'clamp(1rem, 1.35vw, 1.18rem)' }}
+            >
+              emojitours.ru
+            </a>
+            <a
+              href="tel:+79636491852"
+              className="font-lora font-medium text-white/75 hover:text-white transition-colors duration-300 px-2 py-4"
+              style={{ fontSize: 'clamp(1rem, 1.35vw, 1.18rem)' }}
+            >
+              +7 963-649-18-52
+            </a>
+          </div>
+        </motion.div>
 
-      {/* Правая колонка — текст */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col gap-6 font-lora font-medium text-charcoal leading-[1.75]"
-        style={{ fontSize: 'clamp(1.15rem, 1.55vw, 1.38rem)' }}
-      >
-        <p>
-          Каждый гость для нас является особенным. Мы хотим, чтобы и после свадебного торжества праздник для Вас продолжился незабываемым свадебным путешествием.
-        </p>
-        <p>
-          Туристическое агентство Emoji Tours — это место, где Вы сможете получить море незабываемых впечатлений и ощутить надёжность, заботу и новые впечатления от путешествия мечты.
-        </p>
-        <p className="text-charcoal">
-          Наша задача — чтобы ваше путешествие стало индивидуальной историей, которую вы будете пересказывать годами. Каждая деталь продумана для вашего вдохновения.
-        </p>
-      </motion.div>
+        {/* Правая колонка — текст */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col gap-5 font-lora font-medium text-white/75 leading-[1.75] md:max-w-sm"
+          style={{ fontSize: 'clamp(0.95rem, 1.3vw, 1.15rem)' }}
+        >
+          <p>
+            Каждый гость для нас является особенным. Мы хотим, чтобы и после свадебного торжества праздник для Вас продолжился незабываемым свадебным путешествием.
+          </p>
+          <p>
+            Туристическое агентство Emoji Tours — это место, где Вы сможете получить море незабываемых впечатлений и ощутить надёжность, заботу и новые впечатления от путешествия мечты.
+          </p>
+          <p>
+            Наша задача — чтобы ваше путешествие стало индивидуальной историей, которую вы будете пересказывать годами.
+          </p>
+        </motion.div>
 
+      </div>
     </div>
   </section>
 );
