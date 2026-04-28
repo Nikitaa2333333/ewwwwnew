@@ -30,6 +30,7 @@ const BookingModal = ({ open, onClose }: { open: boolean; onClose: () => void })
   const [phoneError, setPhoneError] = useState(false);
   const [note, setNote] = useState('');
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -43,13 +44,26 @@ const BookingModal = ({ open, onClose }: { open: boolean; onClose: () => void })
     return () => { document.body.style.overflow = ''; };
   }, [open]);
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const nameInvalid = name.trim().length === 0;
     const phoneInvalid = !isPhoneComplete(phone);
     if (nameInvalid) setNameError(true);
     if (phoneInvalid) setPhoneError(true);
     if (nameInvalid || phoneInvalid) return;
+
+    setSending(true);
+    const formData = new FormData();
+    formData.append('access_key', '38ecc3df-a7a2-4ef7-8c9a-8ff517567e1e');
+    formData.append('name', name.trim());
+    formData.append('phone', phone);
+    if (note.trim()) formData.append('message', note.trim());
+    try {
+      await fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData });
+    } catch (_) {
+      // отправляем лучший ответ пользователю в любом случае
+    }
+    setSending(false);
     setSent(true);
   };
 
@@ -80,7 +94,7 @@ const BookingModal = ({ open, onClose }: { open: boolean; onClose: () => void })
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="relative bg-charcoal w-full max-w-lg px-10 py-12 md:px-12 md:py-12 overflow-hidden"
-            style={{  }}
+            style={{}}
             onClick={e => e.stopPropagation()}
           >
             {/* Закрыть */}
@@ -213,10 +227,11 @@ const BookingModal = ({ open, onClose }: { open: boolean; onClose: () => void })
                       {/* Кнопка отправки */}
                       <button
                         type="submit"
-                        className="font-lora font-medium text-white border border-white/30 rounded-full px-8 py-3 hover:bg-white hover:text-charcoal transition-all duration-300 cursor-pointer whitespace-nowrap"
+                        disabled={sending}
+                        className="font-lora font-medium text-white border border-white/30 rounded-full px-8 py-3 hover:bg-white hover:text-charcoal transition-all duration-300 cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-default"
                         style={{ fontSize: 'clamp(1rem, 1.38vw, 1.15rem)' }}
                       >
-                        Отправить заявку
+                        {sending ? 'Отправка...' : 'Отправить заявку'}
                       </button>
                     </div>
                   </form>
@@ -759,7 +774,7 @@ const AdvantagesSection = () => {
 const ZONES = [
   {
     title: 'Главный зал',
-    images: ['/IMG_20260414_202543.webp', '/IMG_20260414_202547.webp'],
+    images: ['/hall-1.webp', '/hall-2.webp', '/hall-3.webp'],
   },
   {
     title: 'Welcome-зона',
@@ -823,7 +838,7 @@ const ZonesSlider = () => {
   const scrollToZone = (zoneIndex: number) => {
     const el = scrollRef.current;
     if (!el) return;
-    
+
     const firstImageIndex = allImages.findIndex(img => img.zoneIndex === zoneIndex);
     if (firstImageIndex !== -1) {
       const card = el.children[firstImageIndex] as HTMLElement;
@@ -834,10 +849,10 @@ const ZonesSlider = () => {
   const onScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
-    
+
     let closestIndex = 0;
     let minDiff = Infinity;
-    
+
     for (let i = 0; i < allImages.length; i++) {
       const child = el.children[i] as HTMLElement;
       if (!child) continue;
@@ -845,13 +860,13 @@ const ZonesSlider = () => {
       const childCenter = child.offsetLeft + child.offsetWidth / 2;
       const scrollCenter = el.scrollLeft + el.offsetWidth / 2;
       const diff = Math.abs(childCenter - scrollCenter);
-      
+
       if (diff < minDiff) {
         minDiff = diff;
         closestIndex = i;
       }
     }
-    
+
     const currentZoneIndex = allImages[closestIndex]?.zoneIndex ?? 0;
     if (currentZoneIndex !== active) {
       setActive(currentZoneIndex);
@@ -905,7 +920,7 @@ const ZonesSlider = () => {
 
       <style>{`.zones-scroll::-webkit-scrollbar{display:none}`}</style>
       {/* Полоса карточек — нативный скролл */}
-      <div className="relative">
+      <div className="relative overflow-hidden">
         <div
           ref={scrollRef}
           onScroll={onScroll}
@@ -914,8 +929,6 @@ const ZonesSlider = () => {
             scrollSnapType: 'x mandatory',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
-            marginRight: '-1.5rem',
-            paddingRight: '1.5rem',
           }}
         >
           {allImages.map((img, i) => (
@@ -934,10 +947,7 @@ const ZonesSlider = () => {
           ))}
         </div>
         {/* Градиент справа */}
-        <div 
-          className="absolute top-0 bottom-0 w-24 pointer-events-none bg-gradient-to-l from-sand to-transparent" 
-          style={{ right: '-1.5rem' }} 
-        />
+        <div className="absolute top-0 right-0 bottom-0 w-24 pointer-events-none bg-gradient-to-l from-sand to-transparent" />
       </div>
     </div>
   );
