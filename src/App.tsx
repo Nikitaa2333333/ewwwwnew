@@ -1010,6 +1010,8 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
   };
 
   const tariff = isValid ? getRentalTariff(parsedDate!) : null;
+  const matchedRow = tariff?.rows.find(r => r.match) ?? null;
+  const advanceAmount = matchedRow ? matchedRow.price * 0.5 + 30000 : null;
 
   const inputClass =
     'w-16 md:w-24 bg-transparent border-b-2 border-charcoal/20 focus:border-gold focus:outline-none text-center font-cormorant font-semibold text-charcoal pb-1 transition-colors duration-200 placeholder:text-charcoal/25';
@@ -1151,10 +1153,9 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
               </h3>
               <ul className="flex flex-col gap-2 md:gap-3">
                 {[
+                  'Минимальный депозит — 200 000 ₽ (без учёта обслуживания и аренды зала).',
                   'Минимальный заказ по меню — от 5 000 ₽/чел.',
                   'Сервисный сбор за обслуживание — 10% от стоимости заказа.',
-                  'Минимальный депозит — 200 000 ₽ (без учёта обслуживания и аренды зала).',
-                  'Авансовый платеж — 50% стоимости аренды + 30 000 ₽ (депозит).'
                 ].map((text, i) => (
                   <li key={i} className="flex items-start gap-4 font-lora font-medium text-charcoal" style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}>
                     <span className="mt-2.5 w-1.5 h-1.5 bg-gold flex-shrink-0 rotate-45" />
@@ -1188,12 +1189,20 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
                           <span className="ml-4 px-3 py-1 bg-gold text-white text-[10px] font-bold uppercase tracking-[0.15em] rounded-full">ваш день</span>
                         )}
                       </span>
-                      <span
-                        className={`font-cormorant font-semibold leading-none ${row.match ? 'text-charcoal' : 'text-charcoal'}`}
-                        style={{ fontSize: row.match ? 'clamp(2.07rem, 3.45vw, 2.88rem)' : 'clamp(1.61rem, 2.88vw, 2.30rem)' }}
-                      >
-                        {row.price.toLocaleString('ru-RU')} ₽
-                      </span>
+                      <div className="flex flex-col items-end">
+                        <span
+                          className="font-cormorant font-semibold leading-none text-charcoal"
+                          style={{ fontSize: row.match ? 'clamp(2.07rem, 3.45vw, 2.88rem)' : 'clamp(1.61rem, 2.88vw, 2.30rem)' }}
+                        >
+                          {row.price.toLocaleString('ru-RU')} ₽
+                        </span>
+                        {row.match && advanceAmount && (
+                          <span className="font-lora font-medium text-charcoal mt-1.5" style={{ fontSize: 'clamp(0.85rem, 1.1vw, 1rem)' }}>
+                            <span className="text-charcoal/40">аванс: 50% + 30 000 =</span>
+                            {' '}{advanceAmount.toLocaleString('ru-RU')} ₽
+                          </span>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
