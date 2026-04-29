@@ -19,7 +19,7 @@
   }
 
   body {
-    background: linear-gradient(160deg, #F2F0ED 0%, #EFEDEA 55%, #E9E6E1 100%);
+    background-color: #191919;
     color: var(--color-charcoal);
     font-family: var(--font-lora);
     -webkit-font-smoothing: antialiased;

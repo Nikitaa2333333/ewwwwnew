@@ -78,5 +78,6 @@ const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
 
 - Кнопки-ссылки: `rounded-full`, `border border-white/40`, hover: `bg-white text-charcoal`
 - Кнопки на светлом фоне: `border border-charcoal/30`, hover: `bg-charcoal text-sand`
+- **Никаких серых начертаний текста на кнопках** — текст кнопки всегда полный `text-charcoal` или `text-sand`, не `text-charcoal/60` и не `text-white/60`
 - Никаких иконок-стрелок на кнопках
 - Hover-подчёркивание ссылок: абсолютный `span` с `h-px bg-gold`, растущий через `w-0 → w-full`

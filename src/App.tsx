@@ -196,13 +196,9 @@ const BookingModal = ({ open, onClose }: { open: boolean; onClose: () => void })
                     <div className="flex items-center justify-between pt-2">
                       {/* Соцсети */}
                       <div className="flex items-center gap-4">
-                        {/* Instagram */}
-                        <a href="#" aria-label="Instagram" className="text-white/45 hover:text-white transition-colors duration-200">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                            <circle cx="12" cy="12" r="4" />
-                            <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
-                          </svg>
+                        {/* MAX */}
+                        <a href="#" aria-label="MAX" className="group transition-colors duration-200">
+                          <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width={20} height={20} className="brightness-0 invert opacity-45 group-hover:opacity-100 transition-opacity duration-200" />
                         </a>
                         {/* VK */}
                         <a href="#" aria-label="ВКонтакте" className="text-white/45 hover:text-white transition-colors duration-200">
@@ -221,10 +217,6 @@ const BookingModal = ({ open, onClose }: { open: boolean; onClose: () => void })
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
                           </svg>
-                        </a>
-                        {/* MAX */}
-                        <a href="#" aria-label="MAX" className="group transition-colors duration-200">
-                          <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width={20} height={20} className="brightness-0 invert opacity-45 group-hover:opacity-100 transition-opacity duration-200" />
                         </a>
                       </div>
 
@@ -255,12 +247,13 @@ const Navbar = ({ onBook }: { onBook: () => void }) => {
     { label: 'Залы', href: '#' },
     { label: 'Галерея', href: '#' },
     { label: 'Условия', href: '#' },
+    { label: 'Памятка', href: '/pamyatka.html', target: '_blank' },
     { label: 'Контакты', href: '#' },
   ];
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-charcoal border-b border-white/8">
-      <div className="grid grid-cols-3 items-center px-8 md:px-12 py-4">
+      <div className="grid grid-cols-3 items-center px-8 md:px-16 py-4">
 
         {/* Лого — слева */}
         <div className="font-cormorant font-semibold text-white text-xl md:text-2xl font-medium">
@@ -273,6 +266,7 @@ const Navbar = ({ onBook }: { onBook: () => void }) => {
             <a
               key={item.label}
               href={item.href}
+              target={(item as any).target}
               className="font-lora font-medium text-[14px] text-white hover:text-white transition-colors duration-200 relative group"
             >
               {item.label}
@@ -291,23 +285,15 @@ const Navbar = ({ onBook }: { onBook: () => void }) => {
 
           {/* Соцсети */}
           <div className="flex items-center gap-3">
-            {/* Instagram */}
-            <a href="#" aria-label="Instagram" className="text-white/90 hover:text-white transition-colors duration-200">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                <circle cx="12" cy="12" r="4" />
-                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
-              </svg>
+            {/* MAX */}
+            <a href="#" aria-label="MAX" className="group transition-colors duration-200">
+              <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width={18} height={18} className="brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity duration-200" />
             </a>
             {/* VK */}
             <a href="#" aria-label="ВКонтакте" className="text-white/90 hover:text-white transition-colors duration-200">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 13.5h-1.7c-.64 0-.84-.51-1.99-1.67-1-.97-1.44-.97-1.69-.97-.34 0-.44.1-.44.58v1.52c0 .42-.13.67-1.22.67-1.8 0-3.8-1.09-5.2-3.13C4.13 10.12 3.7 8.1 3.7 7.67c0-.25.1-.48.58-.48h1.7c.43 0 .59.19.75.65.83 2.38 2.21 4.47 2.78 4.47.21 0 .31-.1.31-.64V9.62c-.07-1.15-.67-1.25-.67-1.66 0-.2.16-.4.42-.4h2.68c.36 0 .49.19.49.61v3.26c0 .36.16.49.26.49.21 0 .39-.13.78-.52 1.21-1.35 2.07-3.43 2.07-3.43.11-.25.31-.48.74-.48h1.7c.51 0 .62.26.51.61-.21.98-2.28 3.91-2.28 3.91-.18.29-.24.42 0 .74.17.23.74.71 1.12 1.14.7.77 1.23 1.41 1.37 1.86.16.44-.07.67-.51.67z" />
               </svg>
-            </a>
-            {/* MAX */}
-            <a href="#" aria-label="MAX" className="group transition-colors duration-200">
-              <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width={18} height={18} className="brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity duration-200" />
             </a>
           </div>
 
@@ -341,26 +327,32 @@ const FACTS = [
 
 const containerVariants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.12 } },
+  visible: { transition: { staggerChildren: 0.07 } },
 };
 const itemVariants = {
-  hidden: { opacity: 0, y: 48 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
 };
 
-const HERO_SLIDES = [
-  '/15-43-14.webp',
-  '/wed-a-140.webp',
-  '/wdfl357.webp',
-  '/wdfl593.webp',
-  '/wed-a-53.webp',
-  '/20-14-11.webp',
-  '/photo-443.webp',
+type HeroSlide =
+  | { type: 'single'; src: string; position?: string }
+  | { type: 'pair'; left: string; right: string };
+
+const HERO_SLIDES: HeroSlide[] = [
+  { type: 'single', src: '/hero-ls-1.webp' },
+  { type: 'pair',   left: '/hero-pt-1.webp',  right: '/hero-pt-2.webp' },
+  { type: 'single', src: '/hero-ls-2.webp' },
+  { type: 'pair',   left: '/hero-pt-3.webp',  right: '/hero-pt-4.webp' },
+  { type: 'single', src: '/hero-ls-3.webp' },
+  { type: 'pair',   left: '/hero-pt-5.webp',  right: '/hero-pt-6.webp' },
+  { type: 'single', src: '/hero-ls-4.webp' },
+  { type: 'pair',   left: '/hero-pt-7.webp',  right: '/hero-pt-8.webp' },
+  { type: 'single', src: '/hero-ls-5.webp' },
+  { type: 'pair',   left: '/hero-pt-9.webp',  right: '/hero-pt-10.webp' },
+  { type: 'single', src: '/hero-ls-6.webp' },
+  { type: 'pair',   left: '/hero-pt-11.webp', right: '/hero-pt-12.webp' },
+  { type: 'single', src: '/hero-ls-7.webp' },
 ];
-
-const HERO_SLIDE_POSITION: Record<string, string> = {
-  '/wed-a-53.webp': 'center 30%',
-};
 
 const Hero = ({ onBook }: { onBook: () => void }) => {
   const containerRef = useRef(null);
@@ -386,23 +378,54 @@ const Hero = ({ onBook }: { onBook: () => void }) => {
       <motion.div style={{ y, opacity }} className="absolute inset-0 w-full h-full">
         {/* Preload all slides */}
         <div className="sr-only" aria-hidden="true">
-          {HERO_SLIDES.map((src) => <img key={src} src={src} alt="" />)}
+          {HERO_SLIDES.map((s) => s.type === 'single'
+            ? <img key={s.src} src={s.src} alt="" />
+            : <><img key={s.left} src={s.left} alt="" /><img key={s.right} src={s.right} alt="" /></>
+          )}
         </div>
         <AnimatePresence>
-          <motion.img
-            key={HERO_SLIDES[current]}
-            src={HERO_SLIDES[current]}
-            alt=""
-            initial={{ opacity: 0, scale: 1.06 }}
-            animate={{ opacity: 0.95, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              opacity: { duration: 2, ease: 'easeInOut' },
-              scale: { duration: 6, ease: [0.16, 1, 0.3, 1] },
-            }}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: HERO_SLIDE_POSITION[HERO_SLIDES[current]] ?? 'center' }}
-          />
+          {(() => {
+            const slide = HERO_SLIDES[current];
+            if (slide.type === 'single') {
+              return (
+                <motion.img
+                  key={slide.src}
+                  src={slide.src}
+                  alt=""
+                  fetchPriority={current === 0 ? 'high' : 'auto'}
+                  initial={{ opacity: 0, scale: 1.06 }}
+                  animate={{ opacity: 0.95, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    opacity: { duration: 2, ease: 'easeInOut' },
+                    scale: { duration: 6, ease: [0.16, 1, 0.3, 1] },
+                  }}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{ objectPosition: slide.position ?? 'center' }}
+                />
+              );
+            }
+            return (
+              <motion.div
+                key={slide.left}
+                className="absolute inset-0 flex"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.95 }}
+                exit={{ opacity: 0 }}
+                transition={{ opacity: { duration: 2, ease: 'easeInOut' } }}
+              >
+                {/* Dark zone for text — left 38% */}
+                <div className="w-[38%] h-full bg-charcoal shrink-0" />
+                {/* Two portrait photos — right 62% */}
+                <div className="relative flex w-[62%] h-full shrink-0">
+                  <img src={slide.left}  alt="" className="w-1/2 h-full object-cover object-center" />
+                  <img src={slide.right} alt="" className="w-1/2 h-full object-cover object-center" />
+                  {/* Gradient to soften the left edge */}
+                  <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-charcoal to-transparent pointer-events-none" />
+                </div>
+              </motion.div>
+            );
+          })()}
         </AnimatePresence>
         {/* Bottom glow — keeps photo vivid, only darkens where text lives */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
@@ -411,7 +434,7 @@ const Hero = ({ onBook }: { onBook: () => void }) => {
       </motion.div>
 
       {/* Main content — left-aligned, bottom */}
-      <div className="absolute inset-0 flex flex-col justify-end items-start text-white px-10 md:px-16 pb-16 pt-[72px]">
+      <div className="absolute inset-0 flex flex-col justify-end items-start text-white px-8 md:px-16 pb-16 pt-[72px]">
         {/* Heading */}
         <motion.div
           initial={{ y: 60, opacity: 0 }}
@@ -526,7 +549,7 @@ const StatsSection = () => {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-80px' }}
+        viewport={{ once: true }}
         className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-px bg-white/10"
       >
         {/* Плашка 1 — широкая, большая */}
@@ -588,9 +611,8 @@ const AboutRiverLoft = () => {
     offset: ['start start', 'end end'],
   });
 
-  // Church rises from below, covers text physically (no fake opacity fade on text)
-  const churchY = useTransform(scrollYProgress, [0, 1], ['100vh', '0vh']);
-  const churchScale = useTransform(scrollYProgress, [0, 1], [0.92, 1.05]);
+  // Church slides in from the right as user scrolls
+  const churchX = useTransform(scrollYProgress, [0, 1], ['110%', '0%']);
 
   return (
     <section
@@ -602,7 +624,7 @@ const AboutRiverLoft = () => {
       <div className="sticky top-0 h-screen overflow-hidden bg-charcoal z-10">
 
         {/* Text — stays white, church physically covers it */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-12 lg:px-24 text-center z-10 pointer-events-none">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-8 md:px-16 text-center z-10 pointer-events-none">
 
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -640,15 +662,16 @@ const AboutRiverLoft = () => {
           </motion.div>
         </div>
 
-        {/* Church — rises from below, overlaps text, z-20 */}
+        {/* Church — slides in from right */}
         <motion.div
-          style={{ y: churchY, scale: churchScale, willChange: 'transform' }}
-          className="absolute inset-x-0 bottom-0 z-20 origin-bottom"
+          style={{ x: churchX, willChange: 'transform' }}
+          className="absolute right-0 bottom-0 z-20 flex items-end justify-end"
         >
           <img
             src="/church-dubrovitsy.png"
             alt="Церковь Знамение в Дубровицах"
-            className="w-full h-auto block"
+            className="block"
+            style={{ maxHeight: '92vh', maxWidth: '48vw', width: 'auto', height: 'auto' }}
           />
         </motion.div>
 
@@ -715,7 +738,7 @@ const EditorialAdvantage = ({ title, desc, index }: any) => {
 
 const AdvantagesSection = () => {
   return (
-    <section className="relative py-32 lg:py-48 px-6 lg:px-24 bg-charcoal overflow-hidden min-h-screen flex items-center">
+    <section className="relative py-32 lg:py-48 px-8 md:px-16 bg-charcoal overflow-hidden min-h-screen flex items-center">
       <div className="absolute inset-0">
         <img
           src="/IMG_20260414_202525.webp"
@@ -732,9 +755,8 @@ const AdvantagesSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6"
+          className="mb-16 flex flex-col items-center text-center gap-6"
         >
-          {/* TITLE-L */}
           <h2
             className="font-cormorant font-semibold text-white leading-[1.05]"
             style={{ fontSize: 'clamp(3.45rem, 6.90vw, 6.90rem)' }}
@@ -744,9 +766,8 @@ const AdvantagesSection = () => {
             <span className="font-accent font-light text-white">преимущества</span>
           </h2>
 
-          {/* Подзаголовок — читаемый размер */}
           <p
-            className="font-lora font-medium text-white max-w-sm md:text-right pb-1"
+            className="font-lora font-medium text-white max-w-sm pb-1"
             style={{ fontSize: 'clamp(1.15rem, 1.61vw, 1.44rem)' }}
           >
             Идеальное мероприятие складывается из внимания к каждой детали.
@@ -781,24 +802,20 @@ const AdvantagesSection = () => {
 
 const ZONES = [
   {
-    title: 'Главный зал',
-    images: ['/hall-1.webp', '/hall-2.webp', '/hall-3.webp'],
-  },
-  {
-    title: 'Welcome-зона',
+    title: 'Зона Welcome',
     images: ['/IMG_20260414_202517.webp', '/IMG_20260414_202525.webp', '/IMG_20260414_202529.webp'],
   },
   {
-    title: 'Зона церемонии',
-    images: ['/IMG_20260414_202551.webp', '/IMG_20260414_202553.webp'],
-  },
-  {
-    title: 'Камерная терраса',
-    images: ['/IMG_20260414_202558.webp', '/IMG_20260414_202520.webp'],
+    title: 'Основной зал',
+    images: ['/hall-1.webp', '/hall-2.webp', '/hall-3.webp'],
   },
   {
     title: 'Гримерная комната',
-    images: [],
+    images: ['/IMG_20260414_202551.webp', '/IMG_20260414_202553.webp'],
+  },
+  {
+    title: 'Уборные комнаты',
+    images: ['/IMG_20260414_202558.webp', '/IMG_20260414_202520.webp'],
   },
 ];
 
@@ -807,7 +824,6 @@ const INCLUDED_SERVICES = [
   'Профессиональное обслуживание',
   'Вкусная кухня',
   'Гардеробная зона',
-  '4 уборных комнаты',
   'Столы и стулья',
   'Белый текстиль',
   'Дизайнерская посуда',
@@ -1025,7 +1041,7 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
     'w-16 md:w-24 bg-transparent border-b-2 border-charcoal/20 focus:border-gold focus:outline-none text-center font-cormorant font-semibold text-charcoal pb-1 transition-colors duration-200 placeholder:text-charcoal/25';
 
   return (
-    <section className="py-32 px-6 lg:px-24 bg-sand text-charcoal flex flex-col justify-center items-center">
+    <section className="py-32 px-8 md:px-16 bg-sand text-charcoal flex flex-col justify-center items-center">
       <div className="max-w-4xl w-full mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -1217,13 +1233,24 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
               </div>
             )}
 
-            <button
-              onClick={onBook}
-              className="rounded-full border border-charcoal/30 text-charcoal px-12 py-5 font-lora font-medium hover:bg-charcoal hover:text-sand transition-all duration-300 cursor-pointer"
-              style={{ fontSize: 'clamp(1.09rem, 1.49vw, 1.26rem)' }}
-            >
-              Забронировать эту дату
-            </button>
+            <div className="flex flex-wrap gap-4 items-center">
+              <button
+                onClick={onBook}
+                className="rounded-full border border-charcoal/30 text-charcoal px-12 py-5 font-lora font-medium hover:bg-charcoal hover:text-sand transition-all duration-300 cursor-pointer"
+                style={{ fontSize: 'clamp(1.09rem, 1.49vw, 1.26rem)' }}
+              >
+                Забронировать эту дату
+              </button>
+              <a
+                href="/pamyatka.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-charcoal/30 text-charcoal px-8 py-5 font-lora font-medium hover:bg-charcoal hover:text-sand transition-all duration-300"
+                style={{ fontSize: 'clamp(1.09rem, 1.49vw, 1.26rem)' }}
+              >
+                Памятка гостя
+              </a>
+            </div>
 
             <div className="pb-16" />
           </motion.div>
@@ -1269,20 +1296,15 @@ const FOOTER_NAV = [
   { label: 'Залы и зоны', href: '#' },
   { label: 'Галерея', href: '#' },
   { label: 'Условия аренды', href: '#' },
+  { label: 'Памятка гостя', href: '/pamyatka.html', target: '_blank' },
   { label: 'Контакты', href: '#' },
 ];
 
 const FOOTER_SOCIALS = [
   {
-    label: 'Instagram',
+    label: 'MAX',
     href: '#',
-    icon: (
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
-      </svg>
-    ),
+    icon: <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width={17} height={17} className="brightness-0 invert" />,
   },
   {
     label: 'ВКонтакте',
@@ -1310,11 +1332,6 @@ const FOOTER_SOCIALS = [
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
       </svg>
     ),
-  },
-  {
-    label: 'MAX',
-    href: '#',
-    icon: <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width={17} height={17} className="brightness-0 invert" />,
   },
 ];
 
@@ -1379,7 +1396,7 @@ const Footer = ({ onBook }: { onBook: () => void }) => {
               Ривер Лофт
             </p>
             <p className="font-lora font-medium text-white/45 leading-relaxed" style={{ fontSize: 'clamp(0.90rem, 1.15vw, 1rem)' }}>
-              Премиальная площадка для мероприятий у слияния рек Пахры и Десны
+              Премиальная площадка для мероприятий рядом с парком Дубровицы
             </p>
           </motion.div>
 
@@ -1397,6 +1414,7 @@ const Footer = ({ onBook }: { onBook: () => void }) => {
                 <li key={link.label}>
                   <a
                     href={link.href}
+                    target={(link as any).target}
                     className="font-lora font-medium text-white/65 hover:text-gold transition-colors duration-300 relative group inline-block"
                     style={{ fontSize: 'clamp(0.95rem, 1.2vw, 1.06rem)' }}
                   >
@@ -1446,8 +1464,7 @@ const Footer = ({ onBook }: { onBook: () => void }) => {
               Режим работы
             </p>
             <ul className="flex flex-col gap-2 font-lora font-medium text-white/60" style={{ fontSize: 'clamp(0.90rem, 1.15vw, 1rem)' }}>
-              <li>Пн — Пт: <span className="text-white">10:00 – 22:00</span></li>
-              <li>Сб — Вс: <span className="text-white">09:00 – 23:00</span></li>
+              <li>Ежедневно: <span className="text-white">11:00 – 23:00</span></li>
 
             </ul>
           </motion.div>
@@ -1463,25 +1480,25 @@ const Footer = ({ onBook }: { onBook: () => void }) => {
             </p>
             <div className="flex flex-col gap-1 mb-5">
               <a
-                href="mailto:hello@riverloft.ru"
+                href="mailto:info@river-loft.ru"
                 className="font-lora font-medium text-white/65 hover:text-gold transition-colors duration-300"
                 style={{ fontSize: 'clamp(0.95rem, 1.2vw, 1.06rem)' }}
               >
-                hello@riverloft.ru
+                info@river-loft.ru
               </a>
               <a
-                href="tel:+74991234567"
+                href="tel:+79258592225"
                 className="font-lora font-medium text-white/65 hover:text-gold transition-colors duration-300"
                 style={{ fontSize: 'clamp(0.95rem, 1.2vw, 1.06rem)' }}
               >
-                +7 (499) 123-45-67
+                +7 925 859 22 25
               </a>
             </div>
             <p className="font-lora font-medium text-white/35 mb-2" style={{ fontSize: 'clamp(0.78rem, 0.95vw, 0.88rem)' }}>
               Адрес
             </p>
             <p className="font-lora font-medium text-white/65 leading-relaxed" style={{ fontSize: 'clamp(0.95rem, 1.2vw, 1.06rem)' }}>
-              Подольский р-н,<br />с. Дубровицы,<br />ул. Парковая, 1
+              Поселок Дубровицы, д. 38
             </p>
           </motion.div>
 
@@ -1506,6 +1523,80 @@ const Footer = ({ onBook }: { onBook: () => void }) => {
     </footer>
   );
 };
+
+const partnerCategories = [
+  { num: '01', name: 'Диджеи' },
+  { num: '02', name: 'Декораторы' },
+  { num: '03', name: 'Кондитеры' },
+  { num: '04', name: 'Ведущие' },
+  { num: '05', name: 'Организаторы' },
+  { num: '06', name: 'Фотографы' },
+  { num: '07', name: 'Видеографы' },
+  { num: '08', name: 'Стилисты' },
+];
+
+const PartnersSection = () => (
+  <section className="w-full bg-sand py-24 md:py-36 px-10 md:px-16 overflow-hidden">
+
+      {/* Шапка */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col items-center text-center mb-16 md:mb-20"
+      >
+        <span
+          className="font-lora text-gold block mb-4"
+          style={{ fontSize: 'clamp(0.85rem, 1vw, 0.95rem)' }}
+        >
+          Партнёры площадки
+        </span>
+        <h2
+          className="font-cormorant font-medium text-charcoal leading-[0.88]"
+          style={{ fontSize: 'clamp(3rem, 6vw, 6rem)' }}
+        >
+          Лучшие
+          <br />
+          <span className="font-accent">специалисты</span>
+        </h2>
+        <a
+          href="/partners"
+          className="mt-8 inline-block font-lora font-medium text-charcoal border border-charcoal/30 px-9 py-4 rounded-full hover:bg-charcoal hover:text-sand transition-all duration-300"
+          style={{ fontSize: 'clamp(1rem, 1.35vw, 1.18rem)' }}
+        >
+          Смотреть всех партнёров
+        </a>
+      </motion.div>
+
+      {/* Сетка категорий */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-charcoal/10"
+      >
+        {partnerCategories.map((p) => (
+          <motion.div
+            key={p.num}
+            variants={itemVariants}
+            className="group relative bg-sand px-8 py-10 md:py-14 flex flex-col justify-between cursor-default overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-gold/6 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+            <span
+              className="font-cormorant font-medium text-charcoal leading-tight transition-colors duration-400 group-hover:text-gold"
+              style={{ fontSize: 'clamp(1.72rem, 2.88vw, 2.88rem)' }}
+            >
+              {p.name}
+            </span>
+            <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
+          </motion.div>
+        ))}
+      </motion.div>
+
+  </section>
+);
 
 const TravelSection = () => (
   <section className="relative w-full bg-charcoal" style={{ minHeight: '90vh' }}>
@@ -1620,6 +1711,7 @@ export default function App() {
       <AboutRiverLoft />
       <BookingSection onBook={openModal} />
       <Gallery />
+      <PartnersSection />
       <TravelSection />
       <Footer onBook={openModal} />
     </div>
