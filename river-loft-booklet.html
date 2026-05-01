@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>River Loft — Официальный Буклет</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap"
+        rel="stylesheet" />
+    <style>
+        /* ── DESIGN TOKENS ── */
+        :root {
+            --ink: #1C1C1A;
+            --cream: #F8F6F1;
+            --gold: #A8915A;
+            --muted: #6B6660;
+            --rule: #D6D0C4;
+            --paper: #F1EFE9;
+            --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+            --fs-xs: 12pt;
+            --fs-sm: 13pt;
+            --fs-body: 14pt;
+            --fs-md: 16pt;
+            --fs-lg: 24pt;
+            --fs-heading: 24pt;
+            --fs-num: 23pt;
+            --fs-h2: 30pt;
+            --fs-initial: 130pt;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 10pt;
+        }
+
+        body {
+            background: #D4CFC8;
+            font-family: 'Lora', Georgia, serif;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+
+        /* ── СТРАНИЦА ── */
+        .page {
+            width: 210mm;
+            height: 297mm;
+            overflow: hidden;
+            background: var(--cream);
+            margin: 12mm auto;
+            position: relative;
+            page-break-after: always;
+            break-after: page;
+            box-shadow: 0 12px 60px rgba(0, 0, 0, .18);
+        }
+
+        .page:last-child {
+            page-break-after: avoid;
+            break-after: avoid;
+        }
+
+        .inner {
+            height: 100%;
+            padding: 12mm 16mm 30mm;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            line-height: 1.15;
+        }
+
+        .section-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: var(--fs-heading);
+            font-style: italic;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 5mm;
+            display: block;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 7mm;
+            left: 16mm;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: var(--fs-sm);
+            font-weight: 500;
+            color: var(--gold);
+            opacity: 0.8;
+            z-index: 20;
+        }
+
+        /* ── ОБЛОЖКА ── */
+        .cover {
+            height: 100%;
+            background: var(--ink);
+            color: var(--cream);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20mm 22mm 24mm;
+        }
+
+        .cover-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.38;
+        }
+
+        .cover::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 30%, rgba(28, 28, 26, .72) 100%);
+            z-index: 5;
+        }
+
+        .cover-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .cover-title-img {
+            width: 115mm;
+            filter: brightness(0) invert(1);
+            margin-bottom: 8mm;
+        }
+
+        .cover-tagline {
+            font-size: var(--fs-md);
+            max-width: 130mm;
+            line-height: 1.65;
+            color: rgba(248, 246, 241, .88);
+        }
+
+        /* ── ПРИВЕТСТВИЕ ── */
+        .welcome-heading {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: var(--fs-h2);
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 6mm;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-text {
+            font-size: var(--fs-body);
+            line-height: 1.65;
+            margin-bottom: 4mm;
+            color: #2A2926;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-sign {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 15pt;
+            white-space: nowrap;
+            color: var(--gold);
+            margin-top: 3mm;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-photo {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100mm;
+            overflow: hidden;
+        }
+
+        .welcome-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 40%;
+        }
+
+        /* ── ПРЕИМУЩЕСТВА ── */
+        .hero-stripe {
+            height: 62mm;
+            width: calc(100% + 32mm);
+            margin-left: -16mm;
+            margin-top: -12mm;
+            margin-bottom: 8mm;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .hero-stripe img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 45%;
+        }
+
+        .adv-item {
+            display: grid;
+            grid-template-columns: 12mm 1fr;
+            gap: 2mm;
+            margin-bottom: 4mm;
+            padding-bottom: 4mm;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .adv-item:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .adv-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: var(--fs-num);
+            color: var(--gold);
+            line-height: 1.1;
+            font-weight: 600;
+        }
+
+        .adv-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: var(--fs-lg);
+            font-weight: 600;
+            font-style: italic;
+            margin-bottom: 1.5mm;
+            color: var(--ink);
+        }
+
+        .adv-desc {
+            font-size: var(--fs-body);
+            line-height: 1.6;
+            color: #3A3835;
+        }
+
+        /* ── FAQ ── */
+        .faq-category {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: var(--fs-lg);
+            font-style: italic;
+            font-weight: 700;
+            color: var(--gold);
+            padding-bottom: 2mm;
+            margin-bottom: 6mm;
+            border-bottom: 1.5px solid var(--gold);
+        }
+
+        .faq-item {
+            margin-bottom: 5.5mm;
+            padding-bottom: 5.5mm;
+            border-bottom: 1px dashed var(--rule);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .faq-q {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: var(--fs-heading);
+            font-weight: 600;
+            font-style: italic;
+            line-height: 0.9;
+            margin-bottom: 2.5mm;
+            color: var(--ink);
+        }
+
+        .faq-a {
+            font-size: var(--fs-body);
+            line-height: 1.6;
+            color: #2E2C29;
+        }
+
+        .faq-a p {
+            margin-bottom: 2mm;
+        }
+
+        .faq-a ul,
+        .faq-a ol {
+            padding-left: 4mm;
+            margin-bottom: 2mm;
+        }
+
+        .faq-a li {
+            margin-bottom: 1.5mm;
+        }
+
+        .faq-a li::marker {
+            color: var(--gold);
+        }
+
+        .highlight-box {
+            background: var(--paper);
+            border-left: 3px solid var(--gold);
+            padding: 4mm 5mm;
+            margin-top: 4mm;
+            font-size: var(--fs-body);
+            line-height: 1.6;
+            font-style: italic;
+            color: var(--ink);
+        }
+
+        .hero-img {
+            height: 90mm;
+            width: calc(100% + 32mm);
+            margin-left: -16mm;
+            margin-top: -12mm;
+            margin-bottom: 8mm;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .hero-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 70%;
+        }
+
+        /* ── ЛОКАЦИЯ ── */
+        .location-hero {
+            height: 68mm;
+            width: calc(100% + 32mm);
+            margin-left: -16mm;
+            margin-top: -12mm;
+            margin-bottom: 7mm;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .location-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 55%;
+        }
+
+        .location-text {
+            font-size: var(--fs-sm);
+            line-height: 1.62;
+            color: #2E2C29;
+            margin-bottom: 3.5mm;
+        }
+
+        .fact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4mm;
+            margin-top: auto;
+            padding-top: 5mm;
+            border-top: 1px solid var(--rule);
+        }
+
+        .fact-label {
+            font-size: var(--fs-xs);
+            color: var(--gold);
+            margin-bottom: 1mm;
+        }
+
+        .fact-val {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: var(--fs-md);
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.3;
+        }
+
+        /* ── СВАДЕБНОЕ ПУТЕШЕСТВИЕ ── */
+        .travel-hero {
+            height: 85mm;
+            width: calc(100% + 32mm);
+            margin-left: -16mm;
+            margin-top: -12mm;
+            margin-bottom: 8mm;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .travel-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 40%;
+        }
+
+        /* ── ЗАДНЯЯ ОБЛОЖКА ── */
+        .back-cover {
+            height: 100%;
+            background: var(--ink);
+            color: var(--cream);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20mm;
+            position: relative;
+        }
+
+        .back-logo {
+            width: 100mm;
+            filter: brightness(0) invert(1);
+            margin-bottom: 12mm;
+        }
+
+        .back-divider {
+            width: 30mm;
+            height: 1px;
+            background: var(--gold);
+            margin: 0 auto 8mm;
+        }
+
+        .contact-label {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--gold);
+            font-size: var(--fs-md);
+            margin-top: 6mm;
+        }
+
+        .contact-val {
+            font-size: var(--fs-body);
+            color: rgba(248, 246, 241, .85);
+            margin-top: 1mm;
+        }
+
+        .back-tagline {
+            margin-top: 16mm;
+            opacity: 0.5;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18pt;
+            font-style: italic;
+        }
+
+        @media print {
+            body {
+                background: none;
+            }
+
+            .page {
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- СТРАНИЦА 01 — ОБЛОЖКА -->
+    <div class="page">
+        <div class="cover">
+            <img src="IMG_20260414_202543.webp" class="cover-bg" alt="Обложка">
+            <div class="cover-content">
+                <img src="Group 24.png" class="cover-title-img" alt="River Loft">
+                <div class="cover-tagline">Место, где каждый праздник становится особенным и незабываемым</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- СТРАНИЦА 02 — ПРИВЕТСТВИЕ -->
+    <div class="page">
+        <div class="inner">
+            <span class="section-label">Добро пожаловать</span>
+            <h2 class="welcome-heading">Добрый день<br>наши дорогие гости!</h2>
+            <p class="welcome-text">Мы очень рады, что Вы остановили свой выбор на нашей площадке!</p>
+            <p class="welcome-text">Команда River loft сделает всё для того, чтобы наши гости чувствовали себя
+                максимально комфортно, как в процессе подготовки, так и в день мероприятия!</p>
+            <p class="welcome-text">В независимости от формата торжества, мы готовы помочь Вам с организацией,
+                планированием, расстановкой столов, подбором подрядчиков, составлением меню, расчётом количества
+                необходимых напитков и многих других вопросов.</p>
+            <p class="welcome-text">Выбирая River loft, Вы делаете своё мероприятие организованным, понятным и
+                максимально комфортным!</p>
+            <div class="welcome-sign">Желаем Вам лёгкой подготовки и приятного отдыха!</div>
+        </div>
+        <div class="welcome-photo">
+            <img src="IMG_20260414_202514.webp" alt="Зал">
+        </div>
+        <div class="page-number">02</div>
+    </div>
+
+    <!-- СТРАНИЦА 03 — ПРЕИМУЩЕСТВА 1–4 -->
+    <div class="page">
+        <div class="inner">
+            <span class="section-label">Наши преимущества</span>
+            <div class="adv-item">
+                <div class="adv-num">1.</div>
+                <div>
+                    <div class="adv-title">Локация</div>
+                    <div class="adv-desc">River loft находится на территории посёлка Дубровицы городского округа
+                        Подольск в 200 метрах от Церкви Знамения Пресвятой Богородицы. В месте слияния двух рек, Пахры и
+                        Десны. Рядом с нашим лофтом есть обширная бесплатная парковка, историческая усадьба Голицына и
+                        парк для прогулок.</div>
+                </div>
+            </div>
+            <div class="adv-item">
+                <div class="adv-num">2.</div>
+                <div>
+                    <div class="adv-title">Работа под закрытие</div>
+                    <div class="adv-desc">River loft работает в "закрытом" формате и кроме Вас и Ваших гостей в день
+                        мероприятия в зале никого не будет! На входе в лофт гостей встретит охранник, который следит за
+                        общим порядком и тем, чтобы посторонние в зал не заходили.</div>
+                </div>
+            </div>
+            <div class="adv-item">
+                <div class="adv-num">3.</div>
+                <div>
+                    <div class="adv-title">Большой зал</div>
+                    <div class="adv-desc">Основной зал имеет площадь 200 м² и комфортно размещает до 100 гостей при
+                        банкетной рассадке и 150 гостей в формате фуршета.</div>
+                </div>
+            </div>
+            <div class="adv-item">
+                <div class="adv-num">4.</div>
+                <div>
+                    <div class="adv-title">Дополнительные помещения</div>
+                    <div class="adv-desc">Помимо основного зала нашим гостям также доступны: гардеробная зона, зал
+                        Welcome для сбора гостей и организации фуршета, гримерная комната для подрядчиков и 4
+                        полноценных уборных комнаты.</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-number">03</div>
+    </div>
+
+    <!-- СТРАНИЦА 04 — ПРЕИМУЩЕСТВА 5–6 -->
+    <div class="page">
+        <div class="inner">
+            <div class="hero-stripe" style="height: 110mm;">
+                <img src="IMG_20260414_202558.webp" alt="Зал">
+            </div>
+            <div class="adv-item">
+                <div class="adv-num">5.</div>
+                <div>
+                    <div class="adv-title">Богатое техническое оснащение</div>
+                    <div class="adv-desc">2,5 кВт профессионального звука JBL, максимально крутая светомузыка, целых три
+                        экрана 65 дюймов и дым машина доступны нашим гостям, чтобы сделать каждый праздник особенным!
+                        Вам не придётся думать об аренде звука, светомузыки или экранов, просто приходите и отдыхайте!
+                    </div>
+                </div>
+            </div>
+            <div class="adv-item">
+                <div class="adv-num">6.</div>
+                <div>
+                    <div class="adv-title">Профессиональная команда и высокий сервис</div>
+                    <div class="adv-desc">Мы думаем о наших гостях и о том, как сделать каждое мероприятие ещё лучше.
+                        Более 10 лет наша команда работает над тем, чтобы каждое торжество было особенным.
+                        Профессиональные официанты, опытные повара и деликатные менеджеры помогут быть уверенными в том,
+                        что Вы сделали правильный выбор и мероприятие пройдёт именно так, как это задуманно. Нашим
+                        гостям также доступны пледы, зонтики и одноразовые тапочки, а для самых требовательных гостей
+                        есть формат VIP-обслуживания.</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-number">04</div>
+    </div>
+
+    <!-- СТРАНИЦА 05 — FAQ: СТОИМОСТЬ -->
+    <div class="page">
+        <div class="inner">
+            <span class="section-label">Вопросы и ответы</span>
+            <div class="faq-category">Стоимость и Бронирование</div>
+            <div class="faq-item">
+                <div class="faq-q">Как формируется стоимость мероприятия?</div>
+                <div class="faq-a">
+                    <p>Смета на мероприятие обычно состоит из:</p>
+                    <ol>
+                        <li>Меню гостей (~5000-7500 руб./чел за хороший стол).</li>
+                        <li>Меню молодоженов (~6000-10000 руб./чел.)</li>
+                        <li>Фуршет на ваше усмотрение (~500-1200 руб./чел.).</li>
+                        <li>Детское меню (~1000-3500 руб./чел.).</li>
+                        <li>Меню стафф (подрядчики, которые работают на вашем мероприятии ~2000 руб./чел.).</li>
+                        <li>Дополнительные услуги (на ваше усмотрение)</li>
+                        <li>Обслуживание 10% от стоимости мероприятия.</li>
+                        <li>Аренда зала от 50 до 100 тыс. руб. в зависимости от сезона и дня недели.</li>
+                    </ol>
+                    <div class="highlight-box">Как показывает практика, средняя стоимость хорошего мероприятия выходит
+                        ~7500-10000 руб./чел.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Какой размер аванса необходим для бронирования площадки? Сроки оплаты?</div>
+                <div class="faq-a">
+                    Для бронирования River loft необходимо заключить 2 договора. Договор на аренду помещения, аванс по
+                    данному договору составляет 50% от стоимости аренды на день Вашего мероприятия. По договору
+                    Кейтеринга аванс фиксированный и составляет 30 тыс. руб. Итого общий аванс при бронировании составит
+                    от 55 до 80 тыс. руб. в зависимости от даты Вашего мероприятия. Аванс оплачивается при заключении
+                    договоров, окончательное согласование сметы и ее оплата не позднее, чем за 7 календарных дней до
+                    мероприятия.
+                </div>
+            </div>
+        </div>
+        <div class="page-number">05</div>
+    </div>
+
+    <!-- СТРАНИЦА 06 — FAQ: ЕДА (АССОРТИМЕНТ) -->
+    <div class="page">
+        <div class="inner">
+            <div class="hero-img">
+                <img src="IMG_20260416_153443.png" alt="Еда">
+            </div>
+            <div class="faq-category">Меню и Напитки</div>
+            <div class="faq-item">
+                <div class="faq-q">Какой ассортимент блюд необходим для оптимального наполнения стола на банкет?</div>
+                <div class="faq-a">
+                    <p>Меню на каждое мероприятие составляется индивидуально в зависимости от пожеланий заказчика.
+                        Рекомендованный ассортимент блюд включает в себя:</p>
+                    <ul>
+                        <li>1 - 3 вида салатов</li>
+                        <li>7 - 10 видов холодных закусок</li>
+                        <li>1-2 вида горячих закусок</li>
+                        <li>1-3 вида горячих блюд</li>
+                        <li>1-2 вида гарниров</li>
+                        <li>Соусы и хлеб</li>
+                    </ul>
+                    <p>Среднее количество еды на человека составляет 1100-1400 грамм на персону.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Когда необходимо окончательно утвердить меню?</div>
+                <div class="faq-a">Окончательное согласование сметы должно быть произведено не позднее чем за 7
+                    календарных дней до мероприятия.</div>
+            </div>
+        </div>
+        <div class="page-number">06</div>
+    </div>
+
+    <!-- СТРАНИЦА 07 — FAQ: ЕДА (ДОЗАКАЗ, НАПИТКИ) -->
+    <div class="page">
+        <div class="inner">
+            <div class="hero-img">
+                <img src="IMG_20260416_215709.png" alt="Напитки">
+            </div>
+            <div class="faq-category">Меню и Напитки — продолжение</div>
+            <div class="faq-item">
+                <div class="faq-q">Возможен ли дозаказ еды и напитков в день мероприятия?</div>
+                <div class="faq-a">Наша площадка работает только на банкеты, поэтому не держит товарный запас продуктов.
+                    Закупка продуктов осуществляется четко под заранее согласованную смету, что позволяет нам сохранять
+                    максимальную свежесть продуктов. Поэтому дозаказ практически невозможен. Подробности Вы можете
+                    узнать у наших менеджеров.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Есть ли пробковый сбор? Можно ли приносить свою еду и безалкогольные напитки?</div>
+                <div class="faq-a">Пробкового сбора у нас нет. Все напитки, как алкогольные, так и безалкогольные наши
+                    гости могут принести с собой. А вот своя еда на нашей площадке под запретом. Единственное исключение
+                    – кондитерские изделия.</div>
+            </div>
+        </div>
+        <div class="page-number">07</div>
+    </div>
+
+    <!-- СТРАНИЦА 08 — FAQ: МУЗЫКА И СВЕТ -->
+    <div class="page">
+        <div class="inner">
+            <div class="faq-category">Техническое оснащение</div>
+            <div class="faq-item">
+                <div class="faq-q">Какая музыкальная аппаратура установлена? Есть ли микрофоны? Что требуется для
+                    подключения к нашей музыкальной системе? Есть ли звукорежиссер/техник?</div>
+                <div class="faq-a">
+                    <p>Наш зал оснащён музыкальной системой JBL PRX 400, 2 колонки по 400 Вт. и 2 сабвуфера по 800 Вт.
+                        Использование музыкальной аппаратуры возможно только при наличии диджея. Без диджея доступа к
+                        дорогостоящей музыкальной аппаратуре у Вас не будет! Подключение осуществляется через цифровой
+                        пульт Soundcraft UI16 или аналоговый пульт Yamaha MG10XU с помощью двух кабелей XLR. Микрофонов
+                        у нас нет!</p>
+                    <p>Наши сотрудники помогут Вашим подрядчикам с подключением, но техник или звукорежиссер у нас
+                        отсутствует, аппаратура имеет базовую настройку, детальную подстройку аппаратуры под себя диджей
+                        осуществляет самостоятельно.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Какой светомузыкой и дополнительным оборудованием оснащена площадка? Кто управляет
+                    светомузыкой и дополнительным оборудованием?</div>
+                <div class="faq-a">
+                    <p>River loft оснащен современной светомузыкой. Нашим гостям доступны: Заливочный свет WASH 1915 в
+                        количестве 4 шт. и Beam 150 и 200 Вт. в количестве не менее 6 штук. Светомузыка настроена через
+                        блок Sunlight 2 с Wi-Fi DMX на красном сигнале, а также дыммашина (легкий дым). За
+                        дополнительную плату доступен лазерный проектор с «Эффектом Золушки». Управление данной
+                        светомузыкой, а также дыммашиной и лазерным проектором осуществляет сотрудник нашей площадки.
+                        Его услуги включены в стоимость аренды площадки.</p>
+                </div>
+            </div>
+        </div>
+        <div class="page-number">08</div>
+    </div>
+
+    <!-- СТРАНИЦА 09 — FAQ: ДЫМ, ЭКРАНЫ -->
+    <div class="page">
+        <div class="inner">
+            <div class="faq-category">Техническое оснащение — продолжение</div>
+            <div class="faq-item">
+                <div class="faq-q">Есть ли на площадке тяжелый дым?</div>
+                <div class="faq-a">Нет, оборудования для тяжелого дыма у нас нет. Но обратившись к нашим менеджерам за
+                    помощью, Вы можете получить контакты партнеров, которые смогут предоставить Вам данную услугу.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Есть ли проектор или экран для трансляции видео? Как к нему подключиться?</div>
+                <div class="faq-a">Наш зал оснащен тремя телевизорами размером 65 дюймов работающих в разрешении FHD
+                    (1920*1080). Два телевизора имеют настенное крепление на поворотных кронштейнах и беспроводную
+                    синхронизированную передачу изображения, один из телевизоров на стойке с возможностью перемещения и
+                    подключением через обычный HDMI кабель. Все телевизоры соединены через сплиттер и выдают
+                    синхронизированное изображение. Задержка минимальная. Для подключения необходим ноутбук с обычным
+                    HDMI разъемом. Внимание! Наш сплиттер не всегда корректно работает с MacBook.</div>
+            </div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:100mm;overflow:hidden;">
+            <img src="IMG_20260417_173915.png" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+        <div class="page-number">09</div>
+    </div>
+
+    <!-- СТРАНИЦА 10 — FAQ: ТЕКСТИЛЬ, СТУЛЬЯ -->
+    <div class="page">
+        <div class="inner">
+            <div class="faq-category">Сервировка и Мебель</div>
+            <div class="faq-item">
+                <div class="faq-q">Какой текстиль предоставляет площадка? Есть ли чехлы на стулья?</div>
+                <div class="faq-a">River loft предоставляет базовый текстиль (скатерти и тканевые салфетки) белого
+                    цвета. Чехлов на стулья у нас нет. Альтернативный текстиль возможно заказать у декоратора.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Сколько гостей можно разместить за столами? Сколько стульев есть?</div>
+                <div class="faq-a">Для рассадки гостей мы используем круглые столы (в наличии 16 штук) диаметром 150 см.
+                    Данные столы комфортно размещают до 8 гостей. Также у нас есть прямоугольные и два полукруглых
+                    стола, рассадку за данные столы необходимо согласовывать отдельно. Наш зал предоставляет гостям 100
+                    стульев для рассадки, за отдельную плату возможно предоставление белых стульев Кьявари с белыми
+                    подушками (в наличии 40 штук).</div>
+            </div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:100mm;overflow:hidden;">
+            <img src="IMG_20260417_174355.png"
+                style="width:100%;height:100%;object-fit:cover;object-position:center 62%;display:block;">
+        </div>
+        <div class="page-number">10</div>
+    </div>
+
+    <!-- СТРАНИЦА 11 — FAQ: ПОСУДА, ОБСЛУЖИВАНИЕ -->
+    <div class="page">
+        <div class="inner">
+            <div class="faq-category">Сервировка и Сервис</div>
+            <div class="faq-item">
+                <div class="faq-q">Какого цвета посуда предоставляется?</div>
+                <div class="faq-a">
+                    <p>Для сервировки используется прозрачная посуда. Прозрачные тарелки (сервировка в 2 тарелки, 2
+                        вилки и 2 ножа), а также прозрачные классические бокалы (для сервировки по умолчанию
+                        используется Винный бокал и бокал Флюте для шампанского, также доступны Хайбол для
+                        безалкогольных напитков, Снифтер для коньяка, Шот для крепких напитков, Рокс для виски, Мартинки
+                        и Маргаритки для коктейлей, а также пивные бокалы).</p>
+                    <p>Для подачи блюд тспользуется посуда белого и черного цветов из высококачественной керамики,
+                        сланцевого камня и дерева разных размеров и форм.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Как подаются салаты и горячие блюда? Стоят ли алкогольные и безалкогольные напитки на
+                    столе? В чем отличие стандартного и VIP-обслуживания?</div>
+                <div class="faq-a">
+                    <p>По умолчанию, стандартный вариант обслуживания 1 официант на 2 стола, отдача салатов и горячих
+                        блюд осуществляется в общих тарелках по 3-4 порции в тарелке. Алкоголь и безалкогольные напитки
+                        стоят на столе.</p>
+                    <p>У нас есть варианты порционной подачи, а также вариант VIP-обслуживания (Доп. Услуга, за каждым
+                        столом будет свой официант). При VIP-обслуживании напитки не стоят на столах гостей, а раскладка
+                        салатов, горячих блюд и розлив напитков осуществляется официантами по опросу.</p>
+                </div>
+            </div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;">
+            <img src="IMG_20260417_173331.png" style="width:100%;height:220px;object-fit:cover;display:block;">
+        </div>
+        <div class="page-number">11</div>
+    </div>
+
+    <!-- СТРАНИЦА 12 — FAQ: МОНТАЖ, ДОПЛАТЫ -->
+    <div class="page">
+        <div class="inner">
+            <div class="faq-category">Организационные вопросы</div>
+            <div class="faq-item">
+                <div class="faq-q">Можно ли провести выездную регистрацию? Возможна ли официальная регистрация?</div>
+                <div class="faq-a">Да, выездную регистрацию на нашей площадке проводят, как на улице, так и в помещении.
+                    Услуга официальной выездной регистрации сейчас доступна всем, но за данной услугой Вам будет
+                    необходимо обратиться в органы ЗАГС.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Сколько времени дается на монтаж/демонтаж декора?</div>
+                <div class="faq-a">По договору аренды Вашим подрядчикам дается 5 часов до сбора гостей (но не ранее 8
+                    часов утра) на монтажные работы и 1 час после окончания мероприятия на демонтаж декора и
+                    оборудования. Если этого времени Вашим подрядчикам недостаточно, Вы можете доплатить за
+                    дополнительные «Технические часы». Подробности уточняйте у наших менеджеров.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Какие доплаты могут быть?</div>
+                <div class="faq-a">
+                    <p>В день мероприятия наши гости, как правило, оплачивают 3 статьи расходов:</p>
+                    <ul>
+                        <li>Оплата за чай и кофе (обычно сумма составляет 100-250 руб./гостя).</li>
+                        <li>Бой посуды и порчу имущества гостями и подрядчиками (рекомендуем держать резерв).</li>
+                        <li>Продление площадки (Зал по умолчанию работает до 23.00, далее 20 тыс./руб./час).</li>
+                    </ul>
+                    <p>Весь перечень имущества, а также дополнительных услуг прописаны в договорах и меню.</p>
+                </div>
+            </div>
+        </div>
+        <div class="page-number">12</div>
+    </div>
+
+    <!-- СТРАНИЦА 13 — FAQ: ТОРТ, СВЕЧИ, ПИРОТЕХНИКА -->
+    <div class="page">
+        <div class="inner">
+            <div class="faq-category">Организационные вопросы — продолжение</div>
+            <div class="faq-item">
+                <div class="faq-q">Есть ли стол для подачи торта и холодильник для его хранения?</div>
+                <div class="faq-a">Да, у нас красивый кованный металлический выкатной стол для подачи торта с зеркальной
+                    столешницей диаметром 60 см. Холодильник под торт также есть, размеры подложки для торта, чтобы он
+                    поместился в холодильник, должны быть не более чем 50*50 см. Высота до 1 метра.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Разрешено ли использование свечей в зале?</div>
+                <div class="faq-a">В нашем лофте разрешаются только насыпные свечи в колбах, электронные свечи и
+                    семейный очаг. Данное ограничение связано с заботой о бюджете заказчика. Если воск попадает на
+                    текстиль, жирное пятно вывести невозможно даже с помощью дорогой химчистки, соответственно во
+                    избежание порчи текстиля и его оплаты согласно договору, мы запрещаем использование свечей (кроме
+                    насыпных в колбах и семейного очага) в нашем зале. После зажжения семейного очага будьте пожалуйста
+                    внимательны и постарайтесь, чтобы воск не попадал на текстиль.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Разрешена ли пиротехника?</div>
+                <div class="faq-a">На нашей площадке любая пиротехника запрещена, во избежание повреждения помещения,
+                    имущества и в целях пожарной безопасности. Ограничения также распространяются на прилегающую
+                    территорию (5 метров от здания). Территория дальше 5 метров от здания не является территорией нашего
+                    лофта и администрация площадки не имеет права Вам что-то запрещать или разрешать там делать. Поэтому
+                    салюты у нас запускают, но обязательно далее 5 метров от здания и под полную ответственность
+                    заказчика.</div>
+            </div>
+        </div>
+        <div class="page-number">13</div>
+    </div>
+
+    <!-- СТРАНИЦА 14 — ЛОКАЦИЯ -->
+    <div class="page">
+        <div class="inner">
+            <div class="location-hero">
+                <img src="IMG_20260414_202520.webp" alt="Дубровицы">
+            </div>
+            <span class="section-label">Особенности локации</span>
+            <p class="location-text">River Loft располагается в одном из самых красивых районов Подмосковья вблизи
+                усадьбы Голицына и в 200 метрах от объекта культурного наследия Церкви Знамения Пресвятой Богородицы
+                1699 года постройки, который является одним из самых неординарных памятников церковного зодчества рубежа
+                XVII–XVIII вв. Ни один другой подмосковный храм не является столь загадочным, как этот. Доподлинно
+                неизвестны ни автор этого шедевра, ни мастера, трудившиеся здесь. С уверенностью можно сказать лишь, что
+                над созданием храма в Дубровицах трудились как иноземные, так и русские мастера.</p>
+            <p class="location-text">Территория действующего храма открыта для всех желающих. Помимо самого храма
+                посетители могут прогуляться по обновленному парку на месте слияния двух рек Пахры и Десны, а также
+                посетить смотровую площадку с потрясающими видами. Гостям доступна обширная бесплатная парковка, с
+                возможностью использования каршеринга.</p>
+            <div class="fact-grid">
+                <div>
+                    <div class="fact-label">Расстояние от МКАД</div>
+                    <div class="fact-val">26 км</div>
+                </div>
+                <div>
+                    <div class="fact-label">Маршруты</div>
+                    <div class="fact-val">Калужское, Варшавское, Симферопольское шоссе</div>
+                </div>
+                <div>
+                    <div class="fact-label">Парковка</div>
+                    <div class="fact-val">Обширная, бесплатная</div>
+                </div>
+                <div>
+                    <div class="fact-label">Такси</div>
+                    <div class="fact-val">Ожидание до 15 мин даже ночью</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-number">14</div>
+    </div>
+
+    <!-- СТРАНИЦА 15 — ПУТЕШЕСТВИЕ -->
+    <div class="page">
+        <div class="inner">
+            <div class="travel-hero">
+                <img src="IMG_20260416_153106.png" alt="Emoji Tours">
+            </div>
+            <span class="section-label">Свадебное путешествие</span>
+            <p class="welcome-text">Каждый гость для нас является особенным. Мы хотим, чтобы и после свадебного
+                торжества праздник для Вас продолжился незабываемым свадебным путешествием.</p>
+            <p class="welcome-text">Туристическое агентство Emoji Tours это место, где Вы сможете получить море
+                незабываемых впечатлений и ощутить надежность, заботу и новые впечатления от путешествия мечты.</p>
+            <p class="welcome-text">Наша задача — чтобы ваше путешествие стало индивидуальной историей, которую вы
+                будете пересказывать годами. Каждая деталь продумана для вашего вдохновения.</p>
+            <div style="margin-top:6mm;display:flex;flex-direction:column;gap:8px;">
+                <a href="tel:+79636491852"
+                    style="color:var(--gold);font-size:15px;text-decoration:none;font-family:var(--font-body);display:flex;align-items:center;gap:8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                    +7 963-649-18-52
+                </a>
+                <a href="https://emojitours.ru/"
+                    style="color:var(--gold);font-size:15px;text-decoration:none;font-family:var(--font-body);display:flex;align-items:center;gap:8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="2" y1="12" x2="22" y2="12" />
+                        <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                    emojitours.ru
+                </a>
+            </div>
+        </div>
+        <div class="page-number">15</div>
+    </div>
+
+    <!-- СТРАНИЦА 16 — ЗАДНЯЯ ОБЛОЖКА -->
+    <div class="page">
+        <div class="back-cover">
+            <img src="Group 24.png" class="back-logo" alt="River Loft">
+            <div class="back-divider"></div>
+            <div class="contact-label">Адрес</div>
+            <div class="contact-val">Посёлок Дубровицы д. 38</div>
+            <div class="contact-label">Рядом</div>
+            <div class="contact-val">Усадьба Голицына · Церковь 1699 г. · Реки Пахра и Десна</div>
+            <div class="back-tagline">Место, где рождаются воспоминания</div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -45,7 +45,7 @@
         }
 
         body {
-            background: #EFEDEA;
+            background: #111111;
             font-family: 'Lora', Georgia, serif;
             color: var(--ink);
             line-height: 1.6;
@@ -54,27 +54,49 @@
         /* ── КНОПКА НАЗАД ── */
         .back-btn {
             position: fixed;
-            top: 20px;
-            left: 20px;
+            top: 40px;
+            left: 32px;
             z-index: 999;
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: #191919;
-            color: #EFEDEA;
-            font-family: 'Lora', Georgia, serif;
-            font-size: 13pt;
-            font-weight: 500;
-            padding: 10px 20px;
-            border-radius: 100px;
+            gap: 12px;
+            color: #fff;
+            font-family: 'Lora', serif;
             text-decoration: none;
-            border: none;
+            transition: color 0.3s;
             cursor: pointer;
-            transition: background 0.25s;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+        }
+        @media (min-width: 768px) {
+            .back-btn {
+                left: 64px;
+            }
         }
         .back-btn:hover {
-            background: #333;
+            color: #C9A86C;
+        }
+        .back-btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(25, 25, 25, 0.5);
+            backdrop-filter: blur(4px);
+            transition: border-color 0.3s;
+        }
+        .back-btn:hover .back-btn-icon {
+            border-color: rgba(201, 168, 108, 0.5);
+        }
+        .back-btn span {
+            display: none;
+            font-size: clamp(0.85rem, 1.1vw, 1rem);
+        }
+        @media (min-width: 640px) {
+            .back-btn span {
+                display: inline;
+            }
         }
 
         /* ── СТРАНИЦА ── */
@@ -87,7 +109,7 @@
             position: relative;
             page-break-after: always;
             break-after: page;
-            box-shadow: 0 12px 60px rgba(0, 0, 0, .18);
+            box-shadow: 0 12px 80px rgba(0, 0, 0, .45);
         }
 
         .page:last-child {
@@ -496,10 +518,12 @@
 <body>
 
     <a class="back-btn" href="/">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6"/>
-        </svg>
-        Назад
+        <div class="back-btn-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+        </div>
+        <span>Назад</span>
     </a>
 
     <!-- СТРАНИЦА 01 — ОБЛОЖКА -->
@@ -808,36 +832,44 @@
                 <div class="faq-q">Как подаются салаты и горячие блюда? Стоят ли алкогольные и безалкогольные напитки на
                     столе? В чем отличие стандартного и VIP-обслуживания?</div>
                 <div class="faq-a">
-                    <p>По умолчанию, стандартный вариант обслуживания 1 официант на 2 стола, отдача салатов и горячих
-                        блюд осуществляется в общих тарелках по 3-4 порции в тарелке. Алкоголь и безалкогольные напитки
-                        стоят на столе.</p>
-                    <p>У нас есть варианты порционной подачи, а также вариант VIP-обслуживания (Доп. Услуга, за каждым
-                        столом будет свой официант). При VIP-обслуживании напитки не стоят на столах гостей, а раскладка
-                        салатов, горячих блюд и розлив напитков осуществляется официантами по опросу.</p>
-                </div>
-            </div>
-        </div>
-        <div style="position:absolute;bottom:0;left:0;right:0;">
-            <img src="/IMG_20260417_173331.png" style="width:100%;height:220px;object-fit:cover;display:block;">
-        </div>
-        <div class="page-number">11</div>
-    </div>
-
-    <!-- СТРАНИЦА 12 — FAQ: МОНТАЖ, ДОПЛАТЫ -->
-    <div class="page">
+                    <p>По умолчанию, стандартный вариант обслуживания 1 официант на 2 стола, отдача     <!-- СТРАНИЦА 15 — ПУТЕШЕСТВИЕ -->
+    <div class="page" style="background: #1C1C1A; color: #FFFFFF;">
         <div class="inner">
-            <div class="faq-category">Организационные вопросы</div>
-            <div class="faq-item">
-                <div class="faq-q">Можно ли провести выездную регистрацию? Возможна ли официальная регистрация?</div>
-                <div class="faq-a">Да, выездную регистрацию на нашей площадке проводят, как на улице, так и в помещении.
-                    Услуга официальной выездной регистрации сейчас доступна всем, но за данной услугой Вам будет
-                    необходимо обратиться в органы ЗАГС.</div>
+            <div class="travel-hero">
+                <img src="/IMG_20260416_153106.png" alt="Emoji Tours">
             </div>
-            <div class="faq-item">
-                <div class="faq-q">Сколько времени дается на монтаж/демонтаж декора?</div>
-                <div class="faq-a">По договору аренды Вашим подрядчикам дается 5 часов до сбора гостей (но не ранее 8
-                    часов утра) на монтажные работы и 1 час после окончания мероприятия на демонтаж декора и
-                    оборудования. Если этого времени Вашим подрядчикам недостаточно, Вы можете доплатить за
+            <span class="section-label" style="color: var(--gold);">Свадебное путешествие</span>
+            <p class="welcome-text" style="color: #FFFFFF;">Каждый гость для нас является особенным. Мы хотим, чтобы и после свадебного
+                торжества праздник для Вас продолжился незабываемым свадебным путешествием.</p>
+            <p class="welcome-text" style="color: #FFFFFF;">Туристическое агентство Emoji Tours это место, где Вы сможете получить море
+                незабываемых впечатлений и ощутить надежность, заботу и новые впечатления от путешествия мечты.</p>
+            <p class="welcome-text" style="color: #FFFFFF;">Наша задача — чтобы ваше путешествие стало индивидуальной историей, которую вы
+                будете пересказывать годами. Каждая деталь продумана для вашего вдохновения.</p>
+            <div style="margin-top:6mm;display:flex;flex-direction:column;gap:8px;">
+                <a href="tel:+79636491852"
+                    style="color:#FFFFFF;font-size:15px;text-decoration:none;font-family:'Lora',serif;display:flex;align-items:center;gap:8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                    +7 963-649-18-52
+                </a>
+                <a href="https://emojitours.ru/"
+                    style="color:#FFFFFF;font-size:15px;text-decoration:none;font-family:'Lora',serif;display:flex;align-items:center;gap:8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="2" y1="12" x2="22" y2="12" />
+                        <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                    emojitours.ru
+                </a>
+            </div>
+        </div>
+        <div class="page-number">15</div>
+    </div>мени Вашим подрядчикам недостаточно, Вы можете доплатить за
                     дополнительные «Технические часы». Подробности уточняйте у наших менеджеров.</div>
             </div>
             <div class="faq-item">
@@ -942,7 +974,7 @@
                 будете пересказывать годами. Каждая деталь продумана для вашего вдохновения.</p>
             <div style="margin-top:6mm;display:flex;flex-direction:column;gap:8px;">
                 <a href="tel:+79636491852"
-                    style="color:var(--gold);font-size:15px;text-decoration:none;font-family:var(--font-body);display:flex;align-items:center;gap:8px;">
+                    style="color:var(--gold);font-size:15px;text-decoration:none;font-family:'Lora',serif;display:flex;align-items:center;gap:8px;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path
@@ -951,7 +983,7 @@
                     +7 963-649-18-52
                 </a>
                 <a href="https://emojitours.ru/"
-                    style="color:var(--gold);font-size:15px;text-decoration:none;font-family:var(--font-body);display:flex;align-items:center;gap:8px;">
+                    style="color:var(--gold);font-size:15px;text-decoration:none;font-family:'Lora',serif;display:flex;align-items:center;gap:8px;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10" />
@@ -1007,6 +1039,7 @@
         .footer-contacts a { display: block; font-size: clamp(0.95rem, 1.2vw, 1.06rem); color: rgba(239,237,234,0.65); margin-bottom: 4px; transition: color 0.3s; }
         .footer-contacts a:hover { color: #C9A86C; }
         .footer-contacts p { font-size: clamp(0.95rem, 1.2vw, 1.06rem); color: rgba(239,237,234,0.65); line-height: 1.6; margin-top: 8px; }
+        .footer-requisites { margin: 0 64px; padding: 20px 0; font-family: 'Lora', serif; font-size: clamp(0.78rem, 0.95vw, 0.88rem); color: rgba(239,237,234,0.3); }
         .footer-bottom { margin: 0 64px; border-top: 1px solid rgba(255,255,255,0.08); padding: 28px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
         .footer-bottom span, .footer-bottom a { font-size: clamp(0.82rem, 1vw, 0.95rem); color: rgba(239,237,234,0.3); }
         .footer-bottom a:hover { color: rgba(239,237,234,0.65); }
@@ -1042,19 +1075,19 @@
             <div>
                 <div class="footer-col-label">Мы в сети</div>
                 <div class="footer-socials">
-                    <a href="#">
+                    <a href="https://max.ru/u/f9LHodD0cOI5BcMyH8vKICdBWrRm-ZX3tkvjT5Ii9BueQV0vs95kNt0rRPk">
                         <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width="17" height="17" style="filter:brightness(0) invert(1);">
                         MAX
                     </a>
-                    <a href="#">
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 13.5h-1.7c-.64 0-.84-.51-1.99-1.67-1-.97-1.44-.97-1.69-.97-.34 0-.44.1-.44.58v1.52c0 .42-.13.67-1.22.67-1.8 0-3.8-1.09-5.2-3.13C4.13 10.12 3.7 8.1 3.7 7.67c0-.25.1-.48.58-.48h1.7c.43 0 .59.19.75.65.83 2.38 2.21 4.47 2.78 4.47.21 0 .31-.1.31-.64V9.62c-.07-1.15-.67-1.25-.67-1.66 0-.2.16-.4.42-.4h2.68c.36 0 .49.19.49.61v3.26c0 .36.16.49.26.49.21 0 .39-.13.78-.52 1.21-1.35 2.07-3.43 2.07-3.43.11-.25.31-.48.74-.48h1.7c.51 0 .62.26.51.61-.21.98-2.28 3.91-2.28 3.91-.18.29-.24.42 0 .74.17.23.74.71 1.12 1.14.7.77 1.23 1.41 1.37 1.86.16.44-.07.67-.51.67z"/></svg>
+                    <a href="https://vk.com/river_loft">
+                        <img src="/vk.svg" alt="ВКонтакте" width="17" height="17">
                         ВКонтакте
                     </a>
-                    <a href="#">
+                    <a href="https://t.me/RiverLoft_podolsk">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
                         Telegram
                     </a>
-                    <a href="#">
+                    <a href="https://api.whatsapp.com/send/?phone=79258592225&text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C+%D1%85%D0%BE%D1%87%D1%83+%D0%B7%D0%B0%D0%B1%D1%80%D0%BE%D0%BD%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C+%D0%BF%D0%BB%D0%BE%D1%89%D0%B0%D0%B4%D0%BA%D1%83">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                         WhatsApp
                     </a>
@@ -1079,10 +1112,14 @@
             </div>
         </div>
 
+        <div class="footer-requisites">
+            ИП Щербаков Михаил Юрьевич &nbsp;·&nbsp; ИНН 503613709003 &nbsp;·&nbsp; ОГРН 323508100415469 &nbsp;·&nbsp; +7 909 651-67-30
+        </div>
+
         <div class="footer-bottom">
             <span>© 2026 Ривер Лофт. Все права защищены.</span>
             <div class="footer-bottom-links">
-                <a href="#">Политика конфиденциальности</a>
+                <a href="/privacy.html" target="_blank">Политика конфиденциальности</a>
                 <a href="#">Договор оферты</a>
             </div>
         </div>
