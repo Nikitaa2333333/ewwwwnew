@@ -117,7 +117,7 @@ export default function PartnersView({ onBack, onBook }: { onBack: () => void; o
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-20 text-center px-6"
         >
-          <span className="font-lora text-gold mb-4 block" style={{ fontSize: 'clamp(0.85rem, 1.1vw, 1rem)' }}>Ривер Лофт</span>
+          <img src="/ривьера белый.png" alt="Ривер Лофт" className="h-10 w-auto object-contain mx-auto mb-4" />
           <h1 className="font-cormorant font-semibold text-white leading-none mb-6" style={{ fontSize: 'clamp(3.5rem, 9vw, 9rem)' }}>
             Наши <span className="font-accent text-gold font-light">партнеры</span>
           </h1>
@@ -180,28 +180,40 @@ export default function PartnersView({ onBack, onBook }: { onBack: () => void; o
                   transition={{ duration: 0.6, delay: (idx % 3) * 0.1 }}
                   className="group"
                 >
-                  <a 
-                    href={partner.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="block relative aspect-[4/5] overflow-hidden mb-6"
-                  >
-                    <img 
-                        src={partner.image} 
-                        alt={partner.name}
-                        onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://static.tildacdn.com/tild3133-3136-4139-b131-316331326433/photo.jpg'; // Generic placeholder
-                        }}
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-charcoal/20 group-hover:bg-charcoal/0 transition-colors duration-500" />
-                    <div className="absolute inset-0 border border-white/0 group-hover:border-gold/30 transition-all duration-500 m-4" />
-                    
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-charcoal/40 backdrop-blur-[2px]">
-                        <span className="px-6 py-3 border border-gold text-gold font-lora bg-charcoal/60" style={{ fontSize: 'clamp(0.85rem, 1.1vw, 1rem)' }}>Посмотреть работы</span>
+                  {partner.link ? (
+                    <a
+                      href={partner.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block relative aspect-[4/5] overflow-hidden mb-6"
+                    >
+                      <img
+                          src={partner.image}
+                          alt={partner.name}
+                          onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'https://static.tildacdn.com/tild3133-3136-4139-b131-316331326433/photo.jpg';
+                          }}
+                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-charcoal/20 group-hover:bg-charcoal/0 transition-colors duration-500" />
+                      <div className="absolute inset-0 border border-white/0 group-hover:border-gold/30 transition-all duration-500 m-4" />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-charcoal/40 backdrop-blur-[2px]">
+                          <span className="px-6 py-3 border border-gold text-gold font-lora bg-charcoal/60" style={{ fontSize: 'clamp(0.85rem, 1.1vw, 1rem)' }}>Посмотреть работы</span>
+                      </div>
+                    </a>
+                  ) : (
+                    <div className="block relative aspect-[4/5] overflow-hidden mb-6">
+                      <img
+                          src={partner.image}
+                          alt={partner.name}
+                          onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'https://static.tildacdn.com/tild3133-3136-4139-b131-316331326433/photo.jpg';
+                          }}
+                          className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-charcoal/20" />
                     </div>
-                  </a>
+                  )}
 
                   <div className="flex flex-col">
                     <h3 className="font-cormorant font-semibold text-white mb-2 group-hover:text-gold transition-colors duration-300" style={{ fontSize: 'clamp(1.5rem, 2.2vw, 2rem)' }}>

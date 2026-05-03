@@ -99,7 +99,7 @@ const BookingModal = ({ open, onClose }: { open: boolean; onClose: () => void })
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="relative bg-charcoal w-full max-w-lg px-10 py-12 md:px-12 md:py-12 overflow-hidden"
+            className="relative bg-charcoal w-full max-w-lg px-6 py-10 md:px-12 md:py-12 overflow-hidden"
             style={{}}
             onClick={e => e.stopPropagation()}
           >
@@ -231,7 +231,7 @@ const BookingModal = ({ open, onClose }: { open: boolean; onClose: () => void })
                     </div>
 
                     {/* Подвал: соцсети + кнопка */}
-                    <div className="flex items-center justify-between pt-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-2">
                       {/* Соцсети */}
                       <div className="flex items-center gap-4">
                         {/* MAX */}
@@ -278,85 +278,171 @@ const BookingModal = ({ open, onClose }: { open: boolean; onClose: () => void })
 };
 
 const Navbar = ({ onBook }: { onBook: () => void }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
   const menuItems = [
-    { label: 'О нас', href: '#about' },
+    { label: 'О нас', href: '#why' },
+    { label: 'Условия', href: '#conditions' },
     { label: 'Галерея', href: '#gallery' },
     { label: 'Партнеры', href: '#', onClick: () => (window as any).setView('partners') },
-    { label: 'Условия', href: '#conditions' },
-    { label: 'Памятка', href: '/pamyatka.html', target: '_blank' },
+    { label: 'Путешествия', href: '#travel' },
     { label: 'Контакты', href: '#contacts' },
   ];
 
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-charcoal/80 backdrop-blur-md border-b border-white/10">
-      <div className="grid grid-cols-3 items-center px-8 md:px-16 py-4 md:py-5">
+    <>
+      <nav className="fixed top-0 left-0 w-full z-50 bg-charcoal/80 backdrop-blur-md border-b border-white/10">
+        <div className="flex items-center justify-between md:grid md:grid-cols-3 md:items-center px-5 md:px-16 py-4 md:py-5">
 
-        {/* Лого — слева */}
-        <div 
-          onClick={() => (window as any).setView('main')}
-          className="font-cormorant font-semibold text-white text-xl md:text-2xl font-medium cursor-pointer"
-        >
-          Ривер Лофт
-        </div>
-
-        {/* Навигация — по центру */}
-        <div className="hidden md:flex items-center justify-center gap-5">
-          {menuItems.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              target={(item as any).target}
-              onClick={(e) => {
-                if (item.onClick) {
-                  e.preventDefault();
-                  item.onClick();
-                }
-              }}
-              className="font-lora font-medium text-[clamp(0.85rem,1vw,1rem)] text-white hover:text-white transition-colors duration-200 relative group whitespace-nowrap"
-            >
-              {item.label}
-              <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
-            </a>
-          ))}
-        </div>
-
-        {/* Правая часть — телефон, соцсети, кнопка */}
-        <div className="hidden md:flex items-center justify-end gap-5">
-
-          {/* Телефон */}
-          <a href="tel:+74991234567" className="font-lora font-medium text-[clamp(0.85rem,1.05vw,1rem)] text-white/90 hover:text-white transition-colors duration-200 whitespace-nowrap">
-            +7 (499) 123-45-67
-          </a>
-
-          {/* Соцсети */}
-          <div className="flex items-center gap-3">
-            {/* MAX */}
-            <a href="https://max.ru/u/f9LHodD0cOI5BcMyH8vKICdBWrRm-ZX3tkvjT5Ii9BueQV0vs95kNt0rRPk" aria-label="MAX" className="group transition-colors duration-200">
-              <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width={18} height={18} className="brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity duration-200" />
-            </a>
-            {/* VK */}
-            <a href="https://vk.com/river_loft" aria-label="ВКонтакте" className="group transition-colors duration-200">
-              <img src="/vk.svg" alt="ВКонтакте" width={18} height={18} className="opacity-90 group-hover:opacity-100 transition-opacity duration-200" />
-            </a>
+          {/* Лого */}
+          <div
+            onClick={() => { (window as any).setView('main'); setMenuOpen(false); }}
+            className="cursor-pointer"
+          >
+            <img src="/ривьера белый.png" alt="Ривер Лофт" className="h-10 md:h-12 w-auto object-contain" />
           </div>
 
-          {/* CTA кнопка */}
-          <button
-            onClick={onBook}
-            className="font-lora font-medium text-[clamp(0.85rem,1.05vw,1rem)] text-white border border-white/40 hover:bg-white hover:text-charcoal transition-all duration-300 px-5 py-2 rounded-full whitespace-nowrap cursor-pointer"
-          >
-            Забронировать
-          </button>
-        </div>
+          {/* Навигация — desktop */}
+          <div className="hidden md:flex items-center justify-center gap-5">
+            {menuItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                target={(item as any).target}
+                onClick={(e) => {
+                  if (item.onClick) { e.preventDefault(); item.onClick(); }
+                }}
+                className="font-lora font-medium text-[clamp(0.85rem,1vw,1rem)] text-white hover:text-white transition-colors duration-200 relative group whitespace-nowrap"
+              >
+                {item.label}
+                <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
+              </a>
+            ))}
+          </div>
 
-        {/* Мобильный телефон */}
-        <div className="md:hidden flex justify-end">
-          <a href="tel:+74991234567" className="font-lora font-medium text-[12px] text-white/70">
-            +7 (499) 123-45-67
-          </a>
+          {/* Правая часть — desktop */}
+          <div className="hidden md:flex items-center justify-end gap-5">
+            <a href="tel:+79258592225" className="font-lora font-medium text-[clamp(0.85rem,1.05vw,1rem)] text-white/90 hover:text-white transition-colors duration-200 whitespace-nowrap">
+              +7 925 859 22 25
+            </a>
+            <div className="flex items-center gap-3">
+              <a href="https://max.ru/u/f9LHodD0cOI5BcMyH8vKICdBWrRm-ZX3tkvjT5Ii9BueQV0vs95kNt0rRPk" aria-label="MAX" className="group transition-colors duration-200">
+                <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width={18} height={18} className="brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity duration-200" />
+              </a>
+              <a href="https://vk.com/river_loft" aria-label="ВКонтакте" className="group transition-colors duration-200">
+                <img src="/vk.svg" alt="ВКонтакте" width={18} height={18} className="opacity-90 group-hover:opacity-100 transition-opacity duration-200" />
+              </a>
+            </div>
+            <button
+              onClick={onBook}
+              className="font-lora font-medium text-[clamp(0.85rem,1.05vw,1rem)] text-white border border-white/40 hover:bg-white hover:text-charcoal transition-all duration-300 px-5 py-2 rounded-full whitespace-nowrap cursor-pointer"
+            >
+              Забронировать
+            </button>
+          </div>
+
+          {/* Mobile: телефон + бургер */}
+          <div className="md:hidden flex items-center gap-3">
+            <a href="tel:+79258592225" className="font-lora font-medium text-white whitespace-nowrap" style={{ fontSize: 'clamp(0.72rem, 2.8vw, 0.85rem)' }}>
+              +7 925 859 22 25
+            </a>
+            <button
+              onClick={() => setMenuOpen(true)}
+              aria-label="Открыть меню"
+              className="text-white flex flex-col gap-[5px] p-1 flex-shrink-0"
+            >
+              <span className="block w-[22px] h-[1.5px] bg-white rounded-full" />
+              <span className="block w-[15px] h-[1.5px] bg-white rounded-full" />
+              <span className="block w-[22px] h-[1.5px] bg-white rounded-full" />
+            </button>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Мобильное меню */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[100] bg-charcoal flex flex-col px-8 py-6"
+          >
+            <div className="flex justify-between items-center mb-6">
+              <img src="/ривьера белый.png" alt="Ривер Лофт" className="h-11 w-auto object-contain" />
+              <button
+                onClick={() => setMenuOpen(false)}
+                aria-label="Закрыть меню"
+                className="text-white/50 hover:text-white transition-colors duration-200 p-1"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                  <line x1="5" y1="5" x2="19" y2="19" />
+                  <line x1="19" y1="5" x2="5" y2="19" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="flex flex-col flex-1 justify-center">
+              {menuItems.map((item, i) => (
+                <motion.a
+                  key={item.label}
+                  href={item.href}
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: 0.05 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                  onClick={(e) => {
+                    if (item.onClick) { e.preventDefault(); item.onClick(); }
+                    setMenuOpen(false);
+                  }}
+                  className="font-cormorant font-semibold text-white border-b border-white/8 py-5 hover:text-gold transition-colors duration-200"
+                  style={{ fontSize: 'clamp(2.2rem, 7vw, 3rem)' }}
+                >
+                  {item.label}
+                </motion.a>
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-4 pt-6 border-t border-white/10">
+              <div className="flex items-center justify-between">
+                <a href="tel:+79258592225" className="font-lora font-medium text-white" style={{ fontSize: 'clamp(1rem, 3.5vw, 1.1rem)' }}>
+                  +7 925 859 22 25
+                </a>
+                <div className="flex items-center gap-4">
+                  <a href="https://max.ru/u/f9LHodD0cOI5BcMyH8vKICdBWrRm-ZX3tkvjT5Ii9BueQV0vs95kNt0rRPk" aria-label="MAX" className="group">
+                    <img src="https://maxicons.ru/icons/Max_logo.svg" alt="MAX" width={18} height={18} className="brightness-0 invert opacity-50 group-hover:opacity-100 transition-opacity duration-200" />
+                  </a>
+                  <a href="https://vk.com/river_loft" aria-label="ВКонтакте" className="opacity-50 hover:opacity-100 transition-opacity duration-200">
+                    <img src="/vk.svg" alt="ВКонтакте" width={18} height={18} />
+                  </a>
+                  <a href="https://api.whatsapp.com/send/?phone=79258592225&text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C+%D1%85%D0%BE%D1%87%D1%83+%D0%B7%D0%B0%D0%B1%D1%80%D0%BE%D0%BD%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C+%D0%BF%D0%BB%D0%BE%D1%89%D0%B0%D0%B4%D0%BA%D1%83" aria-label="WhatsApp" className="text-white/50 hover:text-white transition-colors duration-200">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                  </a>
+                  <a href="https://t.me/RiverLoft_podolsk" aria-label="Telegram" className="text-white/50 hover:text-white transition-colors duration-200">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+              <button
+                onClick={() => { setMenuOpen(false); onBook(); }}
+                className="w-full font-lora font-medium text-white border border-white/40 rounded-full py-4 hover:bg-white hover:text-charcoal transition-all duration-300 cursor-pointer"
+                style={{ fontSize: 'clamp(1rem, 3.5vw, 1.15rem)' }}
+              >
+                Забронировать
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
@@ -382,19 +468,17 @@ type HeroSlide =
   | { type: 'pair'; left: string; right: string };
 
 const HERO_SLIDES: HeroSlide[] = [
-  { type: 'single', src: '/hero-ls-1.webp', position: '50% 15%' },
-  { type: 'pair',   left: '/hero-pt-1.webp',  right: '/hero-pt-2.webp' },
-  { type: 'single', src: '/hero-ls-2.webp', position: '50% 15%' },
-  { type: 'pair',   left: '/hero-pt-3.webp',  right: '/hero-pt-4.webp' },
-  { type: 'single', src: '/hero-ls-3.webp', position: '50% 15%' },
-  { type: 'pair',   left: '/hero-pt-5.webp',  right: '/hero-pt-6.webp' },
-  { type: 'single', src: '/hero-ls-4.webp', position: '50% 15%' },
-  { type: 'pair',   left: '/hero-pt-7.webp',  right: '/hero-pt-8.webp' },
-  { type: 'single', src: '/hero-ls-5.webp', position: '50% 15%' },
-  { type: 'pair',   left: '/hero-pt-9.webp',  right: '/hero-pt-10.webp' },
-  { type: 'single', src: '/hero-ls-6.webp', position: '50% 15%' },
-  { type: 'pair',   left: '/hero-pt-11.webp', right: '/hero-pt-12.webp' },
-  { type: 'single', src: '/hero-ls-7.webp', position: '50% 15%' },
+  { type: 'pair',   left: '/hero-pt-1.webp',      right: '/hero-pt-2.webp' },
+  { type: 'pair',   left: '/hero-pt-3.webp',      right: '/hero-pt-4.webp' },
+  { type: 'pair',   left: '/hero-pt-5.webp',      right: '/hero-pt-6.webp' },
+  { type: 'pair',   left: '/hero-pt-7.webp',      right: '/hero-pt-8.webp' },
+  { type: 'single', src: '/hero-ls-5.webp',       position: '50% 15%' },
+  { type: 'pair',   left: '/hero-pt-9.webp',      right: '/hero-pt-10.webp' },
+  { type: 'single', src: '/hero-ls-6.webp',       position: '50% 15%' },
+  { type: 'pair',   left: '/hero-pt-11.webp',     right: '/hero-pt-12.webp' },
+  { type: 'single', src: '/hero-ls-7.webp',       position: '50% 15%' },
+  { type: 'pair',   left: '/hero-herrro-1.webp',  right: '/hero-herrro-4.webp' },
+  { type: 'pair',   left: '/hero-herrro-7.webp',  right: '/hero-herrro-8.webp' },
 ];
 
 const Hero = ({ onBook }: { onBook: () => void }) => {
@@ -451,20 +535,28 @@ const Hero = ({ onBook }: { onBook: () => void }) => {
             return (
               <motion.div
                 key={slide.left}
-                className="absolute inset-0 flex"
+                className="absolute inset-0"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.95 }}
                 exit={{ opacity: 0 }}
                 transition={{ opacity: { duration: 2, ease: 'easeInOut' } }}
               >
-                {/* Dark zone for text — left 38% */}
-                <div className="w-[38%] h-full bg-charcoal shrink-0" />
-                {/* Two portrait photos — right 62% */}
-                <div className="relative flex w-[62%] h-full shrink-0">
-                  <img src={slide.left}  alt="" className="w-1/2 h-full object-cover" style={{ objectPosition: '50% 10%' }} />
-                  <img src={slide.right} alt="" className="w-1/2 h-full object-cover" style={{ objectPosition: '50% 10%' }} />
-                  <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-charcoal to-transparent pointer-events-none" />
-                  <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-charcoal via-charcoal/60 to-transparent pointer-events-none" />
+                {/* Mobile: один портрет на весь экран */}
+                <img
+                  src={slide.left}
+                  alt=""
+                  className="md:hidden absolute inset-0 w-full h-full object-cover"
+                  style={{ objectPosition: '50% 10%' }}
+                />
+                {/* Desktop: две колонки */}
+                <div className="hidden md:flex absolute inset-0">
+                  <div className="w-[38%] h-full bg-charcoal shrink-0" />
+                  <div className="relative flex w-[62%] h-full shrink-0">
+                    <img src={slide.left}  alt="" className="w-1/2 h-full object-cover" style={{ objectPosition: '50% 10%' }} />
+                    <img src={slide.right} alt="" className="w-1/2 h-full object-cover" style={{ objectPosition: '50% 10%' }} />
+                    <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-charcoal to-transparent pointer-events-none" />
+                    <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-charcoal via-charcoal/60 to-transparent pointer-events-none" />
+                  </div>
                 </div>
               </motion.div>
             );
@@ -477,7 +569,7 @@ const Hero = ({ onBook }: { onBook: () => void }) => {
       </motion.div>
 
       {/* Main content — left-aligned, centered vertically */}
-      <div className="absolute inset-0 flex flex-col justify-center items-start text-white px-8 md:px-16 pb-16 pt-[140px]">
+      <div className="absolute inset-0 flex flex-col justify-end md:justify-center items-start text-white px-8 md:px-16 pb-16 pt-24 md:pt-[140px]">
         {/* Heading */}
         <motion.div
           initial={{ y: 60, opacity: 0 }}
@@ -559,11 +651,11 @@ const VenueBar = () => (
         { value: 'до 100', unit: '', label: 'гостей при банкетной рассадке' },
         { value: 'до 150', unit: '', label: 'гостей на фуршет' },
       ].map((item, i) => (
-        <div key={i} className="flex items-baseline gap-2 px-10 py-3 sm:py-0">
-          <span className="font-cormorant font-semibold text-gold leading-none" style={{ fontSize: 'clamp(2.30rem, 4.02vw, 3.45rem)' }}>
+        <div key={i} className="flex flex-col items-center sm:flex-row sm:items-baseline gap-0.5 sm:gap-2 px-5 sm:px-10 py-4 sm:py-0 text-center sm:text-left">
+          <span className="font-cormorant font-semibold text-gold leading-none whitespace-nowrap" style={{ fontSize: 'clamp(2.30rem, 4.02vw, 3.45rem)' }}>
             {item.value}{item.unit}
           </span>
-          <span className="font-lora font-medium text-white" style={{ fontSize: 'clamp(0.98rem, 1.26vw, 1.15rem)' }}>
+          <span className="font-lora font-medium text-white" style={{ fontSize: 'clamp(0.9rem, 1.26vw, 1.1rem)' }}>
             {item.label}
           </span>
         </div>
@@ -574,15 +666,15 @@ const VenueBar = () => (
 
 const StatsSection = () => {
   return (
-    <section className="bg-charcoal py-32 px-8 md:px-16 overflow-hidden">
+    <section id="why" className="bg-charcoal py-16 md:py-32 px-8 md:px-16 overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="max-w-7xl mx-auto mb-20 text-center"
+        className="max-w-7xl mx-auto mb-10 md:mb-20 text-center"
       >
-        <h2 className="font-cormorant font-semibold text-white leading-none" style={{ fontSize: 'clamp(4.02rem, 8.05vw, 8.05rem)' }}>
+        <h2 className="font-cormorant font-semibold text-white leading-none" style={{ fontSize: 'clamp(3.2rem, 8.05vw, 8.05rem)' }}>
           Почему<br />
           <span className="font-accent font-light text-gold/80">выбирают нас</span>
         </h2>
@@ -593,49 +685,49 @@ const StatsSection = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-px bg-white/10"
+        className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/10"
       >
-        {/* Плашка 1 — широкая, большая */}
-        <motion.div variants={itemVariants} className="relative col-span-2 lg:col-span-1 bg-charcoal px-10 py-14 flex flex-col justify-end min-h-[320px] group overflow-hidden cursor-default">
+        {/* Плашка 1 */}
+        <motion.div variants={itemVariants} className="relative col-span-1 md:col-span-2 lg:col-span-1 bg-charcoal px-6 py-10 md:px-10 md:py-14 flex flex-col justify-end min-h-[200px] md:min-h-[320px] group overflow-hidden cursor-default">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <span className="font-cormorant font-semibold text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(6.90rem, 11.50vw, 12.65rem)' }}>10+</span>
-          <span className="font-cormorant font-semibold text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.84rem, 2.88vw, 2.88rem)' }}>лет опыта</span>
-          <span className="font-lora font-medium text-white mt-3" style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.38rem)' }}>в организации мероприятий любого формата</span>
+          <span className="font-cormorant font-semibold text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(5rem, 11.50vw, 12.65rem)' }}>10+</span>
+          <span className="font-cormorant font-semibold text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.5rem, 2.88vw, 2.88rem)' }}>лет опыта</span>
+          <span className="font-lora font-medium text-white mt-2" style={{ fontSize: 'clamp(1rem, 1.49vw, 1.38rem)' }}>в организации мероприятий любого формата</span>
           <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
         </motion.div>
 
         {/* Плашка 2 */}
-        <motion.div variants={itemVariants} className="relative bg-charcoal px-10 py-14 flex flex-col justify-end min-h-[320px] group overflow-hidden cursor-default">
+        <motion.div variants={itemVariants} className="relative bg-charcoal px-6 py-10 md:px-10 md:py-14 flex flex-col justify-end min-h-[200px] md:min-h-[320px] group overflow-hidden cursor-default">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <span className="font-cormorant font-semibold text-gold leading-none group-hover:text-white transition-colors duration-500 whitespace-nowrap" style={{ fontSize: 'clamp(5.75rem, 9.20vw, 10.35rem)' }}>2 000+</span>
-          <span className="font-cormorant font-semibold text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.84rem, 2.88vw, 2.88rem)' }}>мероприятий</span>
-          <span className="font-lora font-medium text-white mt-3" style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.38rem)' }}>свадьбы, юбилеи, корпоративы, семинары и не только</span>
+          <span className="font-cormorant font-semibold text-gold leading-none group-hover:text-white transition-colors duration-500 whitespace-nowrap" style={{ fontSize: 'clamp(4rem, 9.20vw, 10.35rem)' }}>2 000+</span>
+          <span className="font-cormorant font-semibold text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.5rem, 2.88vw, 2.88rem)' }}>мероприятий</span>
+          <span className="font-lora font-medium text-white mt-2" style={{ fontSize: 'clamp(1rem, 1.49vw, 1.38rem)' }}>свадьбы, юбилеи, корпоративы, семинары и не только</span>
           <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
         </motion.div>
 
         {/* Плашка 3 */}
-        <motion.div variants={itemVariants} className="relative bg-charcoal px-10 py-14 flex flex-col justify-end min-h-[320px] group overflow-hidden cursor-default">
+        <motion.div variants={itemVariants} className="relative bg-charcoal px-6 py-10 md:px-10 md:py-14 flex flex-col justify-end min-h-[200px] md:min-h-[320px] group overflow-hidden cursor-default">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <span className="font-cormorant font-semibold text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(5.75rem, 9.20vw, 10.35rem)' }}>100+</span>
-          <span className="font-cormorant font-semibold text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.84rem, 2.88vw, 2.88rem)' }}>отзывов 5★</span>
-          <span className="font-lora font-medium text-white mt-3" style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.38rem)' }}>на Яндексе от довольных гостей и пар</span>
+          <span className="font-cormorant font-semibold text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(4rem, 9.20vw, 10.35rem)' }}>100+</span>
+          <span className="font-cormorant font-semibold text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.5rem, 2.88vw, 2.88rem)' }}>отзывов 5★</span>
+          <span className="font-lora font-medium text-white mt-2" style={{ fontSize: 'clamp(1rem, 1.49vw, 1.38rem)' }}>на Яндексе от довольных гостей и пар</span>
           <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
         </motion.div>
 
         {/* Плашка 4 — широкая, текстовая */}
-        <motion.div variants={itemVariants} className="relative col-span-2 bg-charcoal px-10 py-14 flex flex-col justify-end group overflow-hidden cursor-default">
+        <motion.div variants={itemVariants} className="relative col-span-1 md:col-span-2 bg-charcoal px-6 py-10 md:px-10 md:py-14 flex flex-col justify-end group overflow-hidden cursor-default">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <span className="font-cormorant font-semibold text-white leading-tight group-hover:text-gold transition-colors duration-500" style={{ fontSize: 'clamp(2.88rem, 5.75vw, 6.32rem)' }}>Любой формат</span>
-          <span className="font-lora font-medium text-white mt-4 max-w-2xl" style={{ fontSize: 'clamp(1.15rem, 1.61vw, 1.49rem)' }}>Свадьбы, юбилеи, корпоративы, семинары, презентации, дни рождения — всё зависит от вашей фантазии</span>
+          <span className="font-cormorant font-semibold text-white leading-tight group-hover:text-gold transition-colors duration-500" style={{ fontSize: 'clamp(2.2rem, 5.75vw, 6.32rem)' }}>Любой формат</span>
+          <span className="font-lora font-medium text-white mt-3 max-w-2xl" style={{ fontSize: 'clamp(1rem, 1.61vw, 1.49rem)' }}>Свадьбы, юбилеи, корпоративы, семинары, презентации, дни рождения — всё зависит от вашей фантазии</span>
           <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
         </motion.div>
 
         {/* Плашка 5 */}
-        <motion.div variants={itemVariants} className="relative bg-charcoal px-10 py-14 flex flex-col justify-end group overflow-hidden cursor-default">
+        <motion.div variants={itemVariants} className="relative bg-charcoal px-6 py-10 md:px-10 md:py-14 flex flex-col justify-end min-h-[200px] md:min-h-[320px] group overflow-hidden cursor-default">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <span className="font-cormorant font-semibold text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(5.75rem, 9.20vw, 10.35rem)' }}>40+</span>
-          <span className="font-cormorant font-semibold text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.84rem, 2.88vw, 2.88rem)' }}>подрядчиков</span>
-          <span className="font-lora font-medium text-white mt-3" style={{ fontSize: 'clamp(1.15rem, 1.49vw, 1.38rem)' }}>проверенные партнёры на ваш выбор</span>
+          <span className="font-cormorant font-semibold text-gold leading-none group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(4rem, 9.20vw, 10.35rem)' }}>40+</span>
+          <span className="font-cormorant font-semibold text-white leading-tight mt-2" style={{ fontSize: 'clamp(1.5rem, 2.88vw, 2.88rem)' }}>подрядчиков</span>
+          <span className="font-lora font-medium text-white mt-2" style={{ fontSize: 'clamp(1rem, 1.49vw, 1.38rem)' }}>проверенные партнёры на ваш выбор</span>
           <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
         </motion.div>
 
@@ -648,36 +740,54 @@ const StatsSection = () => {
 
 
 const AboutRiverLoft = () => {
-  const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end end'],
-  });
-
-  // Church slides in from the right as user scrolls
-  const churchX = useTransform(scrollYProgress, [0, 1], ['110%', '0%']);
 
   return (
-    <section
-      id="about"
-      ref={sectionRef}
-      className="relative bg-charcoal text-white"
-      style={{ minHeight: '220vh' }}
-    >
-      {/* Sticky viewport — everything is pinned here */}
-      <div className="sticky top-0 h-screen overflow-hidden bg-charcoal z-10">
-
-        {/* Text — left column, optical center (more space below) */}
-        <div
-          className="absolute inset-0 flex flex-col justify-center px-10 md:px-20 z-10 pointer-events-none"
-          style={{ paddingTop: '6vh', paddingBottom: '14vh' }}
+    <>
+      {/* Мобильная версия — статичная */}
+      <section id="about" className="md:hidden bg-charcoal text-white pt-20 pb-0">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+          className="mb-10 px-8"
         >
+          <h2
+            className="font-cormorant font-semibold leading-[1.05] mb-8 text-white"
+            style={{ fontSize: 'clamp(2.8rem, 8vw, 4rem)' }}
+          >
+            Светлый лофт
+            <br />
+            <span className="font-accent text-white font-light block mt-2" style={{ fontSize: 'clamp(2.4rem, 7vw, 3.5rem)' }}>
+              рядом с парком Дубровицы
+            </span>
+          </h2>
+          <div className="flex flex-col gap-5 font-lora font-medium text-white leading-[1.7]" style={{ fontSize: 'clamp(1rem, 3.5vw, 1.15rem)' }}>
+            <p>Ривер Лофт – это идеальное место для отдыха вдали от городской суеты. Пространство для Ваших событий любого формата в живописном и энергетически сильном месте слияния двух рек Пахры и Десны.</p>
+            <p>Большие панорамные окна открывают вид на архитектурный ансамбль усадьбы Голицыных, увенчанный неповторимой и таинственной церковью Знамение.</p>
+          </div>
+        </motion.div>
+        <motion.img
+          initial={{ opacity: 0, x: 60 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          src="/neewwwwwww.webp"
+          alt="Церковь Знамение в Дубровицах"
+          className="block w-full object-contain"
+          style={{ maxHeight: '70vh' }}
+        />
+      </section>
+
+      {/* Desktop версия */}
+      <section className="hidden md:block relative bg-charcoal text-white overflow-hidden">
+        <div className="relative flex items-stretch min-h-screen px-10 md:px-20 py-24">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
-            className="flex flex-col w-full md:w-[48%]"
+            className="flex flex-col justify-center w-[48%] z-10 relative"
           >
             <h2
               className="font-cormorant font-semibold leading-[1.05] tracking-tight mb-10 text-white"
@@ -685,44 +795,32 @@ const AboutRiverLoft = () => {
             >
               Светлый лофт
               <br />
-              <span
-                className="font-accent text-white font-light block mt-3"
-                style={{ fontSize: 'clamp(2.7rem, 5vw, 5.6rem)' }}
-              >
+              <span className="font-accent text-white font-light block mt-3" style={{ fontSize: 'clamp(2.7rem, 5vw, 5.6rem)' }}>
                 рядом с парком Дубровицы
               </span>
             </h2>
-
-            <div
-              className="flex flex-col gap-6 font-lora font-medium text-white leading-[1.7] w-[85%]"
-              style={{ fontSize: 'clamp(1rem, 1.4vw, 1.3rem)' }}
-            >
-              <p>
-                Ривер Лофт – это идеальное место для отдыха вдали от городской суеты. Пространство для Ваших событий любого формата в живописном и энергетически сильном месте слияния двух рек Пахры и Десны.
-              </p>
-              <p>
-                Большие панорамные окна открывают вид на архитектурный ансамбль усадьбы Голицыных, увенчанный неповторимой и таинственной церковью Знамение.
-              </p>
+            <div className="flex flex-col gap-6 font-lora font-medium text-white leading-[1.7] w-[85%]" style={{ fontSize: 'clamp(1rem, 1.4vw, 1.3rem)' }}>
+              <p>Ривер Лофт – это идеальное место для отдыха вдали от городской суеты. Пространство для Ваших событий любого формата в живописном и энергетически сильном месте слияния двух рек Пахры и Десны.</p>
+              <p>Большие панорамные окна открывают вид на архитектурный ансамбль усадьбы Голицыных, увенчанный неповторимой и таинственной церковью Знамение.</p>
             </div>
           </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute right-0 bottom-0 w-[58%] h-full flex items-end justify-end"
+          >
+            <img
+              src="/neewwwwwww.webp"
+              alt="Церковь Знамение в Дубровицах"
+              className="block"
+              style={{ height: '100%', width: 'auto', maxWidth: 'none' }}
+            />
+          </motion.div>
         </div>
-
-        {/* Church — slides in from right */}
-        <motion.div
-          style={{ x: churchX, willChange: 'transform' }}
-          className="absolute right-0 bottom-0 z-20 w-[58%] h-full flex items-end justify-end"
-        >
-          <img
-            src="/neewwwwwww.webp"
-            alt="Церковь Знамение в Дубровицах"
-            className="block"
-            style={{ height: '100vh', width: 'auto', maxWidth: 'none' }}
-          />
-        </motion.div>
-
-      </div>
-
-    </section>
+      </section>
+    </>
   );
 };
 
@@ -753,7 +851,7 @@ const EditorialAdvantage = ({ title, desc, index }: any) => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
       viewport={{ once: true }}
-      className="group flex items-start gap-6 md:gap-12 py-10 border-t border-white/10 cursor-default"
+      className="group flex items-start gap-6 md:gap-12 py-7 md:py-10 border-t border-white/10 cursor-default"
     >
       {/* Номер */}
       <span className="font-cormorant font-semibold text-2xl text-gold/60 font-light w-10 flex-shrink-0 pt-1 transition-colors duration-500 group-hover:text-gold">
@@ -783,7 +881,7 @@ const EditorialAdvantage = ({ title, desc, index }: any) => {
 
 const AdvantagesSection = () => {
   return (
-    <section className="relative py-32 lg:py-48 px-8 md:px-16 bg-charcoal overflow-hidden min-h-screen flex items-center">
+    <section className="relative py-16 md:py-32 lg:py-48 px-8 md:px-16 bg-charcoal overflow-hidden flex items-center">
       <div className="absolute inset-0">
         <img
           src="/IMG_20260414_202525.webp"
@@ -862,9 +960,6 @@ const ZONES = [
       '/зал/5lEXuj34-XE%20(2).webp',
       '/зал/Wed-A%20(92).webp',
       '/зал/_%20(308).webp',
-      '/зал/_%20(339).webp',
-      '/зал/_%20(344).webp',
-      '/зал/_%20(346).webp'
     ],
   },
   {
@@ -1059,7 +1154,7 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
     'w-16 md:w-24 bg-transparent border-b-2 border-charcoal/20 focus:border-gold focus:outline-none text-center font-cormorant font-semibold text-charcoal pb-1 transition-colors duration-200 placeholder:text-charcoal/25';
 
   return (
-    <section id="conditions" className="py-32 px-8 md:px-16 bg-sand text-charcoal flex flex-col justify-center items-center">
+    <section id="conditions" className="py-16 md:py-32 px-8 md:px-16 bg-sand text-charcoal flex flex-col justify-center items-center">
       <div className="max-w-4xl w-full mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -1154,7 +1249,7 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
             {/* Остальное */}
             <div className="mt-12 pt-10 border-t border-charcoal/10 mb-14">
               <p className="font-lora font-medium text-charcoal mb-6" style={{ fontSize: 'clamp(1.15rem, 1.6vw, 1.35rem)' }}>Также включено</p>
-              <ul className="columns-2 md:columns-3 gap-8">
+              <ul className="columns-1 sm:columns-2 md:columns-3 gap-8">
                 {INCLUDED_SERVICES.map((item, i) => (
                   <li key={i} className="flex items-start gap-4 font-lora font-medium text-charcoal mb-2 md:mb-3 break-inside-avoid" style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-gold mt-1 flex-shrink-0">
@@ -1223,14 +1318,16 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
                   {tariff.rows.map((row, i) => (
                     <div
                       key={i}
-                      className={`flex items-center justify-between py-4 border-b border-charcoal/10 ${row.match ? 'text-charcoal' : 'text-charcoal'}`}
+                      className="flex items-start justify-between py-4 border-b border-charcoal/10"
                     >
-                      <span className="font-lora font-medium" style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}>
-                        {row.days}
+                      <div className="flex flex-col gap-1.5">
+                        <span className="font-lora font-medium text-charcoal" style={{ fontSize: 'clamp(1.06rem, 1.49vw, 1.21rem)' }}>
+                          {row.days}
+                        </span>
                         {row.match && (
-                          <span className="ml-4 px-3 py-1 bg-gold text-white text-[10px] font-bold uppercase tracking-[0.15em] rounded-full">ваш день</span>
+                          <span className="px-2.5 py-0.5 bg-gold text-white font-lora font-medium rounded-full whitespace-nowrap self-start" style={{ fontSize: '0.7rem' }}>ваш день</span>
                         )}
-                      </span>
+                      </div>
                       <div className="flex flex-col items-end">
                         <span
                           className="font-cormorant font-semibold leading-none text-charcoal"
@@ -1239,9 +1336,8 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
                           {row.price.toLocaleString('ru-RU')} ₽
                         </span>
                         {row.match && advanceAmount && (
-                          <span className="font-lora font-medium text-charcoal mt-1.5" style={{ fontSize: 'clamp(0.85rem, 1.1vw, 1rem)' }}>
-                            <span className="text-charcoal/40">аванс: 50% + 30 000 =</span>
-                            {' '}{advanceAmount.toLocaleString('ru-RU')} ₽
+                          <span className="font-lora font-medium text-charcoal mt-1.5 text-right" style={{ fontSize: 'clamp(0.85rem, 1.1vw, 1rem)' }}>
+                            аванс: {advanceAmount.toLocaleString('ru-RU')} ₽
                           </span>
                         )}
                       </div>
@@ -1261,8 +1357,6 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
               </button>
               <a
                 href="/pamyatka.html"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="rounded-full border border-charcoal/30 text-charcoal px-8 py-5 font-lora font-medium hover:bg-charcoal hover:text-sand transition-all duration-300"
                 style={{ fontSize: 'clamp(1.09rem, 1.49vw, 1.26rem)' }}
               >
@@ -1279,22 +1373,27 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
 };
 
 const GALLERY_IMAGES = [
-  '/IMG_20260414_202514.webp',
-  '/IMG_20260414_202517.webp',
-  '/IMG_20260414_202520.webp',
-  '/IMG_20260414_202525.webp',
-  '/IMG_20260414_202529.webp',
-  '/IMG_20260414_202543.webp',
-  '/IMG_20260414_202547.webp',
-  '/IMG_20260414_202551.webp',
-  '/IMG_20260414_202553.webp',
-  '/IMG_20260414_202558.webp',
+  '/gal/_ (309).webp',
+  '/gal/15-00-00 (1).webp',
+  '/gal/21-38-24 (1).webp',
+  '/gal/20250819_124346.webp',
+  '/gal/20250819_124353.webp',
+  '/gal/20250819_124403.webp',
+  '/gal/20250819_124416.webp',
+  '/gal/20250819_124430.webp',
+  '/gal/JfSrNIoO1Sc.webp',
+  '/gal/OSmOgaf-OtA.webp',
+  '/gal/QbOSemI5E4o.webp',
+  '/gal/Wed-A (46).webp',
+  '/gal/Wed-A (47).webp',
+  '/gal/Wed-A (80).webp',
+  '/gal/Wed-A (83).webp',
 ];
 
 const Gallery = () => {
   const doubled = [...GALLERY_IMAGES, ...GALLERY_IMAGES];
   return (
-    <section id="gallery" className="py-24 overflow-hidden">
+    <section id="gallery" className="pt-6 pb-0 overflow-hidden">
       <div className="flex marquee-track" style={{ width: 'max-content' }}>
         {doubled.map((img, i) => (
           <div key={i} className="flex-shrink-0 w-[320px] md:w-[380px] aspect-[3/4] overflow-hidden mr-5">
@@ -1310,7 +1409,7 @@ const Gallery = () => {
 };
 
 const PartnersSection = () => (
-  <section className="w-full bg-sand px-10 md:px-16 py-16 md:py-20">
+  <section className="w-full bg-sand px-0 md:px-16 pt-20 pb-0 md:pt-24 md:pb-0">
     <motion.div
       onClick={(e) => {
         e.preventDefault();
@@ -1321,8 +1420,8 @@ const PartnersSection = () => (
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative block w-full overflow-hidden bg-charcoal cursor-pointer mx-auto"
-      style={{ borderRadius: '4px', maxWidth: '1100px' }}
+      className="group relative block w-full overflow-hidden bg-charcoal cursor-pointer mx-auto rounded-none md:rounded-[4px]"
+      style={{ maxWidth: '1100px' }}
     >
       {/* Золотая черта сверху */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gold/60" />
@@ -1342,7 +1441,7 @@ const PartnersSection = () => (
       />
 
       {/* Контент */}
-      <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-10 px-10 md:px-14 py-14 md:py-16">
+      <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-8 px-7 md:px-14 py-14 md:py-16">
 
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-3">
@@ -1360,7 +1459,7 @@ const PartnersSection = () => (
             <span className="font-accent">специалисты</span>
           </h2>
           <p
-            className="font-lora font-medium text-white/55 mt-1"
+            className="font-lora font-medium text-white mt-1"
             style={{ fontSize: 'clamp(0.88rem, 1.15vw, 1.05rem)' }}
           >
             Диджеи · Декораторы · Фотографы · Организаторы
@@ -1374,7 +1473,7 @@ const PartnersSection = () => (
           >
             40+
           </span>
-          <span className="font-lora font-medium text-white/50" style={{ fontSize: 'clamp(0.82rem, 1vw, 0.92rem)' }}>
+          <span className="font-lora font-medium text-white" style={{ fontSize: 'clamp(0.82rem, 1vw, 0.92rem)' }}>
             проверенных специалистов
           </span>
           <span
@@ -1394,7 +1493,7 @@ const PartnersSection = () => (
 );
 
 const TravelSection = () => (
-  <section className="relative w-full bg-charcoal" style={{ minHeight: '90vh' }}>
+  <section id="travel" className="relative w-full bg-charcoal" style={{ minHeight: '90vh' }}>
     {/* Видео на весь блок */}
     <div className="absolute inset-0 overflow-hidden">
       <video
@@ -1413,7 +1512,7 @@ const TravelSection = () => (
     <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(30,18,6,0.65) 0%, rgba(90,55,15,0.18) 50%, rgba(30,18,6,0.45) 100%)' }} />
 
     {/* Двухколоночный контент */}
-    <div className="absolute inset-0 flex items-end px-10 md:px-16 py-16 md:py-20">
+    <div className="absolute inset-0 flex items-end px-8 md:px-16 py-12 md:py-20">
       <div className="w-full flex flex-col md:flex-row md:items-end md:justify-between gap-10">
 
         {/* Левая колонка — заголовок + кнопка */}
@@ -1527,7 +1626,7 @@ export default function App() {
             <Footer onBook={openModal} />
           </motion.div>
         ) : (
-          <PartnersView key="partners" onBack={() => setView('main')} onBook={openModal} />
+          <PartnersView onBack={() => { setView('main'); }} onBook={openModal} />
         )}
       </AnimatePresence>
     </div>

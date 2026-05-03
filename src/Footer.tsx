@@ -1,11 +1,11 @@
 import { motion } from 'motion/react';
 
 const FOOTER_NAV = [
-  { label: 'О площадке', href: '#' },
-  { label: 'Залы и зоны', href: '#' },
-  { label: 'Галерея', href: '#' },
-  { label: 'Условия аренды', href: '#' },
-  { label: 'Памятка гостя', href: '/pamyatka.html', target: '_blank' },
+  { label: 'О нас', href: '#why' },
+  { label: 'Условия', href: '#conditions' },
+  { label: 'Галерея', href: '#gallery' },
+  { label: 'Партнеры', href: '#', onClick: () => (window as any).setView('partners') },
+  { label: 'Путешествия', href: '#travel' },
   { label: 'Контакты', href: '#contacts' },
 ];
 
@@ -97,9 +97,7 @@ const Footer = ({ onBook }: { onBook: () => void }) => {
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             className="col-span-2 md:col-span-1"
           >
-            <p className="font-cormorant font-semibold text-white mb-4" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2rem)' }}>
-              Ривер Лофт
-            </p>
+            <img src="/ривьера белый.png" alt="Ривер Лофт" className="h-12 w-auto object-contain mb-4" />
             <p className="font-lora font-medium text-white/45 leading-relaxed" style={{ fontSize: 'clamp(0.90rem, 1.15vw, 1rem)' }}>
               Премиальная площадка для мероприятий рядом с парком Дубровицы
             </p>
@@ -120,6 +118,18 @@ const Footer = ({ onBook }: { onBook: () => void }) => {
                   <a
                     href={link.href}
                     target={(link as any).target}
+                    onClick={(e) => {
+                      const custom = (link as any).onClick;
+                      if (custom) { e.preventDefault(); custom(); return; }
+                      const anchor = link.href.startsWith('#') ? link.href : null;
+                      if (anchor) {
+                        e.preventDefault();
+                        (window as any).setView?.('main');
+                        setTimeout(() => {
+                          document.querySelector(anchor)?.scrollIntoView({ behavior: 'smooth' });
+                        }, 520);
+                      }
+                    }}
                     className="font-lora font-medium text-white/65 hover:text-gold transition-colors duration-300 relative group inline-block"
                     style={{ fontSize: 'clamp(0.95rem, 1.2vw, 1.06rem)' }}
                   >
@@ -227,9 +237,6 @@ const Footer = ({ onBook }: { onBook: () => void }) => {
         <div className="flex gap-6">
           <a href="/privacy.html" target="_blank" className="font-lora font-medium text-white/30 hover:text-white/65 transition-colors duration-300" style={{ fontSize: 'clamp(0.82rem, 1vw, 0.95rem)' }}>
             Политика конфиденциальности
-          </a>
-          <a href="#" className="font-lora font-medium text-white/30 hover:text-white/65 transition-colors duration-300" style={{ fontSize: 'clamp(0.82rem, 1vw, 0.95rem)' }}>
-            Договор оферты
           </a>
         </div>
       </div>
