@@ -1384,17 +1384,17 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
             <div className="flex flex-wrap gap-4 items-center">
               <button
                 onClick={onBook}
-                className="rounded-full border border-charcoal/30 text-charcoal px-12 py-5 font-lora font-medium hover:bg-charcoal hover:text-sand transition-all duration-300 cursor-pointer"
+                className="rounded-full bg-charcoal text-sand px-12 py-5 font-lora font-medium hover:bg-charcoal/80 transition-all duration-300 cursor-pointer"
                 style={{ fontSize: 'clamp(1.09rem, 1.49vw, 1.26rem)' }}
               >
                 Забронировать эту дату
               </button>
               <a
                 href="/pamyatka.html"
-                className="rounded-full border border-charcoal/30 text-charcoal px-8 py-5 font-lora font-medium hover:bg-charcoal hover:text-sand transition-all duration-300"
+                className="rounded-full bg-charcoal text-sand px-8 py-5 font-lora font-medium hover:bg-charcoal/80 transition-all duration-300"
                 style={{ fontSize: 'clamp(1.09rem, 1.49vw, 1.26rem)' }}
               >
-                Памятка гостя
+                Детали
               </a>
             </div>
 
