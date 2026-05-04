@@ -1482,7 +1482,7 @@ const Gallery = () => {
 };
 
 const PartnersSection = () => (
-  <section id="partners" className="w-full bg-sand px-0 md:px-16 pt-20 pb-0 md:pt-24 md:pb-0">
+  <section id="partners" className="w-full bg-sand px-0 md:px-16 pt-20 pb-0 md:pt-24 md:pb-24">
     <motion.div
       onClick={(e) => {
         e.preventDefault();
