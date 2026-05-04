@@ -511,8 +511,6 @@ type HeroSlide =
   | { type: 'pair'; left: string; right: string };
 
 const HERO_SLIDES: HeroSlide[] = [
-  { type: 'pair',   left: '/hero-pt-1.webp',      right: '/hero-pt-2.webp' },
-  { type: 'pair',   left: '/hero-pt-3.webp',      right: '/hero-pt-4.webp' },
   { type: 'pair',   left: '/hero-pt-5.webp',      right: '/hero-pt-6.webp' },
   { type: 'pair',   left: '/hero-pt-7.webp',      right: '/hero-pt-8.webp' },
   { type: 'single', src: '/hero-ls-5.webp',       position: '50% 15%' },
