@@ -4,9 +4,9 @@ const FOOTER_NAV = [
   { label: 'О нас', href: '#why' },
   { label: 'Условия', href: '#conditions' },
   { label: 'Галерея', href: '#gallery' },
-  { label: 'Партнеры', href: '#', onClick: () => (window as any).setView('partners') },
+  { label: 'Партнеры', href: '#partners' },
   { label: 'Путешествия', href: '#travel' },
-  { label: 'Контакты', href: '#contacts' },
+  { label: 'Контакты', href: '#footer-info' },
 ];
 
 const FOOTER_SOCIALS = [
@@ -87,7 +87,7 @@ const Footer = ({ onBook }: { onBook: () => void }) => {
       </div>
 
       {/* Info columns */}
-      <div className="px-8 md:px-16 py-16">
+      <div id="footer-info" className="px-8 md:px-16 py-16">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-10 md:gap-6">
 
           <motion.div
@@ -225,7 +225,6 @@ const Footer = ({ onBook }: { onBook: () => void }) => {
           <span>ИП Щербаков Михаил Юрьевич</span>
           <span>ИНН 503613709003</span>
           <span>ОГРН 323508100415469</span>
-          <span>+7 909 651-67-30</span>
         </div>
       </div>
 

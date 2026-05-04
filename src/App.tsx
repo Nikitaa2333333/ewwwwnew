@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AnimatePresence, motion, useScroll, useTransform } from 'motion/react';
+import { AnimatePresence, motion, useScroll, useTransform, useMotionValue, useAnimationFrame } from 'motion/react';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import PartnersView from './PartnersView';
 import Footer from './Footer';
@@ -44,8 +44,28 @@ const BookingModal = ({ open, onClose }: { open: boolean; onClose: () => void })
   }, [open, onClose]);
 
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    if (open) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+    } else {
+      const top = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (top) window.scrollTo(0, -parseInt(top, 10));
+    }
+    return () => {
+      const top = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (top) window.scrollTo(0, -parseInt(top, 10));
+    };
   }, [open]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -283,14 +303,34 @@ const Navbar = ({ onBook }: { onBook: () => void }) => {
     { label: 'О нас', href: '#why' },
     { label: 'Условия', href: '#conditions' },
     { label: 'Галерея', href: '#gallery' },
-    { label: 'Партнеры', href: '#', onClick: () => (window as any).setView('partners') },
+    { label: 'Партнеры', href: '#partners' },
     { label: 'Путешествия', href: '#travel' },
-    { label: 'Контакты', href: '#contacts' },
+    { label: 'Контакты', href: '#footer-info' },
   ];
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    if (menuOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+    } else {
+      const top = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (top) window.scrollTo(0, -parseInt(top, 10));
+    }
+    return () => {
+      const top = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (top) window.scrollTo(0, -parseInt(top, 10));
+    };
   }, [menuOpen]);
 
   return (
@@ -630,13 +670,6 @@ const Hero = ({ onBook }: { onBook: () => void }) => {
           >
             Забронировать дату
           </button>
-          <a
-            href="#"
-            className="font-lora font-medium text-white/90 px-5 py-4 hover:text-white transition-colors duration-250 cursor-pointer"
-            style={{ fontSize: 'clamp(1.03rem, 1.38vw, 1.21rem)' }}
-          >
-            Смотреть площадку
-          </a>
         </motion.div>
       </div>
     </section>
@@ -957,7 +990,6 @@ const ZONES = [
     images: [
       '/зал/11-41-12.webp',
       '/зал/4DSqBL5iUBY%20(1).webp',
-      '/зал/5lEXuj34-XE%20(2).webp',
       '/зал/Wed-A%20(92).webp',
       '/зал/_%20(308).webp',
     ],
@@ -1392,24 +1424,63 @@ const GALLERY_IMAGES = [
 
 const Gallery = () => {
   const doubled = [...GALLERY_IMAGES, ...GALLERY_IMAGES];
+  const trackRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const isDragging = useRef(false);
+  const setWidth = useRef(0);
+  const SPEED = 0.9; // px per 16ms frame
+
+  useEffect(() => {
+    const measure = () => {
+      if (trackRef.current) {
+        setWidth.current = trackRef.current.scrollWidth / 2;
+      }
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
+
+  useAnimationFrame((_, delta) => {
+    if (isDragging.current || setWidth.current === 0) return;
+    let next = x.get() - SPEED * (delta / 16);
+    if (next <= -setWidth.current) next += setWidth.current;
+    x.set(next);
+  });
+
+  const wrapX = (val: number) => {
+    const w = setWidth.current;
+    if (w === 0) return val;
+    let v = val;
+    while (v <= -w) v += w;
+    while (v > 0) v -= w;
+    return v;
+  };
+
   return (
-    <section id="gallery" className="pt-6 pb-0 overflow-hidden">
-      <div className="flex marquee-track" style={{ width: 'max-content' }}>
-        {doubled.map((img, i) => (
-          <div key={i} className="flex-shrink-0 w-[320px] md:w-[380px] aspect-[3/4] overflow-hidden mr-5">
-            <img
-              src={img} loading="lazy" alt="Gallery"
-              className="w-full h-full object-cover grayscale-[15%] hover:grayscale-0 transition-all duration-700"
-            />
-          </div>
-        ))}
-      </div>
+    <section id="gallery" className="pt-6 pb-0 overflow-hidden cursor-grab active:cursor-grabbing select-none">
+      <motion.div
+        onPanStart={() => { isDragging.current = true; }}
+        onPan={(_, info) => { x.set(wrapX(x.get() + info.delta.x)); }}
+        onPanEnd={() => { isDragging.current = false; }}
+      >
+        <motion.div ref={trackRef} className="flex" style={{ x, width: 'max-content' }}>
+          {doubled.map((img, i) => (
+            <div key={i} className="flex-shrink-0 w-[320px] md:w-[380px] aspect-[3/4] overflow-hidden mr-5">
+              <img
+                src={img} loading="lazy" alt="Gallery" draggable={false}
+                className="w-full h-full object-cover grayscale-[15%] hover:grayscale-0 transition-all duration-700 pointer-events-none"
+              />
+            </div>
+          ))}
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
 
 const PartnersSection = () => (
-  <section className="w-full bg-sand px-0 md:px-16 pt-20 pb-0 md:pt-24 md:pb-0">
+  <section id="partners" className="w-full bg-sand px-0 md:px-16 pt-20 pb-0 md:pt-24 md:pb-0">
     <motion.div
       onClick={(e) => {
         e.preventDefault();
@@ -1493,7 +1564,7 @@ const PartnersSection = () => (
 );
 
 const TravelSection = () => (
-  <section id="travel" className="relative w-full bg-charcoal" style={{ minHeight: '90vh' }}>
+  <section id="travel" className="relative w-full bg-charcoal" style={{ minHeight: '100svh' }}>
     {/* Видео на весь блок */}
     <div className="absolute inset-0 overflow-hidden">
       <video
@@ -1511,8 +1582,8 @@ const TravelSection = () => (
     <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(30,18,6,0.82) 0%, rgba(90,55,15,0.35) 50%, rgba(180,130,50,0.10) 100%)' }} />
     <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(30,18,6,0.65) 0%, rgba(90,55,15,0.18) 50%, rgba(30,18,6,0.45) 100%)' }} />
 
-    {/* Двухколоночный контент */}
-    <div className="absolute inset-0 flex items-end px-8 md:px-16 py-12 md:py-20">
+    {/* Контент */}
+    <div className="relative z-10 flex flex-col justify-end min-h-[100svh] px-8 md:px-16 py-14 md:py-20">
       <div className="w-full flex flex-col md:flex-row md:items-end md:justify-between gap-10">
 
         {/* Левая колонка — заголовок + кнопка */}
@@ -1565,13 +1636,13 @@ const TravelSection = () => (
           </div>
         </motion.div>
 
-        {/* Правая колонка — текст */}
+        {/* Правая колонка — текст (только десктоп) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col gap-5 font-lora font-medium text-white leading-[1.75] md:max-w-sm"
+          className="hidden md:flex flex-col gap-5 font-lora font-medium text-white leading-[1.75] md:max-w-sm"
           style={{ fontSize: 'clamp(0.95rem, 1.3vw, 1.15rem)' }}
         >
           <p>
