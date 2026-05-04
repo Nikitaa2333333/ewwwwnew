@@ -1644,7 +1644,7 @@ const TravelSection = () => (
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="hidden md:flex flex-col gap-5 font-lora font-medium text-white leading-[1.75] md:max-w-sm"
+          className="flex flex-col gap-5 font-lora font-medium text-white leading-[1.75] md:max-w-sm"
           style={{ fontSize: 'clamp(0.95rem, 1.3vw, 1.15rem)' }}
         >
           <p>
