@@ -315,22 +315,19 @@ const Navbar = ({ onBook }: { onBook: () => void }) => {
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
-    } else {
-      const top = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.style.overflow = '';
-      if (top) window.scrollTo(0, -parseInt(top, 10));
+      window.history.pushState(null, '', window.location.href);
+      const onPop = () => setMenuOpen(false);
+      window.addEventListener('popstate', onPop);
+      return () => {
+        window.removeEventListener('popstate', onPop);
+        const top = document.body.style.top;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        if (top) window.scrollTo(0, -parseInt(top, 10));
+      };
     }
-    return () => {
-      const top = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.style.overflow = '';
-      if (top) window.scrollTo(0, -parseInt(top, 10));
-    };
   }, [menuOpen]);
 
   return (
@@ -411,14 +408,20 @@ const Navbar = ({ onBook }: { onBook: () => void }) => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[100] bg-charcoal flex flex-col px-8 py-6"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={{ left: 0, right: 0.8 }}
+            onDragEnd={(_, info) => {
+              if (info.offset.x > 80 || info.velocity.x > 400) setMenuOpen(false);
+            }}
+            className="fixed inset-0 z-[100] bg-charcoal flex flex-col px-8 py-6 cursor-default"
           >
             <div className="flex justify-between items-center mb-6">
               <img src="/ривьера белый.png" alt="Ривер Лофт" className="h-11 w-auto object-contain" />
               <button
                 onClick={() => setMenuOpen(false)}
                 aria-label="Закрыть меню"
-                className="text-white/50 hover:text-white transition-colors duration-200 p-1"
+                className="text-white/50 hover:text-white transition-colors duration-200 flex items-center justify-center w-11 h-11 -mr-2"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                   <line x1="5" y1="5" x2="19" y2="19" />
@@ -517,8 +520,9 @@ const HERO_SLIDES: HeroSlide[] = [
   { type: 'single', src: '/hero-ls-6.webp',       position: '50% 15%' },
   { type: 'pair',   left: '/hero-pt-11.webp',     right: '/hero-pt-12.webp' },
   { type: 'single', src: '/hero-ls-7.webp',       position: '50% 15%' },
-  { type: 'pair',   left: '/hero-herrro-1.webp',  right: '/hero-herrro-4.webp' },
-  { type: 'pair',   left: '/hero-herrro-7.webp',  right: '/hero-herrro-8.webp' },
+  { type: 'pair',   left: '/hero-herrro-1.webp',  right: '/hero-herrro-2.webp' },
+  { type: 'pair',   left: '/hero-herrro-3.webp',  right: '/hero-herrro-4.webp' },
+  { type: 'pair',   left: '/hero-herrro-5.webp',  right: '/hero-herrro-6.webp' },
 ];
 
 const Hero = ({ onBook }: { onBook: () => void }) => {
