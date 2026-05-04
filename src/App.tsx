@@ -992,8 +992,8 @@ const ZONES = [
     images: [
       '/зал/11-41-12.webp',
       '/зал/4DSqBL5iUBY%20(1).webp',
+      '/зал/5lEXuj34-XE%20(2).webp',
       '/зал/Wed-A%20(92).webp',
-      '/зал/_%20(308).webp',
     ],
   },
   {
@@ -1482,7 +1482,7 @@ const Gallery = () => {
 };
 
 const PartnersSection = () => (
-  <section id="partners" className="w-full bg-sand px-0 md:px-16 pt-20 pb-0 md:pt-24 md:pb-24">
+  <section id="partners" className="w-full bg-sand px-0 md:px-16 pt-20 pb-16 md:pt-24 md:pb-24">
     <motion.div
       onClick={(e) => {
         e.preventDefault();
