@@ -1,14 +1,26 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ривер Лофт</title>
-    <link rel="preload" as="image" href="/15-43-14.webp" />
+
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Fonts (non-blocking, in <head> instead of CSS @import) -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Great+Vibes&family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
+    />
+
+    <!-- Preload first hero slide images -->
+    <link rel="preload" as="image" href="/hero-pt-5.webp" />
+    <link rel="preload" as="image" href="/hero-pt-6.webp" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

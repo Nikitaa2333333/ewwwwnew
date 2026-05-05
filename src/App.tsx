@@ -4,7 +4,7 @@
  */
 
 import { AnimatePresence, motion, useScroll, useTransform, useMotionValue, useAnimationFrame } from 'motion/react';
-import { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import PartnersView from './PartnersView';
 import Footer from './Footer';
 
@@ -545,12 +545,15 @@ const Hero = ({ onBook }: { onBook: () => void }) => {
     <section ref={containerRef} className="relative w-full h-screen overflow-hidden bg-charcoal" style={{ minHeight: '100svh' }}>
       {/* Parallax background */}
       <motion.div style={{ y, opacity }} className="absolute inset-0 w-full h-full">
-        {/* Preload all slides */}
+        {/* Preload only adjacent slides (current ± 1) */}
         <div className="sr-only" aria-hidden="true">
-          {HERO_SLIDES.map((s) => s.type === 'single'
-            ? <img key={s.src} src={s.src} alt="" />
-            : <><img key={s.left} src={s.left} alt="" /><img key={s.right} src={s.right} alt="" /></>
-          )}
+          {[-1, 0, 1].map(offset => {
+            const idx = (current + offset + HERO_SLIDES.length) % HERO_SLIDES.length;
+            const s = HERO_SLIDES[idx];
+            return s.type === 'single'
+              ? <img key={s.src} src={s.src} alt="" />
+              : <React.Fragment key={s.left}><img src={s.left} alt="" /><img src={s.right} alt="" /></React.Fragment>;
+          })}
         </div>
         <AnimatePresence>
           {(() => {
@@ -809,6 +812,7 @@ const AboutRiverLoft = () => {
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           src="/neewwwwwww.webp"
           alt="Церковь Знамение в Дубровицах"
+          loading="lazy"
           className="block w-full object-contain"
           style={{ maxHeight: '70vh' }}
         />
@@ -849,6 +853,7 @@ const AboutRiverLoft = () => {
             <img
               src="/neewwwwwww.webp"
               alt="Церковь Знамение в Дубровицах"
+              loading="lazy"
               className="block"
               style={{ height: '100%', width: 'auto', maxWidth: 'none' }}
             />
@@ -1574,6 +1579,7 @@ const TravelSection = () => (
         muted
         loop
         playsInline
+        preload="none"
         className="w-full h-full object-cover"
       >
         <source src="/travel-video.mp4" type="video/mp4" />
