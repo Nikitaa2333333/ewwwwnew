@@ -340,7 +340,7 @@ const Navbar = ({ onBook }: { onBook: () => void }) => {
             onClick={() => { (window as any).setView('main'); setMenuOpen(false); }}
             className="cursor-pointer"
           >
-            <img src="/ривьера белый.png" alt="Ривер Лофт" className="h-10 md:h-12 w-auto object-contain" />
+            <img src="/riveeeeeeee.png" alt="Ривер Лофт" className="h-10 md:h-12 w-auto object-contain" />
           </div>
 
           {/* Навигация — desktop */}
@@ -417,7 +417,7 @@ const Navbar = ({ onBook }: { onBook: () => void }) => {
             className="fixed inset-0 z-[100] bg-charcoal flex flex-col px-8 py-6 cursor-default"
           >
             <div className="flex justify-between items-center mb-6">
-              <img src="/ривьера белый.png" alt="Ривер Лофт" className="h-11 w-auto object-contain" />
+              <img src="/riveeeeeeee.png" alt="Ривер Лофт" className="h-11 w-auto object-contain" />
               <button
                 onClick={() => setMenuOpen(false)}
                 aria-label="Закрыть меню"
