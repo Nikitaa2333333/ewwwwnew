@@ -97,7 +97,7 @@ const Footer = ({ onBook }: { onBook: () => void }) => {
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             className="col-span-2 md:col-span-1"
           >
-            <img src="/riveeeeeeee.png" alt="Ривер Лофт" className="h-12 w-auto object-contain mb-4" />
+            <img src="/riveeeeeeee.png" alt="Ривер Лофт" className="h-[83px] w-auto object-contain mb-4" />
             <p className="font-lora font-medium text-white/45 leading-relaxed" style={{ fontSize: 'clamp(0.90rem, 1.15vw, 1rem)' }}>
               Премиальная площадка для мероприятий рядом с парком Дубровицы
             </p>

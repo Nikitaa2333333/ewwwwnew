@@ -117,7 +117,7 @@ export default function PartnersView({ onBack, onBook }: { onBack: () => void; o
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-20 text-center px-6"
         >
-          <img src="/riveeeeeeee.png" alt="Ривер Лофт" className="h-10 w-auto object-contain mx-auto mb-4" />
+          <img src="/riveeeeeeee.png" alt="Ривер Лофт" className="h-[67px] w-auto object-contain mx-auto mb-4" />
           <h1 className="font-cormorant font-semibold text-white leading-none mb-6" style={{ fontSize: 'clamp(3.5rem, 9vw, 9rem)' }}>
             Наши <span className="font-accent text-gold font-light">партнеры</span>
           </h1>
