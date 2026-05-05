@@ -614,7 +614,7 @@ const Hero = ({ onBook }: { onBook: () => void }) => {
       </motion.div>
 
       {/* Main content — left-aligned, centered vertically */}
-      <div className="absolute inset-0 flex flex-col justify-end md:justify-start items-start text-white px-8 md:px-16 pb-16 pt-24 md:pt-[220px]">
+      <div className="absolute inset-0 flex flex-col justify-end items-start text-white px-8 md:px-16 pb-16 pt-24">
         {/* Heading */}
         <motion.div
           initial={{ y: 60, opacity: 0 }}
