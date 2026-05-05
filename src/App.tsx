@@ -1408,8 +1408,6 @@ const BookingSection = ({ onBook }: { onBook: () => void }) => {
 
 const GALLERY_IMAGES = [
   '/gal/_ (309).webp',
-  '/gal/15-00-00 (1).webp',
-  '/gal/21-38-24 (1).webp',
   '/gal/20250819_124346.webp',
   '/gal/20250819_124353.webp',
   '/gal/20250819_124403.webp',
@@ -1422,6 +1420,8 @@ const GALLERY_IMAGES = [
   '/gal/Wed-A (47).webp',
   '/gal/Wed-A (80).webp',
   '/gal/Wed-A (83).webp',
+  '/gal/15-00-00 (1).webp',
+  '/gal/21-38-24 (1).webp',
 ];
 
 const Gallery = () => {
